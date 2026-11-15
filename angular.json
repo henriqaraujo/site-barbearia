@@ -73,7 +73,7 @@
               }
             },
             "demo": {
-              "baseHref": "/barbearia/",
+              "baseHref": "/",
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",

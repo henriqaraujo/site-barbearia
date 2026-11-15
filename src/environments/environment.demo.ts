@@ -1,4 +1,4 @@
-// Demonstracao publicada em public_html/barbearia: sem API, com o backend de exemplo ligado (demoBackendInterceptor).
+// Demonstracao publicada em public_html/barbearia (raiz de barbearia.hlsolutions.com.br): sem API, com o backend de exemplo ligado (demoBackendInterceptor).
 export const environment = {
   production: true,
   apiBaseUrl: '',

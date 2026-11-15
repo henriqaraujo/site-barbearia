@@ -20,7 +20,7 @@ jobs:
       - name: Instalar dependências
         run: npm ci
 
-      - name: Build da demonstração (base /barbearia/)
+      - name: Build da demonstração (base /)
         run: npm run build:demo
 
       - name: FTP Deploy Locaweb

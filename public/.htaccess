@@ -1,9 +1,9 @@
-# SPA Angular em /barbearia/: qualquer rota que nao seja arquivo volta para o index.html.
+# SPA Angular em /: qualquer rota que nao seja arquivo volta para o index.html.
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteBase /barbearia/
+  RewriteBase /
   RewriteRule ^index\.html$ - [L]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule . /barbearia/index.html [L]
+  RewriteRule . /index.html [L]
 </IfModule>
