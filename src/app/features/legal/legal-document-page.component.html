@@ -1,0 +1,40 @@
+<main class="legal-page">
+  <header class="legal-page__header">
+    <a class="legal-page__brand" routerLink="/">
+      <img class="legal-page__logo" [src]="brand.logoUrl" [alt]="brand.name" width="480" height="320" />
+    </a>
+  </header>
+
+  <article class="legal-page__document" aria-labelledby="legal-page-title">
+    <h1 id="legal-page-title">{{ document.title }}</h1>
+    <p class="legal-page__version">Versão de {{ versionDate }}</p>
+
+    @if (document.isDraft) {
+      <p class="legal-page__draft" role="note">
+        <strong>Rascunho — revisar com advogado.</strong>
+        Este texto ainda não foi revisado e não vale como versão final.
+      </p>
+    }
+
+    @switch (state()) {
+      @case ('loading') {
+        <div class="legal-page__skeleton" aria-busy="true" aria-label="Carregando o texto">
+          <span></span><span></span><span></span><span></span>
+        </div>
+      }
+      @case ('error') {
+        <div class="legal-page__error">
+          <p role="alert">Não foi possível carregar o texto agora.</p>
+          <button type="button" class="legal-page__retry" (click)="load()">Tentar de novo</button>
+        </div>
+      }
+      @default {
+        <div class="legal-page__content" [innerHTML]="content()"></div>
+      }
+    }
+
+    <footer class="legal-page__footer">
+      <app-legal-links />
+    </footer>
+  </article>
+</main>

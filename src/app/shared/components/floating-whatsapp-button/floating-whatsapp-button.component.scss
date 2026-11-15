@@ -1,0 +1,45 @@
+.whatsapp-button {
+  position: fixed;
+  right: clamp(1rem, 3vw, 2rem);
+  bottom: clamp(1rem, 3vw, 2rem);
+  z-index: 90;
+  display: grid;
+  width: 58px;
+  height: 58px;
+  place-items: center;
+  border: 1px solid rgba(245, 241, 232, 0.18);
+  border-radius: var(--radius-control);
+  color: #ffffff;
+  background: var(--color-success);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.24);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(16px);
+  transition: opacity 180ms ease, transform 180ms ease;
+
+  &--visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  &__tooltip {
+    position: absolute;
+    right: calc(100% + 0.7rem);
+    padding: 0.35rem 0.55rem;
+    border-radius: var(--radius-control);
+    color: var(--color-text-primary);
+    background: var(--surface-secondary);
+    font-size: 0.78rem;
+    opacity: 0;
+    transform: translateX(6px);
+    transition: opacity 180ms ease, transform 180ms ease;
+    white-space: nowrap;
+  }
+
+  &:hover &__tooltip,
+  &:focus-visible &__tooltip {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

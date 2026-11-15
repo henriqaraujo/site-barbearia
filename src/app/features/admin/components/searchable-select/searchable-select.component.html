@@ -1,0 +1,42 @@
+<div class="searchable-select" (click)="$event.stopPropagation()">
+  <input
+    #searchInput
+    type="text"
+    role="combobox"
+    autocomplete="off"
+    [attr.aria-expanded]="isOpen()"
+    [attr.aria-label]="ariaLabel"
+    [disabled]="disabled"
+    [placeholder]="placeholder"
+    [value]="inputValue"
+    (click)="toggle($event)"
+    (input)="updateSearchTerm($event)"
+    (keydown)="handleKeydown($event)"
+  />
+  <span class="searchable-select__indicator" [class.searchable-select__indicator--open]="isOpen()" aria-hidden="true">
+    <app-icon name="chevron-right" [size]="16" />
+  </span>
+
+  <div *ngIf="isOpen()" class="searchable-select__panel" (keydown)="handlePanelKeydown($event)">
+    <div class="searchable-select__options" role="listbox">
+      <button
+        *ngFor="let option of filteredOptions()"
+        type="button"
+        role="option"
+        [class.selected]="option.id === value"
+        [disabled]="option.disabled"
+        [attr.aria-selected]="option.id === value"
+        (click)="selectOption(option)"
+      >
+        {{ option.label }}
+      </button>
+
+      <p *ngIf="filteredOptions().length === 0" class="searchable-select__empty">{{ emptyText }}</p>
+    </div>
+
+    <button *ngIf="actionLabel" type="button" class="searchable-select__action" (click)="runAction()">
+      <span class="searchable-select__action-icon" aria-hidden="true"><app-icon name="plus" [size]="12" /></span>
+      {{ actionLabel }}
+    </button>
+  </div>
+</div>

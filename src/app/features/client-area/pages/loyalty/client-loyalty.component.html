@@ -1,0 +1,176 @@
+<section class="pontos-page">
+  <header class="pontos-hero">
+    <h1>Meus pontos</h1>
+    <p>Junte pontos nos atendimentos e troque por recompensas.</p>
+  </header>
+
+  @if (feedbackMessage()) {
+    <p class="pontos-state pontos-state--success" role="status">{{ feedbackMessage() }}</p>
+  }
+
+  @if (isLoading() && !loyalty()) {
+    <div class="pontos-state" role="status">Carregando seus pontos.</div>
+  } @else if (unavailable()) {
+    <div class="pontos-state" role="status">O programa de pontos não está disponível nesta empresa no momento.</div>
+  } @else if (errorMessage()) {
+    <div class="pontos-state pontos-state--error" role="alert">
+      <span>{{ errorMessage() }}</span>
+      <button type="button" class="pontos-link" (click)="load()">Tentar de novo</button>
+    </div>
+  } @else if (loyalty(); as current) {
+    <article class="pontos-balance">
+      <div class="pontos-balance__pole"></div>
+      <div class="pontos-balance__body">
+        <span class="pontos-balance__label">Seu saldo</span>
+        <strong class="pontos-balance__value">{{ current.balance.toLocaleString('pt-BR') }} <small>{{ current.balance === 1 ? 'ponto' : 'pontos' }}</small></strong>
+        @if (!current.programEnabled) {
+          <p class="pontos-balance__note">O programa de pontos está pausado: os atendimentos não geram pontos e não dá para pedir resgates agora. Seu saldo e os pedidos já feitos continuam valendo.</p>
+        }
+      </div>
+    </article>
+
+    <section class="pontos-section" aria-labelledby="pontos-como-ganhar">
+      <h2 id="pontos-como-ganhar">Como ganhar</h2>
+      @if (current.mode === 'PerReal') {
+        <p>{{ perRealText(current) }}</p>
+      } @else if (current.servicePoints.length === 0) {
+        <p>{{ 'Os pontos são definidos por serviço. No momento, nenhum serviço está dando pontos.' | term }}</p>
+      } @else {
+        <p>{{ 'Cada serviço concluído dá os pontos abaixo:' | term }}</p>
+        <ul class="pontos-services">
+          @for (service of current.servicePoints; track service.serviceName) {
+            <li><span>{{ service.serviceName }}</span><strong>{{ service.points.toLocaleString('pt-BR') }} pontos</strong></li>
+          }
+        </ul>
+      }
+      <p class="pontos-muted">Faltas, cancelamentos e atendimentos feitos com resgate não dão pontos.</p>
+    </section>
+
+    <section class="pontos-section" aria-labelledby="pontos-recompensas">
+      <h2 id="pontos-recompensas">Recompensas</h2>
+      @if (current.rewards.length === 0) {
+        <p class="pontos-muted">Ainda não há recompensas cadastradas.</p>
+      } @else {
+        <div class="pontos-rewards">
+          @for (reward of current.rewards; track reward.id) {
+            <article class="pontos-reward">
+              <div class="pontos-reward__top">
+                <span class="pontos-reward__icon" aria-hidden="true"><app-icon [name]="reward.type === 'FreeService' ? 'scissors' : 'sparkles'" [size]="16" /></span>
+                <span class="pontos-reward__cost">{{ reward.pointsCost.toLocaleString('pt-BR') }} pontos</span>
+              </div>
+              <h3>{{ reward.name }}</h3>
+              <p class="pontos-reward__kind">{{ rewardKind(reward) }}</p>
+              @if (reward.description) {
+                <p class="pontos-reward__description">{{ reward.description }}</p>
+              }
+              <div class="pontos-reward__action">
+                <button type="button" class="pontos-btn" [disabled]="!!blockReason(reward)" (click)="openRedeem(reward)">Resgatar</button>
+                @if (blockReason(reward); as reason) {
+                  <small>{{ reason }}</small>
+                }
+              </div>
+            </article>
+          }
+        </div>
+      }
+    </section>
+
+    <section class="pontos-section" aria-labelledby="pontos-pedidos">
+      <h2 id="pontos-pedidos">Meus pedidos</h2>
+      @if (current.redemptions.length === 0) {
+        <p class="pontos-muted">Você ainda não pediu resgates.</p>
+      } @else {
+        <ul class="pontos-list">
+          @for (redemption of current.redemptions; track redemption.id) {
+            <li class="pontos-request">
+              <div class="pontos-request__main">
+                <strong>{{ redemption.rewardName }}</strong>
+                <small>Pedido em {{ redemption.requestedAtUtc | date: 'dd/MM/yyyy' }} · {{ redemption.pointsCost.toLocaleString('pt-BR') }} pontos</small>
+                <small>{{ redemptionDetail(redemption) }}</small>
+              </div>
+              <div class="pontos-request__side">
+                <span class="pontos-pill" [class]="'pontos-pill pontos-pill--' + statusTone(redemption.status)">{{ statusLabel(redemption.status) }}</span>
+                @if (redemption.canCancel) {
+                  <button type="button" class="pontos-link" (click)="openCancel(redemption)">Cancelar pedido</button>
+                }
+              </div>
+            </li>
+          }
+        </ul>
+      }
+    </section>
+
+    <section class="pontos-section" aria-labelledby="pontos-extrato">
+      <h2 id="pontos-extrato">Extrato</h2>
+      @if (transactions().length === 0) {
+        <p class="pontos-muted">Seus pontos aparecem aqui depois dos atendimentos concluídos.</p>
+        <a class="pontos-btn pontos-btn--outline" [routerLink]="'/' + companySlug() + '/agendamento'">Agendar um horário</a>
+      } @else {
+        <ul class="pontos-list">
+          @for (transaction of transactions(); track transaction.id) {
+            <li class="pontos-movement">
+              <div>
+                <span>{{ transaction.description }}</span>
+                <small>{{ transaction.occurredAtUtc | date: 'dd/MM/yyyy' }}{{ transaction.reason ? ' · ' + transaction.reason : '' }}</small>
+              </div>
+              <strong [class.pontos-movement--debit]="transaction.points < 0">{{ formatPoints(transaction.points) }}</strong>
+            </li>
+          }
+        </ul>
+        @if (hasMore()) {
+          <button type="button" class="pontos-link" [disabled]="isLoadingMore()" (click)="loadMore()">{{ isLoadingMore() ? 'Carregando' : 'Ver mais movimentos' }}</button>
+        }
+      }
+    </section>
+  }
+</section>
+
+@if (redeeming(); as reward) {
+  <app-confirm-dialog
+    title="Resgatar recompensa"
+    [description]="'Os ' + reward.pointsCost.toLocaleString('pt-BR') + ' pontos saem do seu saldo agora.'"
+    tone="neutral"
+    icon="award"
+    cancelLabel="Voltar"
+    confirmLabel="Confirmar resgate"
+    busyLabel="Resgatando..."
+    [busy]="isBusy()"
+    [errorMessage]="dialogErrorMessage()"
+    (confirmed)="confirmRedeem()"
+    (cancelled)="closeDialogs()">
+    <div class="confirm-entity">
+      <span class="confirm-entity__avatar confirm-entity__avatar--icon"><app-icon name="sparkles" [size]="18" /></span>
+      <div class="confirm-entity__text">
+        <strong>{{ reward.name }}</strong>
+        <small>{{ rewardKind(reward) }}</small>
+      </div>
+      <span class="confirm-entity__amount">{{ reward.pointsCost.toLocaleString('pt-BR') }} pts</span>
+    </div>
+    <p class="pontos-dialog-note">
+      {{ reward.type === 'FreeService' ? ('Ao agendar este serviço, marque "Usar resgate" e o horário sai sem custo. Enquanto não for usado, você pode cancelar o pedido e os pontos voltam.' | term) : 'Retire no local. Enquanto não for entregue, você pode cancelar o pedido e os pontos voltam.' }}
+    </p>
+  </app-confirm-dialog>
+}
+
+@if (cancelling(); as redemption) {
+  <app-confirm-dialog
+    title="Cancelar pedido"
+    [description]="'Os ' + redemption.pointsCost.toLocaleString('pt-BR') + ' pontos voltam para o seu saldo.'"
+    tone="warning"
+    icon="ban"
+    cancelLabel="Voltar"
+    confirmLabel="Cancelar pedido"
+    busyLabel="Cancelando..."
+    [busy]="isBusy()"
+    [errorMessage]="dialogErrorMessage()"
+    (confirmed)="confirmCancel()"
+    (cancelled)="closeDialogs()">
+    <div class="confirm-entity">
+      <span class="confirm-entity__avatar confirm-entity__avatar--icon"><app-icon name="sparkles" [size]="18" /></span>
+      <div class="confirm-entity__text">
+        <strong>{{ redemption.rewardName }}</strong>
+        <small>Pedido em {{ redemption.requestedAtUtc | date: 'dd/MM/yyyy' }}</small>
+      </div>
+    </div>
+  </app-confirm-dialog>
+}

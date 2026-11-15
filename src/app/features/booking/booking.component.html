@@ -1,0 +1,519 @@
+<section class="booking-page">
+  <header class="booking-hero">
+    <div>
+      <span class="booking-hero__label">Agendamento online</span>
+      <h1>Reserve seu horário</h1>
+      <p>Preencha os dados abaixo e garanta seu horário com praticidade e segurança.</p>
+    </div>
+
+    <aside class="booking-hero__security" aria-label="Segurança do agendamento">
+      <app-icon name="shield" [size]="34" />
+      <span>
+        <strong>Seu horário é reservado</strong>
+        Confirmação imediata e lembretes automáticos.
+      </span>
+    </aside>
+  </header>
+
+  <main class="booking-board" aria-label="Formulário de agendamento">
+    @if (bookingState.replacingAppointmentId() && bookingState.isAuthenticatedCustomer() && !bookingState.savedBooking()) {
+      <p class="booking-reschedule-notice" role="status">
+        <app-icon name="repeat" [size]="16" />
+        Você está remarcando um horário. Ao confirmar o novo, o anterior é cancelado e o plano ou o resgate dele passa para o novo.
+      </p>
+    }
+
+    <div class="booking-grid">
+      <section class="booking-column booking-column--services" aria-labelledby="booking-service-title">
+        <div class="booking-column__heading">
+          <span>1</span>
+          <h2 id="booking-service-title">{{ 'Serviço' | term }}</h2>
+        </div>
+
+        @if (bookingState.isLoadingServices()) {
+          <p class="booking-feedback">{{ 'Carregando serviços...' | term }}</p>
+        }
+
+        @if (bookingState.servicesErrorMessage()) {
+          <div class="booking-feedback booking-feedback--error">
+            <span>{{ bookingState.servicesErrorMessage() }}</span>
+            <button type="button" (click)="bookingState.retryLoadServices()">Tentar novamente</button>
+          </div>
+        }
+
+        <div class="service-list" role="radiogroup" aria-labelledby="booking-service-title">
+          @for (service of bookingState.services(); track service.id) {
+            <button
+              class="service-item"
+              type="button"
+              role="radio"
+              [attr.aria-checked]="bookingState.selectedService()?.id === service.id"
+              [class.is-selected]="bookingState.selectedService()?.id === service.id"
+              (click)="bookingState.selectService(service)"
+            >
+              <app-icon name="scissors" [size]="18" />
+              <span>
+                <strong>{{ service.name }}</strong>
+                <small>{{ service.duration }}</small>
+              </span>
+              <em>{{ service.price | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</em>
+              <i aria-hidden="true"></i>
+            </button>
+          }
+        </div>
+      </section>
+
+      <section class="booking-column booking-column--professionals" aria-labelledby="booking-professional-title">
+        <div class="booking-column__heading">
+          <span>2</span>
+          <h2 id="booking-professional-title">Profissional</h2>
+        </div>
+
+        <div class="professional-list" role="radiogroup" aria-labelledby="booking-professional-title">
+          <button
+            class="professional-item professional-item--any"
+            type="button"
+            role="radio"
+            [attr.aria-checked]="bookingState.allowsAnyProfessional()"
+            [class.is-selected]="bookingState.allowsAnyProfessional()"
+            (click)="bookingState.selectAnyProfessional()"
+          >
+            <span class="professional-item__avatar">
+              <app-icon name="user" [size]="18" />
+            </span>
+            <span>
+              <strong>Qualquer profissional disponível</strong>
+              <small>Primeiro horário livre</small>
+            </span>
+            <i aria-hidden="true"></i>
+          </button>
+
+          @if (bookingState.isLoadingProfessionals()) {
+            <p class="booking-feedback">Carregando profissionais...</p>
+          }
+
+          @if (bookingState.professionalsErrorMessage()) {
+            <div class="booking-feedback booking-feedback--error">
+              <span>{{ bookingState.professionalsErrorMessage() }}</span>
+              <button type="button" (click)="bookingState.retryLoadProfessionals()">Tentar novamente</button>
+            </div>
+          }
+
+          @if (bookingState.selectedService() && !bookingState.isLoadingProfessionals() && !bookingState.professionalsErrorMessage() && bookingState.professionals().length === 0) {
+            <p class="booking-feedback">{{ 'Nenhum profissional disponível para este serviço.' | term }}</p>
+          }
+
+          @for (professional of bookingState.professionals(); track professional.id) {
+            <button
+              class="professional-item"
+              type="button"
+              role="radio"
+              [attr.aria-checked]="bookingState.selectedProfessional()?.id === professional.id"
+              [class.is-selected]="bookingState.selectedProfessional()?.id === professional.id"
+              (click)="bookingState.selectProfessional(professional)"
+            >
+              @if (professional.photoUrl) {
+                <img [src]="professional.photoUrl" [alt]="professional.name" width="52" height="56" loading="lazy">
+              } @else {
+                <span class="professional-item__avatar">
+                  <app-icon name="user" [size]="18" />
+                </span>
+              }
+              <span>
+                <strong>{{ professional.name }}</strong>
+                <small>{{ professional.specialty }} · {{ professional.yearsOfExperience }} anos</small>
+                @if (bookingState.planProfessionalIds() !== 'any' && bookingState.isCoveredByPlan(professional.id)) {
+                  <small class="professional-item__plan">Pelo seu plano</small>
+                }
+              </span>
+              <i aria-hidden="true"></i>
+            </button>
+          }
+        </div>
+
+      </section>
+
+      <section class="booking-column booking-column--datetime" aria-labelledby="booking-datetime-title">
+        <div class="booking-column__heading">
+          <span>3</span>
+          <h2 id="booking-datetime-title">Data e horário</h2>
+        </div>
+
+        <div class="calendar-card">
+          <div class="calendar-card__header">
+            <button type="button" aria-label="Mês anterior" (click)="bookingState.showPreviousMonth()">
+              <app-icon name="chevron-left" [size]="16" />
+            </button>
+            <strong>{{ bookingState.monthLabel() }}</strong>
+            <button type="button" aria-label="Próximo mês" (click)="bookingState.showNextMonth()">
+              <app-icon name="chevron-right" [size]="16" />
+            </button>
+          </div>
+
+          <div class="calendar-card__weekdays" aria-hidden="true">
+            @for (weekDay of weekDays; track weekDay) {
+              <span>{{ weekDay }}</span>
+            }
+          </div>
+
+          <div class="calendar-card__days" role="grid" aria-labelledby="booking-datetime-title">
+            @for (calendarDay of bookingState.calendarDays(); track calendarDay.date) {
+              <button
+                type="button"
+                role="gridcell"
+                [disabled]="calendarDay.isPast || calendarDay.isUnavailable || !calendarDay.isCurrentMonth"
+                [class.is-muted]="!calendarDay.isCurrentMonth"
+                [class.is-today]="calendarDay.isToday"
+                [class.is-unavailable]="calendarDay.isUnavailable"
+                [class.is-selected]="bookingState.selectedDate() === calendarDay.date"
+                [attr.aria-selected]="bookingState.selectedDate() === calendarDay.date"
+                [attr.aria-label]="'Selecionar dia ' + calendarDay.dayNumber"
+                (click)="selectDate(calendarDay)"
+              >
+                {{ calendarDay.dayNumber }}
+              </button>
+            }
+          </div>
+        </div>
+
+        <h3 class="time-title">Horários disponíveis</h3>
+
+        @if (bookingState.isLoadingAvailability()) {
+          <p class="booking-feedback">Carregando horários disponíveis...</p>
+        }
+
+        @if (bookingState.availabilityErrorMessage()) {
+          <div class="booking-feedback booking-feedback--error">
+            <span>{{ bookingState.availabilityErrorMessage() }}</span>
+            <button type="button" (click)="bookingState.retryLoadAvailability()">Tentar novamente</button>
+          </div>
+        }
+
+        @if (bookingState.selectedDate() && !bookingState.isLoadingAvailability() && !bookingState.availabilityErrorMessage() && bookingState.timeOptions().length === 0) {
+          <p class="booking-feedback">Nenhum horário disponível para esta data.</p>
+        }
+
+        <div class="time-grid" role="radiogroup" aria-label="Horários disponíveis">
+          @for (timeOption of bookingState.timeOptions(); track timeOption.id) {
+            <button
+              type="button"
+              role="radio"
+              [disabled]="!timeOption.isAvailable"
+              [attr.aria-disabled]="!timeOption.isAvailable"
+              [attr.aria-checked]="bookingState.selectedAvailabilitySlot()?.startTime === timeOption.startTime && bookingState.selectedAvailabilitySlot()?.professionalId === timeOption.professionalId"
+              [class.is-selected]="bookingState.selectedAvailabilitySlot()?.startTime === timeOption.startTime && bookingState.selectedAvailabilitySlot()?.professionalId === timeOption.professionalId"
+              (click)="selectTime(timeOption)"
+            >
+              {{ timeOption.label }}
+            </button>
+          }
+        </div>
+
+        <div class="calendar-legend">
+          <span><i></i> Disponível</span>
+          <span><i class="is-selected"></i> Selecionado</span>
+          <span><i class="is-disabled"></i> Indisponível</span>
+        </div>
+
+        @if (bookingState.shouldShowWaitlist()) {
+          <section class="waitlist-box" aria-label="Fila de espera">
+            <strong>Não há horários disponíveis com {{ bookingState.selectedProfessional()?.name }} nesta data.</strong>
+            <p>Quer entrar na fila de espera caso algum horário seja liberado?</p>
+
+            <div class="waitlist-options" role="radiogroup" aria-label="Preferência de horário">
+              <button type="button" [class.is-selected]="bookingState.selectedWaitlistPeriod() === 'Morning'" (click)="bookingState.selectWaitlistPeriod('Morning')">Manhã</button>
+              <button type="button" [class.is-selected]="bookingState.selectedWaitlistPeriod() === 'Afternoon'" (click)="bookingState.selectWaitlistPeriod('Afternoon')">Tarde</button>
+              <button type="button" [class.is-selected]="bookingState.selectedWaitlistPeriod() === 'Any'" (click)="bookingState.selectWaitlistPeriod('Any')">Qualquer horário</button>
+            </div>
+
+            <button class="waitlist-action" type="button" [disabled]="!bookingState.canJoinWaitlist()" (click)="bookingState.joinWaitlist()">
+              {{ bookingState.isSubmittingWaitlist() ? 'Entrando...' : 'Entrar na fila de espera' }}
+            </button>
+
+            @if (bookingState.waitlistErrorMessage()) {
+              <small class="form-error">{{ bookingState.waitlistErrorMessage() }}</small>
+            }
+          </section>
+        }
+
+        @if (bookingState.savedWaitlistEntry(); as waitlistEntry) {
+          <section class="waitlist-box waitlist-box--confirmed" aria-label="Fila de espera confirmada">
+            <strong>Você está na fila de espera.</strong>
+            <p>Preferência: {{ waitlistEntry.entry.preferenceLabel }}. Caso um horário seja liberado, você poderá ser avisado.</p>
+            @if (waitlistEntry.cancellationLinkSentByEmail) {
+              <p>Enviamos para o seu e-mail um link para sair da fila quando quiser.</p>
+            } @else if (bookingState.waitlistCancellationUrl(); as cancellationUrl) {
+              <p class="waitlist-box__warning"><strong>Guarde este link:</strong> é o único jeito de sair da fila depois de fechar esta página.</p>
+              <a class="waitlist-box__link" [href]="cancellationUrl">{{ cancellationUrl }}</a>
+            }
+            <button class="waitlist-action waitlist-action--secondary" type="button" [disabled]="bookingState.isSubmittingWaitlist()" (click)="bookingState.leaveWaitlist()">
+              {{ bookingState.isSubmittingWaitlist() ? 'Saindo...' : 'Sair da fila' }}
+            </button>
+            @if (bookingState.waitlistErrorMessage()) {
+              <small class="form-error">{{ bookingState.waitlistErrorMessage() }}</small>
+            }
+          </section>
+        }
+      </section>
+
+      <!-- No celular o resumo fica na barra inferior: plano, aviso de horario nao coberto e resgate aparecem aqui, antes dos dados. -->
+      <div class="mobile-plan-choices">
+        <ng-container [ngTemplateOutlet]="planChoices" />
+      </div>
+
+      <section class="booking-column booking-column--customer" aria-labelledby="booking-customer-title">
+        <div class="booking-column__heading">
+          <span>4</span>
+          <h2 id="booking-customer-title">Seus dados</h2>
+        </div>
+
+        <form class="customer-form" [formGroup]="bookingState.customerForm">
+          @if (bookingState.authenticatedCustomer(); as customer) {
+            <section class="authenticated-customer" [attr.aria-label]="'Cliente autenticado' | term">
+              <span>Agendando como</span>
+              <strong>{{ customer.name }}</strong>
+              <small>{{ customer.phone || 'Telefone não informado' }}</small>
+              <small>{{ customer.email || 'E-mail não informado' }}</small>
+              <a [routerLink]="'cliente/perfil' | tenantUrl">Atualizar meus dados</a>
+            </section>
+          } @else {
+          <label>
+            Nome completo *
+            <input type="text" formControlName="fullName" autocomplete="name" placeholder="Digite seu nome completo">
+            @if (bookingState.shouldShowFieldError('fullName')) {
+              <small>Informe seu nome completo.</small>
+            }
+          </label>
+          <label>
+            Telefone / WhatsApp *
+            <input type="tel" formControlName="phone" autocomplete="tel" placeholder="(12) 99999-9999">
+            @if (bookingState.shouldShowFieldError('phone')) {
+              <small>Informe um telefone válido.</small>
+            }
+          </label>
+
+          <label>
+            E-mail opcional
+            <input type="email" formControlName="email" autocomplete="email" placeholder="seu@email.com">
+            @if (bookingState.shouldShowFieldError('email')) {
+              <small>Informe um e-mail válido.</small>
+            }
+          </label>
+          }
+
+          <label>
+            Observações opcional
+            <textarea rows="4" formControlName="notes" [placeholder]="'Alguma observação sobre o serviço?' | term"></textarea>
+          </label>
+
+          <label class="customer-form__policy">
+            <input type="checkbox" formControlName="acceptedCancellationPolicy">
+            <span>Concordo com a política de cancelamento e remarcação de horários.</span>
+          </label>
+
+          @if (bookingState.shouldShowFieldError('acceptedCancellationPolicy')) {
+            <small class="form-error">Você precisa aceitar a política de cancelamento.</small>
+          }
+
+          <!-- Abaixo do formulario (e nao no resumo, que some no celular): visivel nas duas larguras. -->
+          @if (bookingState.emailConfirmationMessage()) {
+            <div class="email-confirmation" role="alert">
+              <p>{{ bookingState.emailConfirmationMessage() }}</p>
+              <button type="button" class="email-confirmation__resend" (click)="bookingState.resendEmailConfirmation()">Reenviar link</button>
+              @if (bookingState.emailConfirmationFeedback()) {
+                <p role="status">{{ bookingState.emailConfirmationFeedback() }}</p>
+              }
+            </div>
+          }
+
+          @if (privacyPolicyPath) {
+            <p class="privacy-notice">
+              Usamos seus dados só para o agendamento e os lembretes.
+              <a [routerLink]="privacyPolicyPath" target="_blank" rel="noopener">Política de Privacidade</a>
+            </p>
+          }
+        </form>
+      </section>
+    </div>
+
+    <section class="summary-area" [class.is-confirmed]="bookingState.savedBooking()" aria-label="Resumo do agendamento" aria-live="polite">
+      @if (bookingState.savedBooking(); as booking) {
+        <div class="confirmation-summary">
+          <span class="summary-area__title">{{ bookingState.replacingAppointmentId() ? 'Horário remarcado' : 'Horário reservado' }}</span>
+          @if (bookingState.replacingAppointmentId()) {
+            <p class="booking-reschedule-done">O horário anterior foi cancelado.</p>
+          }
+          <h2>{{ booking.code }}</h2>
+          <dl class="summary-list">
+            <div><app-icon name="scissors" [size]="17" /><dt>{{ 'Serviço' | term }}</dt><dd>{{ booking.service.name }}</dd></div>
+            <div><app-icon name="user" [size]="17" /><dt>Profissional</dt><dd>{{ booking.professional?.name || 'Primeiro profissional disponível' }}</dd></div>
+            <div><app-icon name="calendar" [size]="17" /><dt>Data</dt><dd>{{ bookingState.getConfirmedBookingDateLabel(booking) }}</dd></div>
+            <div><app-icon name="clock" [size]="17" /><dt>Horário</dt><dd>{{ booking.time }}</dd></div>
+            <div><app-icon name="clock" [size]="17" /><dt>Duração</dt><dd>{{ booking.service.duration }}</dd></div>
+            <div><app-icon name="credit-card" [size]="17" /><dt>Valor</dt><dd>{{ bookingState.getConfirmedBookingPriceLabel(booking) }}</dd></div>
+            @if (booking.subscriptionPlanName) {
+              <div><app-icon name="credit-card" [size]="17" /><dt>Plano</dt><dd>Coberto pelo {{ booking.subscriptionPlanName }}</dd></div>
+            }
+            <div><app-icon name="user" [size]="17" /><dt>{{ 'Cliente' | term }}</dt><dd>{{ booking.customer.fullName }}</dd></div>
+            <div><app-icon name="message-circle" [size]="17" /><dt>Telefone</dt><dd>{{ booking.customer.phone }}</dd></div>
+          </dl>
+        </div>
+
+        <div class="summary-actions">
+          <a class="button button-secondary" [href]="bookingState.getCalendarUrl()" target="_blank" rel="noopener">Adicionar ao calendário</a>
+          @if (bookingState.getWhatsappUrl(); as whatsappUrl) {
+            <a class="button button-secondary" [href]="whatsappUrl" target="_blank" rel="noopener">Falar pelo WhatsApp</a>
+          }
+          @if (bookingState.isAuthenticatedCustomer()) {
+            <a class="button button-secondary" [routerLink]="'cliente/agendamentos' | tenantUrl">Ver meus agendamentos</a>
+          }
+          <button class="button button-secondary" type="button" (click)="bookingState.resetBooking()">Fazer novo agendamento</button>
+          <button class="button button-primary" type="button" (click)="goToHome()">Voltar para o início</button>
+        </div>
+      } @else {
+        <div class="summary-details">
+          <span class="summary-area__title">Resumo do agendamento</span>
+          <dl class="summary-list">
+            <div><app-icon name="scissors" [size]="17" /><dt>{{ 'Serviço' | term }}</dt><dd>{{ bookingState.summary().serviceName }}</dd></div>
+            <div><app-icon name="user" [size]="17" /><dt>Profissional</dt><dd>{{ bookingState.summary().professionalName }}</dd></div>
+            <div><app-icon name="calendar" [size]="17" /><dt>Data</dt><dd>{{ bookingState.summary().dateLabel }}</dd></div>
+            <div><app-icon name="clock" [size]="17" /><dt>Horário</dt><dd>{{ bookingState.summary().time }}</dd></div>
+            <div><app-icon name="clock" [size]="17" /><dt>Duração</dt><dd>{{ bookingState.summary().duration }}</dd></div>
+            <div><app-icon name="credit-card" [size]="17" /><dt>Valor</dt><dd>{{ bookingState.summary().priceLabel }}</dd></div>
+            @if (bookingState.summary().subscriptionLabel) {
+              <div><app-icon name="credit-card" [size]="17" /><dt>Plano</dt><dd>{{ bookingState.summary().subscriptionLabel }}</dd></div>
+            }
+          </dl>
+        </div>
+
+        <ng-container [ngTemplateOutlet]="planChoices" />
+
+        <section class="payment-box" aria-label="Forma de pagamento">
+          <span><app-icon name="credit-card" [size]="18" /> Forma de pagamento</span>
+          <p>{{ bookingState.summary().paymentMessage }}</p>
+          @if (bookingState.summary().depositLabel) {
+            <p>{{ bookingState.summary().depositLabel }}</p>
+          }
+        </section>
+
+        <div class="summary-action">
+          <div class="summary-total">
+            <span>Total</span>
+            <strong>{{ bookingState.summary().priceLabel }}</strong>
+          </div>
+
+          <button class="confirm-button" type="button" [disabled]="!bookingState.canConfirmBooking()" (click)="bookingState.confirmBooking()">
+            <app-icon name="calendar" [size]="18" />
+            {{ bookingState.isSubmitting() ? 'Confirmando...' : 'Confirmar agendamento' }}
+          </button>
+
+          @if (bookingState.appointmentErrorMessage()) {
+            <p class="booking-error" role="alert">{{ bookingState.appointmentErrorMessage() }}</p>
+          }
+
+          <small class="summary-secure"><app-icon name="shield" [size]="15" /> Seus dados estão protegidos</small>
+        </div>
+      }
+    </section>
+
+    <footer class="booking-benefits">
+      <span><app-icon name="shield" [size]="18" /> Agendamento rápido e seguro</span>
+      <span><app-icon name="clock" [size]="18" /> Lembretes automáticos</span>
+      <span><app-icon name="check" [size]="18" /> Alteração ou cancelamento fácil</span>
+      <span><app-icon name="message-circle" [size]="18" /> Atendimento via WhatsApp</span>
+    </footer>
+  </main>
+
+  @if (!bookingState.savedBooking()) {
+    <div class="mobile-booking-bar" [class.is-open]="bookingState.isMobileSummaryOpen()">
+      <button type="button" class="mobile-booking-bar__summary" aria-label="Abrir resumo do agendamento" [attr.aria-expanded]="bookingState.isMobileSummaryOpen()" (click)="bookingState.toggleMobileSummary()">
+        <span>{{ bookingState.summary().serviceName }}</span>
+        <strong>{{ bookingState.summary().priceLabel }}</strong>
+      </button>
+      <button type="button" class="mobile-booking-bar__confirm" [disabled]="!bookingState.canConfirmBooking()" (click)="bookingState.confirmBooking()">Confirmar</button>
+      <!-- No celular o resumo fica escondido: o erro aparece aqui, na barra fixa, junto do botao. -->
+      @if (bookingState.appointmentErrorMessage()) {
+        <p class="booking-error mobile-booking-bar__error" role="alert">{{ bookingState.appointmentErrorMessage() }}</p>
+      }
+      @if (bookingState.isMobileSummaryOpen()) {
+        <div class="mobile-booking-bar__panel" aria-live="polite">
+          <p>{{ bookingState.summary().professionalName }}</p>
+          <p>{{ bookingState.summary().dateLabel }} · {{ bookingState.summary().time }}</p>
+          <p>{{ bookingState.summary().paymentMessage }}</p>
+        </div>
+      }
+    </div>
+  }
+
+  @if (bookingState.confirmationDialogOpen() && bookingState.savedBooking(); as booking) {
+    <div class="booking-confirmation" (keydown.escape)="bookingState.closeConfirmation()">
+      <div class="booking-confirmation__backdrop" aria-hidden="true" (click)="bookingState.closeConfirmation()"></div>
+      <section class="booking-confirmation__panel" role="dialog" aria-modal="true" aria-labelledby="booking-confirmation-title">
+        <button #confirmationClose class="booking-confirmation__close" type="button" aria-label="Fechar" (click)="bookingState.closeConfirmation()">
+          <app-icon name="x" [size]="18" />
+        </button>
+        <span class="booking-confirmation__badge" aria-hidden="true"><app-icon name="check" [size]="22" /></span>
+        <h2 id="booking-confirmation-title">{{ bookingState.replacingAppointmentId() ? 'Horário remarcado' : 'Agendamento confirmado' }}</h2>
+        @if (companyName()) {
+          <p class="booking-confirmation__company">{{ companyName() }}</p>
+        }
+        <dl class="booking-confirmation__summary">
+          <div><dt>{{ 'Serviço' | term }}</dt><dd>{{ booking.service.name }}</dd></div>
+          <div><dt>Profissional</dt><dd>{{ booking.professional?.name || 'Primeiro profissional disponível' }}</dd></div>
+          <div><dt>Data e hora</dt><dd>{{ bookingState.getConfirmedBookingDateLabel(booking) }}, às {{ booking.time }}</dd></div>
+          <div><dt>Código</dt><dd>{{ booking.code }}</dd></div>
+        </dl>
+        <div class="booking-confirmation__actions">
+          @if (bookingState.isAuthenticatedCustomer()) {
+            <a class="button button-primary" [routerLink]="'cliente/agendamentos' | tenantUrl">{{ 'Ver na Área do Cliente' | term }}</a>
+          }
+          <button class="button button-secondary" type="button" (click)="bookingState.resetBooking()">Fazer outro agendamento</button>
+        </div>
+      </section>
+    </div>
+  }
+</section>
+
+<!-- Plano e resgate: no resumo (computador) e no corpo da pagina (celular, abaixo de 760 px). -->
+<ng-template #planChoices>
+  @if (bookingState.isAuthenticatedCustomer() && bookingState.selectedService() && bookingState.selectedDate() && (bookingState.selectedAvailabilitySlot() || bookingState.selectedProfessional())) {
+    <section class="payment-box" aria-label="Benefício de assinatura">
+      @if (bookingState.isLoadingSubscriptionCoverage()) {
+        <span><app-icon name="clock" [size]="18" /> Consultando plano</span>
+      } @else if (bookingState.subscriptionCoverage(); as coverage) {
+        @if (coverage.isCovered && coverage.planName) {
+          <span><app-icon name="credit-card" [size]="18" /> {{ coverage.planName }}</span>
+          <p>
+            Coberto pelo {{ coverage.planName }}: {{ coverage.availableQuantity }} {{ coverage.availableQuantity === 1 ? 'utilização disponível' : 'utilizações disponíveis' }}@if (coverage.periodEndDate) { até {{ coverage.periodEndDate | date: 'dd/MM' }}}.
+          </p>
+          <button class="button button-secondary" type="button" (click)="bookingState.toggleSubscriptionBenefit()">
+            {{ bookingState.useSubscriptionBenefit() ? 'Usar pagamento comum' : 'Usar benefício do plano' }}
+          </button>
+        } @else if (bookingState.uncoveredWarning(); as warning) {
+          <span class="payment-box__uncovered" role="status"><app-icon name="alert-circle" [size]="18" /> Este horário não é coberto pelo seu plano</span>
+          <p>{{ warning.reason }}</p>
+          <p><strong>Valor a pagar: {{ warning.chargeLabel }}</strong></p>
+        } @else if (coverage.planName) {
+          <span><app-icon name="credit-card" [size]="18" /> {{ coverage.planName }}</span>
+          <p>Limite do plano atingido neste período.</p>
+        }
+      }
+    </section>
+  }
+
+  @if (bookingState.isAuthenticatedCustomer() && bookingState.usableRedemptions().length > 0) {
+    <section class="payment-box" aria-label="Resgate de pontos">
+      <span><app-icon name="award" [size]="18" /> Resgate: {{ bookingState.usableRedemptions()[0].rewardName }}</span>
+      <p>
+        @if (bookingState.selectedRedemption()) {
+          Este horário usa o seu resgate e sai sem custo. Se cancelar o horário, o resgate volta para você usar depois.
+        } @else {
+          Você tem um resgate deste serviço. Usando, o horário sai sem custo.
+        }
+      </p>
+      <button class="button button-secondary" type="button" (click)="bookingState.toggleRedemption()">
+        {{ bookingState.selectedRedemption() ? 'Não usar o resgate' : 'Usar resgate' }}
+      </button>
+    </section>
+  }
+</ng-template>

@@ -1,0 +1,368 @@
+// Classes de /minha-conta (Fase 4), no mesmo padrao da area do cliente de cada empresa (paleta e medidas do
+// client-dashboard). Paginas e componentes incluem este arquivo (o estilo de um componente nao alcanca os outros); as
+// paginas incluem antes o my-account-host.scss, com a paleta e o fundo.
+
+
+.conta-page {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.conta-hero {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.conta-eyebrow {
+  margin: 0 0 0.25rem;
+  color: var(--latao-700);
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+.conta-hero h1 {
+  margin: 0;
+  color: var(--verde-900);
+  font-family: 'Fraunces', serif;
+  font-size: 2.1rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.conta-subtitle {
+  margin: 0.35rem 0 0;
+  max-width: 36rem;
+  color: var(--grafite-500);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.conta-section {
+  display: grid;
+  gap: 0.9rem;
+  padding: 1.25rem 1.35rem;
+  border-bottom: 1px solid #dedad2;
+  border-radius: 14px;
+  background: var(--marfim-50);
+}
+
+.conta-section h2 {
+  margin: 0;
+  color: var(--verde-900);
+  font-family: 'Fraunces', serif;
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+
+.conta-section__hint {
+  margin: 0;
+  color: var(--grafite-500);
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+
+.conta-btn,
+.conta-btn-secondary,
+.conta-btn-danger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  border-radius: 8px;
+  padding: 0 1.15rem;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 500;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.conta-btn {
+  border: 0;
+  background: var(--verde-900);
+  color: var(--marfim-50);
+}
+
+.conta-btn:hover:not(:disabled) {
+  background: var(--verde-700);
+}
+
+.conta-btn-secondary {
+  border: 1px solid var(--linha);
+  background: #fff;
+  color: var(--grafite-900);
+}
+
+.conta-btn-secondary:hover:not(:disabled),
+.conta-btn-secondary[aria-pressed='true'] {
+  border-color: var(--verde-900);
+  color: var(--verde-900);
+}
+
+.conta-btn-secondary[aria-pressed='true'] {
+  background: #edf2ee;
+  font-weight: 600;
+}
+
+.conta-btn-danger {
+  border: 1px solid var(--perigo);
+  background: #fff;
+  color: var(--perigo);
+}
+
+.conta-btn-danger--solid {
+  background: var(--perigo);
+  color: #fff;
+}
+
+.conta-btn:disabled,
+.conta-btn-secondary:disabled,
+.conta-btn-danger:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.conta-actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+// Lista de cartoes (empresas e agendamentos).
+.conta-list {
+  display: grid;
+  gap: 0.7rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.conta-card {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--linha);
+  border-radius: 12px;
+  background: #fff;
+}
+
+.conta-card__logo {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: var(--bege-100);
+  color: var(--verde-900);
+  font-family: 'Fraunces', serif;
+  font-size: 1.1rem;
+  overflow: hidden;
+}
+
+.conta-card__logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.conta-card__body {
+  display: grid;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.conta-card__title {
+  margin: 0;
+  color: var(--grafite-900);
+  font-size: 0.95rem;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.conta-card__meta {
+  margin: 0;
+  color: var(--grafite-500);
+  font-size: 0.84rem;
+  overflow-wrap: anywhere;
+}
+
+.conta-card__side {
+  display: grid;
+  justify-items: end;
+  gap: 0.35rem;
+}
+
+.conta-card__side--row {
+  grid-auto-flow: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+// Coracao do favorito (Fase 6) nas cores da conta.
+.conta-favorite {
+  --favorite-border: var(--linha);
+  --favorite-background: #fff;
+  --favorite-color: var(--verde-900);
+  --favorite-active-color: #b42345;
+  --favorite-focus: var(--verde-700);
+}
+
+.conta-link {
+  color: var(--verde-900);
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.conta-status {
+  display: inline-flex;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  background: #edf2ee;
+  color: var(--verde-900);
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.conta-status--off {
+  background: #f3ece4;
+  color: var(--grafite-500);
+}
+
+// Estados vazio, carregando e erro.
+.conta-empty {
+  display: grid;
+  justify-items: start;
+  gap: 0.6rem;
+  padding: 1.25rem;
+  border: 1px dashed var(--linha);
+  border-radius: 12px;
+  color: var(--grafite-500);
+  font-size: 0.9rem;
+}
+
+.conta-empty p {
+  margin: 0;
+}
+
+.conta-skeleton {
+  height: 72px;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #f1ece2 0%, #f8f4ec 50%, #f1ece2 100%);
+  background-size: 200% 100%;
+  animation: conta-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes conta-pulse {
+  from {
+    background-position: 100% 0;
+  }
+
+  to {
+    background-position: -100% 0;
+  }
+}
+
+.conta-feedback {
+  margin: 0;
+  padding: 0.7rem 0.9rem;
+  border-radius: 10px;
+  background: #e5efe8;
+  color: #1c4d33;
+  font-size: 0.88rem;
+}
+
+.conta-error {
+  margin: 0;
+  color: #b42318;
+  font-size: 0.86rem;
+}
+
+// Formularios.
+.conta-form {
+  display: grid;
+  gap: 0.85rem;
+  max-width: 30rem;
+}
+
+.conta-field {
+  display: grid;
+  gap: 0.35rem;
+  color: var(--grafite-900);
+  font-size: 0.86rem;
+  font-weight: 500;
+}
+
+.conta-field input,
+.conta-field select {
+  min-height: 44px;
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--linha);
+  border-radius: 8px;
+  padding: 0 0.75rem;
+  background: #fff;
+  color: var(--grafite-900);
+  font: inherit;
+  font-weight: 400;
+}
+
+.conta-field input[readonly] {
+  background: var(--bege-100);
+}
+
+.conta-filters {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.conta-filters .conta-field {
+  min-width: 14rem;
+}
+
+.conta-danger {
+  border: 1px solid #ecd2cf;
+}
+
+.conta-danger h2 {
+  color: var(--perigo);
+}
+
+@media (max-width: 760px) {
+  .conta-hero h1 {
+    font-size: 1.7rem;
+  }
+
+  .conta-card {
+    grid-template-columns: auto 1fr;
+  }
+
+  .conta-card__side {
+    grid-column: 1 / -1;
+    justify-items: start;
+    grid-auto-flow: column;
+    justify-content: start;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .conta-filters .conta-field {
+    min-width: 0;
+    flex: 1 1 100%;
+  }
+
+  .conta-actions > * {
+    flex: 1 1 auto;
+  }
+}

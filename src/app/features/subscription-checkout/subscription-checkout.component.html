@@ -1,0 +1,96 @@
+<main class="subscription-checkout">
+  <section class="subscription-checkout__panel" appRevealOnScroll>
+    <a class="subscription-checkout__back" [routerLink]="'' | tenantUrl">Voltar aos planos</a>
+
+    @if (isLoading()) {
+      <p class="subscription-checkout__state">Carregando plano.</p>
+    }
+
+    @if (errorMessage()) {
+      <p class="subscription-checkout__state subscription-checkout__state--error">{{ errorMessage() }}</p>
+    }
+
+    @if (emailConfirmationMessage()) {
+      <div class="subscription-checkout__state subscription-checkout__notice" role="alert">
+        <p>{{ emailConfirmationMessage() }}</p>
+        <button class="subscription-checkout__notice-action" type="button" (click)="resendEmailConfirmation()">Reenviar link</button>
+        @if (emailConfirmationFeedback()) {
+          <p role="status">{{ emailConfirmationFeedback() }}</p>
+        }
+      </div>
+    }
+
+    @if (createdSubscription(); as subscription) {
+      <div class="subscription-checkout__success" role="status">
+        <span class="eyebrow">Solicitação enviada</span>
+        <h1>{{ subscription.planName }}</h1>
+        <p>Sua assinatura foi criada como aguardando pagamento. @if (companyName()) { {{ companyName() }} vai confirmar o pagamento com você.} @else {A equipe vai confirmar o pagamento com você.}</p>
+        <dl>
+          <div><dt>Status</dt><dd>Aguardando pagamento</dd></div>
+          <div><dt>Início</dt><dd>{{ subscription.startDate | date: 'dd/MM/yyyy' }}</dd></div>
+          <div><dt>Próxima renovação</dt><dd>{{ subscription.nextRenewalDate | date: 'dd/MM/yyyy' }}</dd></div>
+        </dl>
+        <a class="button button-primary" [routerLink]="'cliente' | tenantUrl">Ir para minha área</a>
+      </div>
+    } @else if (plan(); as selectedPlan) {
+      <div class="subscription-checkout__summary">
+        <div>
+          <span class="eyebrow">Contratar plano</span>
+          <h1>{{ selectedPlan.name }}</h1>
+          @if (selectedPlan.description) {
+            <p>{{ selectedPlan.description }}</p>
+          }
+        </div>
+
+        <div class="subscription-checkout__price">
+          <strong>{{ selectedPlan.price | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong>
+          <span>/ {{ getBillingPeriodLabel(selectedPlan) }}</span>
+        </div>
+
+        @if (overlapWarning()) {
+          <p class="subscription-checkout__overlap" role="status">{{ overlapWarning() }} Você pode continuar: ao agendar, usamos primeiro o plano cujo período termina antes.</p>
+        }
+
+        @if (selectedPlan.saleEndsOn) {
+          <p class="subscription-checkout__promo">
+            Plano promocional: assine até {{ selectedPlan.saleEndsOn | date: 'dd/MM/yyyy' }}. Os benefícios valem até o fim do
+            ciclo mensal em curso nessa data, e o plano não renova depois.
+          </p>
+        }
+
+        <section aria-label="Benefícios do plano">
+          <h2>Benefícios</h2>
+          <ul>
+            @for (benefit of selectedPlan.benefits; track benefit.serviceId) {
+              <li>
+                <strong>{{ benefit.serviceName }}</strong>
+                <span>{{ benefit.quantityPerPeriod }} {{ benefit.quantityPerPeriod === 1 ? 'utilização' : 'utilizações' }} por mês</span>
+              </li>
+            }
+          </ul>
+        </section>
+
+        <dl class="subscription-checkout__meta">
+          <div><dt>Periodicidade</dt><dd>{{ getBillingPeriodLabel(selectedPlan) }}</dd></div>
+          <div><dt>Quem atende</dt><dd>{{ describePlanProfessionals(selectedPlan.professionalNames) }}</dd></div>
+          <div><dt>Pagamento</dt><dd>Confirmação administrativa nesta etapa</dd></div>
+        </dl>
+
+        @if (needsPhone()) {
+          <label class="subscription-checkout__phone">
+            Celular / WhatsApp
+            <input type="tel" [formControl]="phoneControl" autocomplete="tel" placeholder="(12) 99999-9999" />
+            <small>{{ companyName() || 'A empresa' }} usa este número para falar com você. Ele também fica salvo na sua conta.</small>
+          </label>
+          @if (phoneControl.touched && phoneControl.invalid) {
+            <p class="subscription-checkout__field-error">Informe um celular válido.</p>
+          }
+        }
+
+        <button class="button button-primary" type="button" [disabled]="isSubmitting()" (click)="confirmSubscription()">
+          {{ isSubmitting() ? 'Solicitando...' : 'Confirmar solicitação' }}
+        </button>
+      </div>
+    }
+  </section>
+</main>

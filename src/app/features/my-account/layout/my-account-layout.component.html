@@ -1,0 +1,41 @@
+<div class="admin-shell client-admin-shell" [class.admin-shell--collapsed]="sidebarCollapsed()" [style.--admin-current-sidebar-width]="sidebarWidth()">
+  <app-admin-sidebar
+    [collapsed]="sidebarCollapsed()"
+    [mobileOpened]="mobileSidebarOpened()"
+    [navigationItems]="navigationItems"
+    [brandNameOverride]="brand.name"
+    [logoUrlOverride]="brand.iconUrl"
+    brandTag="Minha conta"
+    ariaLabel="Menu da conta"
+    navigationAriaLabel="Rotas da conta"
+    (closeMobile)="closeMobileMenu()"
+  />
+
+  <section class="admin-shell__workspace">
+    <app-admin-header
+      [sidebarCollapsed]="sidebarCollapsed()"
+      businessLabel=""
+      [account]="headerAccount()"
+      profileRoute="/minha-conta/dados"
+      profileLabel="Dados da conta"
+      menuAriaLabel="menu da conta"
+      (logoutRequested)="logout()"
+      (toggleDesktopSidebar)="toggleDesktopSidebar()"
+      (toggleMobileSidebar)="toggleMobileMenu()"
+    >
+      @if (!compact()) {
+        <app-my-account-company-picker adminHeaderStart />
+      }
+    </app-admin-header>
+
+    @if (compact()) {
+      <div class="conta-empresa-bar">
+        <app-my-account-company-picker />
+      </div>
+    }
+
+    <main id="conteudo-conta" class="admin-shell__content client-admin-shell__content" tabindex="-1">
+      <router-outlet />
+    </main>
+  </section>
+</div>

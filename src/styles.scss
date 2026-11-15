@@ -1,0 +1,1442 @@
+:root {
+  --color-black: #0a0a0a;
+  --color-charcoal: #0d0f0d;
+  --color-graphite: #121412;
+  --color-leather: #1b201c;
+  --color-ivory: #f3f0e8;
+  --color-sand: #a7aaa5;
+  /*
+   * Cores da barbearia. O BrandingService grava so as tres --company-* (as das configuracoes) e o texto legivel
+   * sobre cada uma (--brand-on-*); o resto da paleta do site deriva delas aqui. Principal: botoes, links e selecao.
+   * Destaque: hover e realces. Secundaria: detalhes decorativos (linhas, icones, etiquetas). Os deslocamentos em
+   * OKLCH reproduzem os tons escuro e claro da paleta original do site a partir de qualquer cor.
+   */
+  --company-primary-color: #1f2933;
+  --company-secondary-color: #f4f6f8;
+  --company-accent-color: #c6922c;
+  --brand-on-primary: var(--color-ivory);
+  --brand-on-secondary: var(--color-black);
+  --brand-on-accent: var(--color-black);
+  --brand-primary: var(--company-primary-color);
+  --brand-primary-deep: oklch(from var(--company-primary-color) calc(l - 0.1472) calc(c - 0.0351) calc(h + 3.8));
+  --brand-accent: var(--company-accent-color);
+  --brand-secondary: var(--company-secondary-color);
+  --brand-secondary-deep: oklch(from var(--company-secondary-color) calc(l - 0.1354) calc(c - 0.012) calc(h - 3.8));
+  --brand-secondary-light: oklch(from var(--company-secondary-color) calc(l + 0.1034) calc(c - 0.0089) calc(h + 5.4));
+  --color-text-primary: #f3f0e8;
+  --color-text-secondary: #a7aaa5;
+  --color-error: #c7685b;
+  --color-success: #1c8a62;
+  --surface-primary: var(--color-charcoal);
+  --surface-secondary: var(--color-graphite);
+  --surface-muted: #101210;
+  --border-subtle: rgba(243, 240, 232, 0.12);
+  --border-brand: rgb(from var(--company-accent-color) r g b / 0.46);
+  --border-secondary-subtle: rgb(from var(--company-secondary-color) r g b / 0.34);
+  --brand-interactive: var(--company-primary-color);
+  --brand-interactive-hover: var(--company-accent-color);
+  --brand-interactive-soft: rgb(from var(--company-primary-color) r g b / 0.14);
+  --shadow-editorial: 0 34px 80px rgba(0, 0, 0, 0.34);
+  --font-display: "Cormorant Garamond", Georgia, serif;
+  --font-interface: "Manrope", Arial, sans-serif;
+  --font-condensed: "Barlow Condensed", Arial, sans-serif;
+  --radius-none: 0;
+  --radius-control: 6px;
+  --radius-feature: 14px;
+  --header-height: 76px;
+  --content-width: 1180px;
+  --form-control-height: 2.55rem;
+  --form-control-padding-x: 0.75rem;
+  --form-control-padding-icon: 2.25rem;
+  --form-control-font-size: 0.95rem;
+  --form-control-line-height: 1.25;
+  --admin-page-title-font-size: clamp(1.4rem, 2vw, 2rem);
+  --admin-page-title-line-height: 1.15;
+  --admin-page-title-font-family: var(--admin-font-display);
+  --admin-page-title-font-weight: 500;
+  --transition-fast: 180ms ease;
+  --transition-medium: 320ms ease;
+  --z-header: 100;
+  --z-modal: 200;
+
+  --admin-font-display: "Fraunces", serif;
+  --admin-font-interface: "Poppins", "Manrope", Arial, sans-serif;
+  --admin-primary: #173425;
+  --admin-primary-strong: #24503a;
+  --admin-on-primary: #fbf7ee;
+  --admin-secondary: #24503a;
+  --admin-background: #faf9f5;
+  --admin-surface: #fbf8f0;
+  --admin-surface-muted: #f4eee0;
+  --admin-surface-raised: #fffdf7;
+  --admin-control-background: #fbf8f0;
+  --admin-sidebar-background: #15140f;
+  --admin-sidebar-text: var(--color-text-primary);
+  --admin-sidebar-text-muted: var(--color-text-secondary);
+  --admin-sidebar-active-background: rgba(23, 52, 37, 0.22);
+  --admin-backdrop: rgba(23, 34, 26, 0.45);
+  --admin-header-background: #faf9f5;
+  --admin-text: #2a2520;
+  --admin-text-muted: #726a5d;
+  --admin-border: #e2d8c2;
+  --admin-border-strong: #cbbb98;
+  --admin-neutral: #726a5d;
+  --admin-neutral-background: #f4eee0;
+  --admin-success: #24503a;
+  --admin-warning: #8c6828;
+  --admin-warning-background: #f3e9d2;
+  --admin-danger: #b5544a;
+  --admin-danger-background: #f3e2df;
+  --admin-success-background: #dce9df;
+  --admin-accent: #b98b3e;
+  --admin-accent-strong: #8c6828;
+  /* Tags da agenda: avulso, assinatura, encaixe e HL CRM (cards e legenda). */
+  --agenda-tag-single: #2c4a63;
+  --agenda-tag-single-background: #e4ebf1;
+  --agenda-tag-subscription: #6b4a7a;
+  --agenda-tag-subscription-background: #eee4f2;
+  --agenda-tag-fit-in: #8a5a3c;
+  --agenda-tag-fit-in-background: #f2e4da;
+  --agenda-tag-crm: #1d6b73;
+  --agenda-tag-crm-background: #dcefef;
+  /* Series dos graficos (shared/components/charts), sempre da paleta do sistema. */
+  --chart-1: var(--admin-primary-strong);
+  --chart-2: var(--admin-accent);
+  --chart-3: var(--agenda-tag-single);
+  --chart-4: var(--agenda-tag-subscription);
+  --chart-5: var(--agenda-tag-crm);
+  --chart-6: var(--admin-danger);
+  --admin-input-border: #e5e5e4;
+  --admin-input-focus: #a87c3f;
+  --admin-input-focus-glow: rgba(168, 124, 63, 0.14);
+  /* Medida unica dos controles de formulario (texto, numero, e-mail, select, seletor e data do sistema). */
+  --admin-input-height: var(--form-control-height);
+  --admin-input-radius: var(--radius-control);
+  --admin-input-padding-x: var(--form-control-padding-x);
+  --admin-input-font-size: var(--form-control-font-size);
+  --admin-shadow: 0 8px 24px rgba(23, 52, 37, 0.14);
+  --admin-shadow-soft: 0 1px 3px rgba(23, 52, 37, 0.08);
+  --admin-header-height: 4.75rem;
+  --admin-sidebar-width: 17rem;
+  --admin-sidebar-collapsed-width: 5rem;
+  --admin-z-header: 90;
+  --admin-z-sidebar: 120;
+
+  --background-main: var(--surface-primary);
+  --background-secondary: var(--surface-secondary);
+  --surface: var(--surface-secondary);
+  --surface-soft: var(--color-leather);
+  --gold: var(--brand-secondary);
+  --gold-light: var(--brand-secondary-light);
+  --text: var(--color-text-primary);
+  --text-muted: var(--color-text-secondary);
+  --border-gold: var(--border-brand);
+  --border-soft: var(--border-subtle);
+  --shadow: var(--shadow-editorial);
+  --font-title: var(--font-display);
+  --font-body: var(--font-interface);
+}
+
+* {
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: #f2e6d2 transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 8px;
+  background-color: #f2e6d2;
+  background-clip: padding-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: color-mix(in srgb, #f2e6d2 75%, black);
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--header-height);
+  overflow-x: hidden;
+  background: var(--surface-primary);
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  color: var(--color-text-primary);
+  background:
+    linear-gradient(90deg, rgba(243, 240, 232, 0.028) 1px, transparent 1px) 0 0 / 72px 72px,
+    radial-gradient(circle at 78% 14%, rgb(from var(--brand-primary-deep) r g b / 0.44), transparent 24rem),
+    linear-gradient(180deg, var(--surface-primary), var(--color-black) 42%, var(--surface-primary));
+  font-family: var(--font-interface);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+body.menu-open {
+  overflow: hidden;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  filter: saturate(0.78) contrast(1.08) sepia(0.08);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--brand-accent);
+  outline-offset: 5px;
+}
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="color"]):focus,
+select:focus,
+textarea:focus {
+  border-color: var(--brand-accent);
+  outline: 0;
+  box-shadow: 0 0 0 1px rgb(from var(--brand-accent) r g b / 0.72);
+}
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="color"]),
+select {
+  min-height: var(--form-control-height);
+  border-radius: var(--radius-control);
+  padding-block: 0;
+  padding-inline: var(--form-control-padding-x);
+  font-size: var(--form-control-font-size);
+  line-height: var(--form-control-line-height);
+}
+
+.skip-link {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1000;
+  padding: 0.75rem 1rem;
+  background: var(--color-ivory);
+  color: var(--color-charcoal);
+  border-radius: var(--radius-control);
+  transform: translateY(-140%);
+  transition: transform var(--transition-fast);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.page-section {
+  display: grid;
+  align-items: center;
+  min-height: 100svh;
+  padding: clamp(4.5rem, 8vw, 8rem) clamp(1rem, 4vw, 4rem);
+}
+
+.section-inner {
+  width: min(var(--content-width), 100%);
+  margin: 0 auto;
+}
+
+.section-heading {
+  position: relative;
+  max-width: 860px;
+  margin-bottom: clamp(2rem, 5vw, 4rem);
+  text-align: left;
+}
+
+.section-heading::after,
+.brand-accent-line {
+  content: "";
+  display: block;
+  width: min(11rem, 44vw);
+  height: 2px;
+  margin-top: 1.15rem;
+  background: linear-gradient(90deg, var(--brand-secondary-light), var(--brand-secondary), transparent);
+}
+
+.eyebrow {
+  color: var(--brand-secondary);
+  font-family: var(--font-condensed);
+  font-size: clamp(0.88rem, 1.2vw, 1rem);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.section-title {
+  margin: 0.55rem 0 1rem;
+  color: var(--color-text-primary);
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 5.4vw, 5.8rem);
+  font-weight: 600;
+  line-height: 0.94;
+  text-wrap: balance;
+}
+
+.section-description {
+  max-width: 680px;
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: clamp(1rem, 1.35vw, 1.14rem);
+}
+
+.button {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding: 0.82rem 1.1rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-control);
+  font-weight: 800;
+  overflow: hidden;
+  transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.button::before {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  z-index: -1;
+  height: 2px;
+  background: var(--brand-interactive);
+  transition: height var(--transition-medium);
+}
+
+.button:hover::before {
+  height: 100%;
+}
+
+.button-primary {
+  color: var(--brand-on-primary);
+  background: var(--brand-interactive);
+  border-color: rgb(from var(--brand-secondary-light) r g b / 0.32);
+}
+
+/* No hover o ::before do .button cobre o botao inteiro com a cor principal: o texto segue o da principal. */
+.button-primary:hover {
+  color: var(--brand-on-primary);
+  background: var(--brand-interactive-hover);
+}
+
+.button-primary app-icon {
+  color: var(--brand-secondary-light);
+}
+
+.button-secondary,
+.button-ghost {
+  color: var(--color-text-primary);
+  background: transparent;
+}
+
+.button-secondary:hover,
+.button-ghost:hover {
+  color: var(--brand-on-primary);
+}
+
+.card {
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-control);
+  background: rgba(27, 26, 23, 0.72);
+}
+
+.editorial-frame {
+  position: relative;
+}
+
+.editorial-frame::before,
+.editorial-frame::after {
+  content: "";
+  position: absolute;
+  width: 58px;
+  height: 58px;
+  pointer-events: none;
+}
+
+.editorial-frame::before {
+  top: -10px;
+  left: -10px;
+  border-top: 2px solid var(--brand-secondary);
+  border-left: 2px solid var(--brand-secondary);
+}
+
+.editorial-frame::after {
+  right: -10px;
+  bottom: -10px;
+  border-right: 2px solid var(--brand-secondary-deep);
+  border-bottom: 2px solid var(--brand-secondary-deep);
+}
+
+.image-treatment {
+  position: relative;
+  overflow: hidden;
+  background: var(--surface-secondary);
+}
+
+.image-treatment::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(120deg, rgb(from var(--brand-primary) r g b / 0.14), transparent 38%),
+    radial-gradient(circle at 18% 12%, rgb(from var(--brand-secondary-light) r g b / 0.1), transparent 16rem);
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+}
+
+.reveal {
+  opacity: 0;
+  clip-path: inset(0 0 18% 0);
+  transform: translateY(24px);
+  transition: opacity 700ms ease, clip-path 700ms ease, transform 700ms ease;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  clip-path: inset(0);
+  transform: translateY(0);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 760px) {
+  .page-section {
+    min-height: auto;
+    padding-block: 4.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    clip-path: inset(0);
+    transform: none;
+  }
+}
+
+.row-icon-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+/* Link com cara de botao de icone (ex.: abrir a fatura em nova aba). */
+a.icon-btn {
+  color: var(--admin-text);
+  text-decoration: none;
+}
+
+.icon-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--admin-border);
+  border-radius: 8px;
+  background: var(--admin-surface);
+  color: var(--admin-text);
+  cursor: pointer;
+  /* Oculto ate o hover da linha; o bloco (hover: none) no fim mantem a acao alcancavel no touch. */
+  opacity: 0;
+  transform: translateY(2px);
+  transition: opacity 150ms ease, transform 150ms ease, background 150ms ease, border-color 150ms ease;
+}
+
+tr:hover .icon-btn,
+/* Teclado: a linha com foco dentro tambem mostra as acoes (acessibilidade). */
+tr:focus-within .icon-btn,
+.icon-btn:hover,
+.icon-btn:focus-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.icon-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0;
+  color: var(--admin-text-muted);
+}
+
+tr:hover .icon-btn:disabled,
+tr:focus-within .icon-btn:disabled,
+.icon-btn:disabled:focus-visible {
+  opacity: 0.35;
+}
+
+/* Em touch nao existe hover: sem isto a acao da linha fica inalcancavel no celular. */
+@media (hover: none) {
+  .icon-btn {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .icon-btn:disabled {
+    opacity: 0.35;
+  }
+}
+
+.icon-btn--edit:hover:not(:disabled) {
+  background: var(--admin-success-background);
+  border-color: var(--admin-success);
+  color: var(--admin-success);
+}
+
+.icon-btn--delete:hover:not(:disabled) {
+  background: var(--admin-danger-background);
+  border-color: var(--admin-danger);
+  color: var(--admin-danger);
+}
+
+.icon-btn--view:hover:not(:disabled) {
+  background: var(--admin-surface-muted);
+  border-color: var(--admin-border-strong);
+  color: var(--admin-text);
+}
+
+.icon-btn--toggle:hover:not(:disabled) {
+  background: var(--admin-warning-background);
+  border-color: var(--admin-warning);
+  color: var(--admin-warning);
+}
+
+.icon-btn--pay:hover:not(:disabled) {
+  background: var(--admin-success-background);
+  border-color: var(--admin-success);
+  color: var(--admin-success);
+}
+
+.icon-btn--cancel:hover:not(:disabled) {
+  background: var(--admin-danger-background);
+  border-color: var(--admin-danger);
+  color: var(--admin-danger);
+}
+
+[data-tooltip] {
+  position: relative;
+}
+
+/* Dica unica presa ao body e posicionada por DataTooltipService: nao e cortada por overflow de tabela/cartao. */
+.app-tooltip {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2000;
+  box-sizing: border-box;
+  width: max-content;
+  max-width: min(320px, calc(100vw - 16px));
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: var(--admin-primary);
+  color: var(--admin-on-primary);
+  font-family: var(--admin-font-interface, var(--font-interface));
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 120ms ease;
+}
+
+.app-tooltip--visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.app-tooltip__arrow {
+  position: absolute;
+  top: -10px;
+  width: 0;
+  height: 0;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-bottom-color: var(--admin-primary);
+}
+
+.app-tooltip--above .app-tooltip__arrow {
+  top: 100%;
+  border-bottom-color: transparent;
+  border-top-color: var(--admin-primary);
+}
+
+/* JS-positioned tooltip for chart shapes (SVG points/segments) where a CSS-only [data-tooltip] pseudo-element isn't reliable. */
+.chart-hover-tooltip {
+  position: absolute;
+  transform: translate(-50%, -100%) translateY(-8px);
+  background: var(--admin-primary);
+  color: var(--admin-on-primary);
+  font-family: var(--admin-font-interface, var(--font-interface));
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.chart-hover-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--admin-primary);
+}
+
+.client-page {
+  display: grid;
+  width: 100%;
+  min-height: 100%;
+  align-content: start;
+  align-self: start;
+  gap: 0.85rem;
+}
+
+.client-admin-shell__content > * {
+  display: block;
+  width: 100%;
+}
+
+.admin-shell {
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.admin-shell__workspace {
+  width: calc(100% - var(--admin-current-sidebar-width));
+  max-width: calc(100% - var(--admin-current-sidebar-width));
+  min-height: 100vh;
+  min-width: 0;
+  margin-left: var(--admin-current-sidebar-width);
+  transition: margin-left var(--transition-medium);
+}
+
+.admin-shell__content {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  padding: 1.25rem clamp(1rem, 2vw, 1.5rem);
+}
+
+.admin-shell__content > * {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .admin-shell__workspace {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+  }
+}
+
+.client-page__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.client-page__eyebrow {
+  margin: 0 0 0.3rem;
+  color: var(--admin-accent-strong);
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.client-page h1,
+.client-page h2,
+.client-page p {
+  margin: 0;
+}
+
+.client-page h1 {
+  font-family: var(--admin-font-display);
+  font-weight: 500;
+  font-size: clamp(1.85rem, 3vw, 2.8rem);
+  line-height: 1;
+  color: var(--admin-primary);
+}
+
+.client-card {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0.9rem;
+  border: 1px solid var(--admin-border);
+  border-radius: var(--radius-control);
+  background: var(--admin-surface);
+  box-shadow: var(--admin-shadow-soft);
+}
+
+.client-card__title-row,
+.client-actions,
+.client-list div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.client-details-grid,
+.client-summary-grid,
+.client-two-columns {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.client-details-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0.65rem 0;
+}
+
+.client-page dt {
+  color: var(--admin-text-muted);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.client-page dd {
+  margin: 0;
+  font-weight: 900;
+}
+
+.client-two-columns {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.client-list {
+  display: grid;
+  gap: 0.85rem;
+}
+
+/*
+ * Card horizontal compacto reutilizavel na area do cliente (agendamentos, historico, etc.):
+ * linha do topo (icone + titulo/subtitulo + status/acoes) e linha de campos abaixo.
+ */
+.client-row {
+  display: grid;
+  gap: 0.6rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--admin-border);
+  border-radius: var(--radius-control);
+  background: var(--admin-surface);
+  box-shadow: var(--admin-shadow-soft);
+}
+
+.client-row__top {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem 1rem;
+  justify-content: space-between;
+}
+
+.client-row__subject {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex: 1 1 14rem;
+  min-width: 0;
+}
+
+.client-row__subject > div {
+  min-width: 0;
+}
+
+.client-row__subject h2,
+.client-row__subject p {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.client-row__subject h2 {
+  font-size: 1rem;
+}
+
+.client-row__subject p {
+  color: var(--admin-text-muted);
+  font-size: 0.82rem;
+}
+
+.client-row__icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 50%;
+  background: var(--admin-success-background);
+  color: var(--admin-success);
+}
+
+.client-row__top-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 0 0 auto;
+}
+
+.client-row__top-actions .button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  white-space: nowrap;
+}
+
+.client-row__fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.1rem;
+}
+
+.client-row__field {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: var(--admin-text-muted);
+  font-weight: 700;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.client-row__field--strong {
+  color: var(--admin-text);
+}
+
+.client-row__field--danger {
+  color: var(--admin-danger);
+}
+
+/* Menu de acoes secundarias (3 pontos) usado dentro de .client-row__top-actions */
+.client-row__menu {
+  position: relative;
+}
+
+.client-row__menu summary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.35rem;
+  height: 2.35rem;
+  border: 1px solid var(--admin-border);
+  border-radius: var(--radius-control);
+  background: var(--admin-surface);
+  color: var(--admin-text-muted);
+  list-style: none;
+  cursor: pointer;
+}
+
+.client-row__menu summary::-webkit-details-marker,
+.client-row__menu summary::marker {
+  display: none;
+  content: '';
+}
+
+.client-row__menu summary:hover {
+  border-color: var(--admin-border-strong);
+  color: var(--admin-text);
+}
+
+.client-row__menu[open] summary {
+  border-color: var(--admin-primary);
+  color: var(--admin-primary);
+}
+
+.client-row__menu-panel {
+  position: absolute;
+  top: calc(100% + 0.35rem);
+  right: 0;
+  z-index: 20;
+  display: grid;
+  min-width: 11rem;
+  padding: 0.35rem;
+  border: 1px solid var(--admin-border);
+  border-radius: var(--radius-control);
+  background: var(--admin-surface);
+  box-shadow: var(--admin-shadow);
+}
+
+.client-row__menu-item {
+  display: block;
+  padding: 0.5rem 0.6rem;
+  border: 0;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--admin-text);
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.client-row__menu-item:hover {
+  background: var(--admin-surface-muted);
+}
+
+@media (max-width: 560px) {
+  .client-row__top {
+    align-items: flex-start;
+  }
+
+  .client-row__top-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+.client-feedback {
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-control);
+  color: var(--admin-success);
+  background: var(--admin-success-background);
+  font-weight: 800;
+}
+
+.client-page .button {
+  min-height: 2.35rem;
+  padding: 0.55rem 0.8rem;
+  color: var(--admin-text);
+  border-color: var(--admin-border);
+  background: var(--admin-surface);
+}
+
+.client-page .button::before {
+  display: none;
+}
+
+.client-page .button-primary {
+  color: var(--admin-on-primary);
+  border-color: var(--admin-primary);
+  background: var(--admin-primary);
+}
+
+.client-page .button-secondary {
+  color: var(--admin-text);
+  background: var(--admin-surface-muted);
+}
+
+.client-page .button-ghost {
+  color: var(--admin-text-muted);
+}
+
+.client-tabs {
+  display: inline-flex;
+  gap: 0.35rem;
+  width: fit-content;
+  padding: 0.25rem;
+  border: 1px solid var(--admin-border);
+  border-radius: var(--radius-control);
+  background: var(--admin-surface);
+}
+
+.client-tabs button {
+  min-height: 2.25rem;
+  border: 0;
+  border-radius: var(--radius-control);
+  padding: 0 0.9rem;
+  background: transparent;
+  font-weight: 800;
+}
+
+.client-tabs button.is-active {
+  color: var(--admin-on-primary);
+  background: var(--admin-primary);
+}
+
+.client-page label {
+  display: grid;
+  gap: 0.35rem;
+  font-weight: 800;
+}
+
+.client-page input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="color"]),
+.client-page select {
+  min-height: var(--form-control-height);
+  border: 1px solid var(--admin-border);
+  border-radius: var(--radius-control);
+  padding: 0 var(--form-control-padding-x);
+}
+
+.client-page textarea {
+  min-height: 5.5rem;
+  border: 1px solid var(--admin-border);
+  border-radius: var(--radius-control);
+  padding: 0.75rem;
+}
+
+.client-page .field-error {
+  color: var(--admin-danger);
+  font-weight: 800;
+}
+
+@media (max-width: 920px) {
+  .client-two-columns,
+  .client-details-grid,
+  .client-summary-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/*
+ * Padrao unico de campo para todo o painel admin (inclui a area do profissional,
+ * que reaproveita o mesmo AdminComponent via /painel), a area do cliente e a
+ * administracao da plataforma: fundo
+ * branco, borda #E5E5E4 e foco dourado. Usa !important porque dezenas de telas
+ * definem seus proprios estilos de input com maior especificidade (SCSS de
+ * componente ganha um seletor de atributo do Angular); sobrescrever aqui evita
+ * ter que editar cada arquivo individualmente e garante consistencia.
+ */
+app-admin input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="color"]),
+app-admin select,
+app-admin textarea,
+app-my-account-layout input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="color"]),
+app-client-area-layout input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="color"]),
+app-my-account-layout select,
+app-client-area-layout select,
+app-my-account-layout textarea,
+app-client-area-layout textarea,
+app-platform-layout input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="color"]),
+app-platform-layout select,
+app-platform-layout textarea {
+  background: #fff !important;
+  border: 1px solid var(--admin-input-border) !important;
+  color: var(--admin-text) !important;
+  font-weight: 400 !important;
+}
+
+/*
+ * Medida unica dos campos (ID 25): mesma altura, raio e fonte em todo input de uma linha e select do painel, da area do
+ * cliente e da plataforma; o seletor e a data do sistema usam os mesmos tokens. Largura fica por conta do grid da tela
+ * (campo em 100% da coluna). Textarea, range, arquivo, cor, caixa e radio ficam de fora.
+ */
+app-admin input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="color"]):not([type="range"]):not([type="hidden"]),
+app-admin select,
+app-my-account-layout input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="color"]):not([type="range"]):not([type="hidden"]),
+app-client-area-layout input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="color"]):not([type="range"]):not([type="hidden"]),
+app-my-account-layout select,
+app-client-area-layout select,
+app-platform-layout input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="color"]):not([type="range"]):not([type="hidden"]),
+app-platform-layout select {
+  box-sizing: border-box;
+  height: var(--admin-input-height) !important;
+  min-height: var(--admin-input-height) !important;
+  border-radius: var(--admin-input-radius) !important;
+  font-size: var(--admin-input-font-size) !important;
+}
+
+/*
+ * Rotulo de campo: o conteudo fica no topo do proprio bloco. Sem isto, o grid do rotulo estica as linhas quando outro
+ * campo da mesma linha tem texto de ajuda e o input fica mais alto ou mais baixo que o vizinho.
+ */
+app-admin label,
+app-client-area-layout label,
+app-platform-layout label {
+  align-content: start;
+}
+
+/*
+ * Padrao unico de rotulo (o texto acima dos inputs, ex.: "Nome", "Documento")
+ * em todos os modais/formularios do site: cor #797164, peso semibold (nao o
+ * bold pesado usado por varias telas). Seletor label > span:first-child cobre
+ * o padrao consistente <label><span>Rotulo</span><input/></label> usado em
+ * praticamente todo o painel sem afetar spans que vem depois de um input
+ * (ex.: texto ao lado de checkbox) nem badges/pills fora de <label>.
+ */
+app-admin label > span:first-child,
+app-my-account-layout label > span:first-child,
+app-client-area-layout label > span:first-child,
+app-platform-layout label > span:first-child,
+app-platform-layout .filters span {
+  color: #797164 !important;
+  font-weight: 600 !important;
+}
+
+/*
+ * Texto "comum" (paragrafos e celulas de tabela) nao deve ter bold em lugar
+ * nenhum do site - apenas titulos (h1/h2/h3, titulos de modal) mantem peso
+ * maior. Nao afeta <strong>/<small> dentro de td, nem botoes, pilulas de
+ * status ou numeros de destaque em cards, que definem seu proprio peso em
+ * um elemento mais especifico (seletor mais especifico ganha do :not-important
+ * aqui, mas cada um deles ja usa !important onde precisa se destacar).
+ */
+app-admin p,
+app-admin td,
+app-client-area-layout p,
+app-client-area-layout td,
+app-platform-layout p,
+app-platform-layout td {
+  font-weight: 400 !important;
+}
+
+app-admin input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="color"]):focus,
+app-admin select:focus,
+app-admin textarea:focus,
+app-my-account-layout input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="color"]):focus,
+app-client-area-layout input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="color"]):focus,
+app-my-account-layout select:focus,
+app-client-area-layout select:focus,
+app-my-account-layout textarea:focus,
+app-client-area-layout textarea:focus,
+app-platform-layout input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="color"]):focus,
+app-platform-layout select:focus,
+app-platform-layout textarea:focus {
+  border-color: var(--admin-input-focus) !important;
+  outline: 0;
+  box-shadow: 0 0 0 3px var(--admin-input-focus-glow) !important;
+}
+
+/*
+ * Padrao unico do botao principal de cada tela (o "Novo profissional", "Nova
+ * empresa", "Salvar" dos formularios): mesma altura dos campos, verde da marca e
+ * peso de texto semibold, sem o bold pesado que varias telas aplicavam. Mesmo
+ * motivo do !important usado nos campos acima: cada tela define o seu
+ * .primary-button com a especificidade extra do encapsulamento do Angular.
+ */
+app-admin .primary-button,
+app-client-area-layout .primary-button,
+app-platform-layout .primary-button {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  height: 40px !important;
+  min-height: 40px !important;
+  padding: 0 1rem !important;
+  border: 1px solid var(--admin-primary) !important;
+  border-radius: var(--radius-control) !important;
+  background: var(--admin-primary) !important;
+  color: var(--admin-on-primary) !important;
+  font-size: 0.9rem !important;
+  font-weight: 600 !important;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+app-admin .primary-button:hover:not(:disabled),
+app-client-area-layout .primary-button:hover:not(:disabled),
+app-platform-layout .primary-button:hover:not(:disabled) {
+  border-color: var(--admin-primary-strong) !important;
+  background: var(--admin-primary-strong) !important;
+}
+
+/*
+ * Botao secundario padrao (Reenviar link, Cancelar, Voltar...): mesma altura e raio do principal, fundo claro e borda.
+ * Sem !important de proposito: as telas que ja definem o seu .secondary-button (encapsulado) seguem mandando nelas;
+ * so as que usam a classe sem estilo proprio passam a ter este.
+ */
+app-admin .secondary-button,
+app-client-area-layout .secondary-button,
+app-platform-layout .secondary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  height: 40px;
+  min-height: 40px;
+  padding: 0 1rem;
+  border: 1px solid var(--admin-border-strong);
+  border-radius: var(--radius-control);
+  background: var(--admin-surface);
+  color: var(--admin-text);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+app-admin .secondary-button:hover:not(:disabled),
+app-client-area-layout .secondary-button:hover:not(:disabled),
+app-platform-layout .secondary-button:hover:not(:disabled) {
+  background: var(--admin-surface-muted);
+}
+
+app-admin .secondary-button:disabled,
+app-client-area-layout .secondary-button:disabled,
+app-platform-layout .secondary-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Acao destrutiva que ocupa o lugar do botao principal, como desativar uma empresa. */
+app-platform-layout .primary-button--danger {
+  border-color: var(--admin-danger) !important;
+  background: var(--admin-danger) !important;
+}
+
+app-platform-layout .primary-button--danger:hover:not(:disabled) {
+  border-color: #9a4238 !important;
+  background: #9a4238 !important;
+}
+
+/*
+ * Radios nativos ainda usados em varias telas renderizam com o azul padrao do
+ * navegador. accent-color recolore so a caixa nativa para a cor do site.
+ */
+app-admin input[type="radio"],
+app-my-account-layout input[type="radio"],
+app-client-area-layout input[type="radio"],
+app-platform-layout input[type="radio"] {
+  accent-color: var(--admin-primary) !important;
+}
+
+/*
+ * Padrao unico de checkbox para todo o painel admin (inclui a area do profissional,
+ * que reaproveita o mesmo AdminComponent via /painel) e a area do cliente: quadrado
+ * com borda #E2D8C2, preenchimento verde da marca e check branco quando marcado
+ * (ex.: "Produto ativo", "Com nao comparecimento", "Ja pago/recebido", "Trabalha").
+ * Exclui os checkboxes ja usados como switch/toggle (appearance propria, layout de
+ * pilula) para nao quebrar esses componentes.
+ */
+app-admin input[type="checkbox"]:not(.switch-input):not(.settings-form__switch-input):not(.switch__native):not(.perm-item__native),
+app-my-account-layout input[type="checkbox"]:not(.perfil-switch-input),
+app-client-area-layout input[type="checkbox"]:not(.perfil-switch-input),
+app-platform-layout input[type="checkbox"]:not(.permission-toggle__native) {
+  appearance: none !important;
+  position: relative;
+  width: 17px !important;
+  height: 17px !important;
+  min-height: 17px !important;
+  flex-shrink: 0;
+  border: 1.5px solid var(--admin-border) !important;
+  border-radius: 4px !important;
+  background: var(--admin-surface) !important;
+  cursor: pointer;
+  margin: 0;
+}
+
+app-admin input[type="checkbox"]:not(.switch-input):not(.settings-form__switch-input):not(.switch__native):not(.perm-item__native):checked,
+app-my-account-layout input[type="checkbox"]:not(.perfil-switch-input):checked,
+app-client-area-layout input[type="checkbox"]:not(.perfil-switch-input):checked,
+app-platform-layout input[type="checkbox"]:not(.permission-toggle__native):checked {
+  background: var(--admin-primary) !important;
+  border-color: var(--admin-primary) !important;
+}
+
+app-admin input[type="checkbox"]:not(.switch-input):not(.settings-form__switch-input):not(.switch__native):not(.perm-item__native):checked::after,
+app-my-account-layout input[type="checkbox"]:not(.perfil-switch-input):checked::after,
+app-client-area-layout input[type="checkbox"]:not(.perfil-switch-input):checked::after,
+app-platform-layout input[type="checkbox"]:not(.permission-toggle__native):checked::after {
+  content: '\2713';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--admin-on-primary);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+app-admin input[type="checkbox"]:not(.switch-input):not(.settings-form__switch-input):not(.switch__native):not(.perm-item__native):focus-visible,
+app-my-account-layout input[type="checkbox"]:not(.perfil-switch-input):focus-visible,
+app-client-area-layout input[type="checkbox"]:not(.perfil-switch-input):focus-visible,
+app-platform-layout input[type="checkbox"]:not(.permission-toggle__native):focus-visible {
+  outline: 2px solid var(--admin-primary);
+  outline-offset: 2px;
+}
+
+/*
+ * Erro de formulario dentro do drawer/modal. Antes o aviso era renderizado na pagina de baixo
+ * e ficava escondido atras do painel aberto, entao o usuario nao via por que o salvar falhou.
+ */
+.form-panel__error {
+  margin: 0 0 0.25rem;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--admin-danger);
+  border-radius: var(--radius-control, 10px);
+  background: var(--admin-danger-background);
+  color: var(--admin-danger);
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+input.is-invalid,
+select.is-invalid,
+textarea.is-invalid {
+  border-color: var(--admin-danger);
+  background: var(--admin-danger-background);
+}
+
+input.is-invalid:focus-visible,
+select.is-invalid:focus-visible,
+textarea.is-invalid:focus-visible {
+  outline: 2px solid var(--admin-danger);
+  outline-offset: 1px;
+}
+
+// Campo de senha com o olho (shared/components/password-field): o input ocupa a largura toda e deixa espaco para o botao.
+app-password-field > input {
+  width: 100%;
+  box-sizing: border-box;
+  padding-right: 2.9rem !important;
+}
+
+/*
+ * Modo apresentacao (ambiente com presentationMock): mesma paleta de tokens do site, em versao clara.
+ * Fundos viram marfim, o texto vira tinta escura e os dourados escurecem para manter contraste.
+ */
+:root.theme-light {
+  color-scheme: light;
+  --color-black: #1d1a14;
+  --color-charcoal: #f6f3ec;
+  --color-graphite: #efeadc;
+  --color-leather: #e6dfcd;
+  --color-sand: #5f574a;
+  --color-text-primary: #1f1b14;
+  --color-text-secondary: #5f574a;
+  --surface-primary: #f6f3ec;
+  --surface-secondary: #efeadc;
+  --surface-muted: #e9e3d3;
+  --border-subtle: rgba(31, 27, 20, 0.14);
+  --shadow-editorial: 0 30px 70px rgba(60, 45, 20, 0.16);
+  --color-ivory: #1f1b14;
+  --company-primary-color: #24211b;
+}
+
+:root.theme-light body {
+  background: #f6f3ec;
+}
+
+/* Hero claro: o marfim cobre o texto e a foto aparece limpa a direita. */
+html:root.theme-light .hero__overlay {
+  background:
+    linear-gradient(90deg, var(--surface-primary) 0 38%, rgba(246, 243, 236, 0.62) 58%, rgba(246, 243, 236, 0)),
+    linear-gradient(180deg, rgba(246, 243, 236, 0) 78%, var(--surface-primary) 104%);
+}
+
+/* Secoes escuras sobre foto (ritual e chamada final) mantem texto claro mesmo no tema claro. */
+html:root.theme-light .parallax,
+html:root.theme-light .final-call {
+  --color-text-primary: #f6f3ec;
+  --color-text-secondary: #ddd6c6;
+  --color-ivory: #f6f3ec;
+  --brand-secondary: #e0b765;
+}
+
+/* Botao principal: fundo tinta com texto marfim em qualquer secao; sobre a foto da chamada final, o inverso. */
+html:root.theme-light .button.button-primary {
+  color: #f6f3ec;
+}
+
+html:root.theme-light .final-call .button.button-primary {
+  background: #f6f3ec;
+  color: #1f1b14;
+}
+
+html:root.theme-light .parallax h2,
+html:root.theme-light .final-call h2,
+html:root.theme-light .parallax,
+html:root.theme-light .final-call {
+  color: #f6f3ec;
+}
+
+/* Mapa: sem a inversao escura aplicada ao tema original. */
+html:root.theme-light .contact__map iframe {
+  filter: grayscale(0.25) contrast(0.95) sepia(0.08);
+}
+
+html:root.theme-light .lightbox__nav {
+  color: #f6f3ec;
+}
+
+@media (max-width: 760px) {
+  html:root.theme-light .hero__overlay {
+    background: linear-gradient(180deg, rgba(246, 243, 236, 0.9) 0 45%, rgba(246, 243, 236, 0.55) 75%, rgba(246, 243, 236, 0.2));
+  }
+}
+
+/* Faixas alternadas: cada bloco da home tem um fundo proprio para a pagina nao virar uma mancha unica. */
+html:root.theme-light {
+  --band-a: #f9f6ef;
+  --band-b: #ebe2cc;
+  --band-c: #ddd0b2;
+}
+
+html:root.theme-light .hero { background: var(--band-a); }
+html:root.theme-light .about { background: var(--band-b); }
+html:root.theme-light .services { background: var(--band-a); }
+html:root.theme-light .subscription-plans { background: var(--band-b); }
+html:root.theme-light .professionals { background: var(--band-c); }
+html:root.theme-light .gallery { background: var(--band-a); }
+html:root.theme-light .products { background: var(--band-b); }
+html:root.theme-light .experience { background: var(--band-c); }
+html:root.theme-light .contact { background: var(--band-a); }
+
+html:root.theme-light .about,
+html:root.theme-light .services,
+html:root.theme-light .professionals,
+html:root.theme-light .gallery,
+html:root.theme-light .products,
+html:root.theme-light .experience,
+html:root.theme-light .contact {
+  border-top: 1px solid rgba(31, 27, 20, 0.16);
+  box-shadow: inset 0 14px 18px -16px rgba(60, 45, 20, 0.28);
+}
+
+html:root.theme-light .hero__overlay {
+  background:
+    linear-gradient(90deg, var(--band-a) 0 38%, rgba(249, 246, 239, 0.62) 58%, rgba(249, 246, 239, 0)),
+    linear-gradient(180deg, rgba(249, 246, 239, 0) 80%, var(--band-a) 104%);
+}

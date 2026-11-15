@@ -1,0 +1,129 @@
+﻿:host {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: block;
+}
+
+.admin-drawer-overlay {
+  overscroll-behavior: contain;
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  background: var(--admin-backdrop);
+}
+
+.admin-drawer {
+  display: flex;
+  flex-direction: column;
+  width: min(760px, 100vw);
+  max-width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  max-height: 100vh;
+  max-height: 100dvh;
+  overflow: hidden;
+  border-left: 1px solid var(--admin-border);
+  background: var(--admin-background);
+  color: var(--admin-text);
+  box-shadow: var(--admin-shadow);
+}
+
+.admin-drawer__header,
+.admin-drawer__footer {
+  flex: 0 0 auto;
+  border-color: var(--admin-border);
+  background: var(--admin-background);
+}
+
+.admin-drawer__header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 0.9rem;
+  padding: 0.85rem 1.15rem;
+  border-bottom: 1px solid var(--admin-border);
+}
+
+.admin-drawer__header p {
+  margin: 0 0 0.25rem;
+  color: var(--admin-primary-strong);
+  font-family: var(--font-condensed);
+  font-size: 0.86rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.admin-drawer__header h2 {
+  margin: 0;
+  color: var(--admin-primary);
+  font-family: var(--admin-font-display);
+  font-weight: 500;
+  font-size: clamp(1.55rem, 3vw, 2.2rem);
+  line-height: 1.05;
+}
+
+.admin-drawer__content {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.admin-drawer__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.65rem;
+  min-height: 3.6rem;
+  padding: 0.7rem 1.15rem;
+  border-top: 1px solid var(--admin-border);
+}
+
+.admin-drawer__footer:empty {
+  display: none;
+}
+
+/* Erro da acao do drawer: fixo acima dos botoes, sempre visivel mesmo com o conteudo rolado. */
+.admin-drawer__error {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 0.65rem 1.15rem;
+  border-top: 1px solid var(--admin-danger);
+  background: var(--admin-danger-background);
+  color: var(--admin-danger);
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+@media (max-width: 900px) {
+  .admin-drawer {
+    width: min(85vw, 760px);
+  }
+}
+
+@media (max-width: 640px) {
+  .admin-drawer {
+    width: 100vw;
+  }
+
+  .admin-drawer__header,
+  .admin-drawer__error,
+  .admin-drawer__footer {
+    padding-inline: 1rem;
+  }
+
+  .admin-drawer__footer {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-drawer-overlay,
+  .admin-drawer {
+    transition: none;
+  }
+}

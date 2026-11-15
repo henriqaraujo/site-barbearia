@@ -1,0 +1,57 @@
+<footer class="footer">
+  <div class="footer__inner">
+    <div>
+      @if (businessInformation().name) {
+        <a class="footer__brand" [routerLink]="publicUrl()">{{ businessInformation().name }}</a>
+      } @else {
+        <span class="footer__skeleton" role="status" aria-label="Carregando"></span>
+      }
+      @if (companyDescription()) {
+        <p>{{ companyDescription() }}</p>
+      }
+    </div>
+
+    <div>
+      <h2>Links rápidos</h2>
+      <a [routerLink]="publicUrl()">Início</a>
+      <a [routerLink]="publicUrl('agendamento')">Agendamento</a>
+    </div>
+
+    <div>
+      <h2>Serviços</h2>
+      @if (isLoadingServices()) {
+        <span>Carregando serviços...</span>
+      }
+      @if (servicesErrorMessage()) {
+        <span>{{ servicesErrorMessage() }}</span>
+      }
+      @for (service of services(); track service.id) {
+        <span>{{ service.name }}</span>
+      }
+    </div>
+
+    <div>
+      <h2>Contato</h2>
+      @if (businessInformation().address) {
+        <span>{{ businessInformation().address }}</span>
+      }
+      @if (businessInformation().phone) {
+        <span>{{ businessInformation().phone }}</span>
+      }
+      @if (businessInformation().instagramUrl) {
+        <a [href]="businessInformation().instagramUrl" target="_blank" rel="noopener">{{ businessInformation().instagram }}</a>
+      }
+      <!-- No perfil o horario ja esta na lateral (pedido do dono, 07/10): aqui so nas outras paginas. -->
+      @if (!isProfilePage()) {
+        @for (openingHour of businessInformation().openingHours; track openingHour) {
+          <span>{{ openingHour }}</span>
+        }
+      }
+    </div>
+  </div>
+
+  <div class="footer__bottom">
+    <span>(c) {{ currentYear }}@if (businessInformation().name) { {{ businessInformation().name }}}. Todos os direitos reservados.</span>
+    <app-legal-links />
+  </div>
+</footer>

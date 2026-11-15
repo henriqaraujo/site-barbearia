@@ -1,0 +1,49 @@
+.legal-acceptance {
+  display: grid;
+  gap: 12px;
+}
+
+.legal-acceptance h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.legal-acceptance__documents {
+  margin: 0;
+  padding-left: 1.2rem;
+  display: grid;
+  gap: 6px;
+}
+
+.legal-acceptance__documents a {
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.legal-acceptance__checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  min-height: 44px;
+  font-weight: 400;
+}
+
+.legal-acceptance__checkbox input {
+  width: 20px;
+  min-height: 20px;
+  height: 20px;
+  margin: 2px 0 0;
+  padding: 0;
+  flex: none;
+}
+
+.link-button {
+  justify-self: start;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}

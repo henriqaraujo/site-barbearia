@@ -1,0 +1,51 @@
+<section class="conta-page">
+  <header class="conta-hero">
+    <div>
+      <p class="conta-eyebrow">Minha conta</p>
+      <h1>Favoritos</h1>
+      <p class="conta-subtitle">As empresas que você marcou com o coração. Só você vê esta lista.</p>
+    </div>
+    <a class="conta-btn-secondary" routerLink="/">Buscar empresas</a>
+  </header>
+
+  <section class="conta-section" aria-labelledby="conta-favoritos-titulo">
+    <h2 id="conta-favoritos-titulo">Empresas favoritas</h2>
+    @if (errorMessage()) {
+      <p class="conta-error" role="alert">{{ errorMessage() }}</p>
+    }
+    @if (!isLoaded()) {
+      <div class="conta-skeleton" aria-hidden="true"></div>
+      <p class="conta-section__hint" role="status">Carregando...</p>
+    } @else if (favorites().length) {
+      <ul class="conta-list">
+        @for (company of favorites(); track company.slug) {
+          <li class="conta-card">
+            <span class="conta-card__logo" aria-hidden="true">
+              @if (logo(company)) {
+                <img [src]="logo(company)" alt="" />
+              } @else {
+                {{ initial(company) }}
+              }
+            </span>
+            <div class="conta-card__body">
+              <p class="conta-card__title">{{ company.name }}</p>
+              @if (place(company)) {
+                <p class="conta-card__meta">{{ place(company) }}</p>
+              }
+              <a class="conta-link" [routerLink]="'/' + company.slug">Ver a página</a>
+            </div>
+            <div class="conta-card__side conta-card__side--row">
+              <app-favorite-toggle class="conta-favorite" [slug]="company.slug" [companyName]="company.name" returnUrl="/minha-conta/favoritos" />
+              <a class="conta-btn" [routerLink]="'/' + company.slug + '/agendamento'" [attr.aria-label]="'Agendar em ' + company.name">Agendar</a>
+            </div>
+          </li>
+        }
+      </ul>
+    } @else {
+      <div class="conta-empty">
+        <p>Você ainda não tem favoritos. Toque no coração na página de uma empresa para guardar aqui.</p>
+        <a class="conta-btn" routerLink="/">Buscar uma empresa</a>
+      </div>
+    }
+  </section>
+</section>

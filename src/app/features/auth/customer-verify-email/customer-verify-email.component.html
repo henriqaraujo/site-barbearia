@@ -1,0 +1,31 @@
+<main class="auth-page auth-page--platform">
+  <section class="auth-panel" aria-labelledby="customer-verify-email-title">
+    <app-auth-brand title="Confirmação de e‑mail" titleId="customer-verify-email-title" [isCompany]="false" />
+
+    @switch (state()) {
+      @case ('verifying') {
+        <p class="form-hint" role="status">Confirmando seu e-mail...</p>
+      }
+      @case ('verified') {
+        <div class="form-message" role="status">
+          <p>E-mail confirmado.</p>
+          @if (linkedMessage(); as message) {
+            <p>{{ message }}</p>
+          }
+        </div>
+        @if (isAuthenticated()) {
+          <a class="submit-button" routerLink="/minha-conta">Continuar</a>
+        } @else {
+          <a class="submit-button" routerLink="/entrar">Entrar</a>
+        }
+      }
+      @case ('failed') {
+        <p class="form-error" role="alert">{{ errorMessage() }}</p>
+        <p class="form-hint">Entre na sua conta e peça um novo link na hora de agendar.</p>
+        <a class="submit-button" routerLink="/entrar">Ir para o login</a>
+      }
+    }
+    <a class="site-link" routerLink="/">Voltar ao site principal</a>
+    <app-legal-links />
+  </section>
+</main>

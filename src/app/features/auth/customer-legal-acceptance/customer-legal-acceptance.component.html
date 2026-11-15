@@ -1,0 +1,23 @@
+<section class="legal-acceptance" aria-labelledby="legal-acceptance-title">
+  <h2 id="legal-acceptance-title">Termos e Privacidade</h2>
+  <p class="form-hint">Antes de continuar, leia e aceite:</p>
+  <ul class="legal-acceptance__documents">
+    @for (document of documents(); track document.id) {
+      <li><a [routerLink]="documentLink(document)" target="_blank" rel="noopener">{{ document.title }}</a></li>
+    }
+  </ul>
+  <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <label class="legal-acceptance__checkbox">
+      <input type="checkbox" formControlName="accepted" />
+      <span>Li e aceito os Termos de Uso e a Política de Privacidade.</span>
+    </label>
+    @if (form.controls.accepted.touched && form.controls.accepted.invalid) {
+      <p class="field-error">Para continuar, marque o aceite.</p>
+    }
+
+    <button class="submit-button" type="submit" [disabled]="isSubmitting()">
+      {{ isSubmitting() ? 'Continuando...' : submitLabel() }}
+    </button>
+  </form>
+  <button class="link-button" type="button" (click)="cancelled.emit()">Voltar</button>
+</section>

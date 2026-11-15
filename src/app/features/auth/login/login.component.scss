@@ -1,0 +1,221 @@
+// Telas de conta do cliente (login, cadastro, esqueci e redefinir a senha, confirmacao do e-mail, passo dos Termos) no
+// padrao do login do HL CRM (referencia do dono, 06/10/2026): fundo claro sem cartao, coluna estreita, titulo serifado
+// (app-auth-brand), campos brancos e o Google com contorno. A cor de destaque e a da empresa do endereco; sem empresa
+// (/entrar e telas da equipe sem empresa) e a do HL Gestao (.auth-page--platform). Os outros componentes de conta
+// incluem este arquivo, porque o estilo de um componente nao alcanca os filhos (encapsulamento do Angular).
+
+.auth-page {
+  --auth-accent: var(--brand-interactive);
+  --auth-on-accent: var(--brand-on-primary);
+  --auth-title: #173425;
+  --auth-text: #2a2520;
+  --auth-muted: #726a5d;
+  --auth-border: #e2d8c2;
+  --auth-background: #faf9f5;
+
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 48px 16px;
+  box-sizing: border-box;
+  background: var(--auth-background);
+  color: var(--auth-text);
+  font-family: 'Poppins', 'Manrope', Arial, sans-serif;
+  font-weight: 300;
+}
+
+.auth-page--platform {
+  --auth-accent: var(--admin-primary-strong, #24503a);
+  --auth-on-accent: var(--admin-on-primary, #fbf7ee);
+}
+
+.auth-panel {
+  width: min(100%, 384px);
+  display: grid;
+  gap: 16px;
+}
+
+h1,
+h2 {
+  margin: 0;
+  color: var(--auth-title);
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+h1 {
+  font-size: 1.8rem;
+  text-align: center;
+}
+
+h2 {
+  font-size: 1.25rem;
+}
+
+form {
+  display: grid;
+  gap: 14px;
+}
+
+label {
+  display: grid;
+  gap: 6px;
+  color: var(--auth-text);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+input {
+  min-height: 44px;
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--auth-border);
+  border-radius: 8px;
+  padding: 0 12px;
+  color: var(--auth-text);
+  background: #fff;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 400;
+}
+
+input:focus {
+  border-color: var(--auth-accent);
+  outline: 0;
+  box-shadow: 0 0 0 3px rgb(from var(--auth-accent) r g b / 0.15);
+}
+
+.submit-button {
+  min-height: 44px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--auth-accent);
+  color: var(--auth-on-accent);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.submit-button:hover:not(:disabled),
+.submit-button:focus-visible:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.submit-button:focus-visible {
+  outline: 3px solid rgb(from var(--auth-accent) r g b / 0.3);
+  outline-offset: 2px;
+}
+
+.submit-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+/* Botao que e um link (Entrar, Continuar, Pedir um novo link): mesmo visual do botao, texto centralizado. */
+a.submit-button {
+  display: grid;
+  place-items: center;
+  padding: 0 16px;
+  text-decoration: none;
+}
+
+a {
+  color: var(--auth-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Links de rodape (criar conta, esqueci a senha, voltar): centralizados, como no HL CRM. */
+.auth-switch,
+.auth-links {
+  margin: 0;
+  color: var(--auth-muted);
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.auth-panel > a:not(.submit-button):not(.site-link) {
+  justify-self: center;
+  color: var(--auth-muted);
+  font-size: 0.875rem;
+}
+
+/* Voltar ao site: botao com contorno, como o "Entrar com Google" do HL CRM. */
+.site-link {
+  min-height: 44px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--auth-border);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--auth-text);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+}
+
+.site-link:hover,
+.site-link:focus-visible {
+  border-color: var(--auth-accent);
+}
+
+.field-error,
+.form-error {
+  margin: 0;
+  color: #b42318;
+  font-size: 0.85rem;
+  font-weight: 400;
+}
+
+.form-hint {
+  margin: 0;
+  color: var(--auth-muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.form-message {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0.7rem 0.85rem;
+  border-radius: 8px;
+  background: #e5efe8;
+  color: #1c4d33;
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+.form-message p {
+  margin: 0;
+}
+
+.legal-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  min-height: 44px;
+  font-weight: 400;
+}
+
+.legal-checkbox input {
+  width: 20px;
+  min-height: 20px;
+  height: 20px;
+  margin: 2px 0 0;
+  padding: 0;
+  flex: none;
+  accent-color: var(--auth-accent);
+}
+
+.legal-checkbox a {
+  font-weight: 500;
+}
+
+.auth-panel > app-legal-links {
+  justify-self: center;
+}

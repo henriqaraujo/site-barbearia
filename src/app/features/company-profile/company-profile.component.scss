@@ -1,0 +1,356 @@
+// Perfil da empresa (Fase 5, D9) no tema do site da empresa (fundo escuro, tokens --surface-*, --color-text-* e --brand-*).
+
+:host {
+  display: block;
+  background: var(--surface-primary);
+  color: var(--color-text-primary);
+}
+
+.perfil {
+  width: min(100% - 32px, 1120px);
+  margin: 0 auto;
+  display: grid;
+  // Coluna que nunca cresce alem da largura: sem isso a galeria (uma fileira de fotos) esticava a pagina toda.
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+  // Abaixo do cabecalho fixo do site, como o agendamento.
+  padding: calc(var(--header-height) + 1.5rem) 0 56px;
+}
+
+.perfil__error {
+  margin: 0;
+  color: var(--color-error);
+}
+
+.perfil__header {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 16px;
+}
+
+.perfil__logo {
+  width: 88px;
+  height: 88px;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-subtle);
+  color: var(--color-text-primary);
+  font-family: var(--font-display);
+  font-size: 2rem;
+  overflow: hidden;
+}
+
+.perfil__logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.perfil__identity {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.perfil__identity h1 {
+  margin: 0;
+  color: var(--color-text-primary);
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.perfil__skeleton-text {
+  width: 240px;
+  height: 2.2rem;
+  border-radius: 8px;
+  background: var(--surface-secondary);
+}
+
+.perfil__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.perfil__place {
+  margin: 0;
+  color: var(--color-text-secondary);
+}
+
+.perfil__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  --favorite-border: var(--border-subtle);
+  --favorite-color: var(--color-text-primary);
+  --favorite-active-color: var(--brand-accent);
+}
+
+.perfil__book,
+.perfil__item-action {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 18px;
+  border-radius: 8px;
+  background: var(--brand-interactive);
+  color: var(--brand-on-primary);
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.perfil__item-action {
+  min-height: 40px;
+  padding: 0 14px;
+  font-size: 0.9rem;
+}
+
+.perfil__gallery {
+  min-width: 0;
+}
+
+.perfil__gallery ul {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(220px, 1fr);
+  gap: 10px;
+  margin: 0;
+  padding: 0 0 6px;
+  list-style: none;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+}
+
+.perfil__gallery ul:focus-visible {
+  outline: 2px solid var(--brand-accent);
+  outline-offset: 4px;
+}
+
+.perfil__gallery li {
+  scroll-snap-align: start;
+}
+
+.perfil__gallery img {
+  width: 100%;
+  height: 180px;
+  display: block;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.perfil__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 24px;
+  align-items: start;
+}
+
+.perfil__main {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+
+.perfil__description {
+  margin: 0;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  white-space: pre-line;
+}
+
+.perfil__tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--border-subtle);
+  overflow-x: auto;
+}
+
+.perfil__tab {
+  min-height: 44px;
+  padding: 0 14px;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font: inherit;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.perfil__tab[aria-selected='true'] {
+  border-bottom-color: var(--brand-accent);
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+.perfil__list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.perfil__item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  background: var(--surface-secondary);
+}
+
+.perfil__item-body {
+  flex: 1;
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.perfil__item-body h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.perfil__item-body p {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+  overflow-wrap: anywhere;
+}
+
+.perfil__meta {
+  color: var(--color-text-primary) !important;
+}
+
+.perfil__avatar {
+  width: 56px;
+  height: 56px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--surface-muted);
+  color: var(--color-text-primary);
+  font-weight: 600;
+  overflow: hidden;
+}
+
+.perfil__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.perfil__hint {
+  margin: 0;
+  color: var(--color-text-secondary);
+}
+
+.perfil__aside {
+  display: grid;
+  gap: 12px;
+}
+
+.perfil__box {
+  display: grid;
+  gap: 6px;
+  padding: 16px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  background: var(--surface-secondary);
+}
+
+.perfil__box h2 {
+  margin: 0;
+  color: var(--color-text-primary);
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.perfil__box p {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.perfil__box a {
+  color: var(--color-text-primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.perfil__hours {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+}
+
+.perfil__hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.9rem;
+}
+
+.perfil__hours dt {
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.perfil__hours dd {
+  margin: 0;
+  color: var(--color-text-secondary);
+  text-align: right;
+}
+
+@media (max-width: 900px) {
+  .perfil__layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .perfil__header {
+    grid-template-columns: auto 1fr;
+  }
+
+  .perfil__logo {
+    width: 64px;
+    height: 64px;
+    border-radius: 14px;
+  }
+
+  .perfil__actions {
+    grid-column: 1 / -1;
+  }
+
+  .perfil__book {
+    flex: 1;
+  }
+
+  .perfil__item {
+    flex-wrap: wrap;
+  }
+
+  .perfil__item-action {
+    width: 100%;
+  }
+
+  .perfil__gallery img {
+    height: 150px;
+  }
+}

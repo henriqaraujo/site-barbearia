@@ -1,0 +1,105 @@
+<section class="historico-page">
+  <header class="historico-hero">
+    <p class="historico-eyebrow">Histórico</p>
+    <h1>Atendimentos concluídos</h1>
+    <p class="historico-subtitle">Acompanhe todos os atendimentos já realizados.</p>
+  </header>
+
+  @if (feedbackMessage()) {
+    <p class="historico-feedback">{{ feedbackMessage() }}</p>
+  }
+
+  <div class="historico-filters-card">
+    <div class="historico-filters-grid">
+      <div class="historico-field">
+        <label for="f-search">Pesquisar</label>
+        <div class="historico-search-wrap">
+          <app-icon name="search" [size]="15" />
+          <input
+            id="f-search"
+            type="search"
+            [placeholder]="'Buscar por serviço ou profissional' | term"
+            [value]="historyService.filters().search"
+            (input)="updateFilter('search', $any($event.target).value)"
+          />
+        </div>
+      </div>
+      <div class="historico-field">
+        <label>Período</label>
+        <app-searchable-select
+          [value]="historyService.filters().period"
+          [options]="periodOptions"
+          ariaLabel="Filtrar por período"
+          (valueChange)="updateFilter('period', $event)"
+        ></app-searchable-select>
+      </div>
+      <div class="historico-field">
+        <label>Profissional</label>
+        <app-searchable-select
+          [value]="historyService.filters().professionalId"
+          [options]="professionalOptions()"
+          ariaLabel="Filtrar por profissional"
+          (valueChange)="updateFilter('professionalId', $event)"
+        ></app-searchable-select>
+      </div>
+      <div class="historico-field">
+        <label>Ordenacao</label>
+        <app-searchable-select
+          [value]="historyService.filters().sortOrder"
+          [options]="sortOptions"
+          ariaLabel="Ordenar histórico"
+          (valueChange)="updateFilter('sortOrder', $event)"
+        ></app-searchable-select>
+      </div>
+    </div>
+  </div>
+
+  <p class="historico-result-count">{{ records().length }} atendimento{{ records().length === 1 ? '' : 's' }} encontrado{{ records().length === 1 ? '' : 's' }}</p>
+
+  @if (records().length) {
+    <div class="historico-list-card">
+      @for (record of visibleRecords(); track record.id) {
+        <article class="historico-item">
+          <div class="historico-item-left">
+            <span class="historico-item-icon"><app-icon name="scissors" [size]="17" /></span>
+            <div class="historico-item-text">
+              <p class="historico-item-svc">{{ record.service.name }}</p>
+              <p class="historico-item-sub">{{ record.professional.name }} &middot; {{ formatService.formatDate(record.date) }}</p>
+            </div>
+          </div>
+
+          <div class="historico-item-right">
+            <span class="historico-payment-info">Pagamento: {{ record.paymentMethod }}</span>
+            <span class="historico-price">{{ formatService.formatCurrency(record.paidAmount) }}</span>
+            <app-client-status-badge [status]="record.status" />
+
+            <details class="historico-menu" appCustomDropdown>
+              <summary data-dropdown-trigger aria-haspopup="menu" [attr.aria-label]="'Mais ações para ' + record.service.name">
+                <app-icon name="more-vertical" [size]="16" />
+              </summary>
+              <div role="menu" class="historico-menu-panel">
+                <a
+                  role="menuitem"
+                  data-dropdown-close
+                  class="historico-menu-item"
+                  [routerLink]="'agendamento' | tenantUrl"
+                  [queryParams]="{ servico: record.service.id, profissional: record.professional.id }"
+                >Agendar novamente</a>
+              </div>
+            </details>
+          </div>
+        </article>
+      }
+    </div>
+
+    @if (hasMoreRecords()) {
+      <p class="historico-load-more" role="status">Role para carregar mais atendimentos.</p>
+    }
+
+    <p class="historico-end-caption">Você já viu todo o seu histórico</p>
+  } @else {
+    <div class="historico-empty-card">
+      <h2>Nenhum atendimento encontrado.</h2>
+    </div>
+  }
+</section>

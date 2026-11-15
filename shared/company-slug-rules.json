@@ -1,0 +1,65 @@
+{
+  "$comment": "Fonte unica das regras do slug (endereco publico da empresa). Lido pelo dominio do backend (CompanySlug, recurso embutido) e pelo front (contexto de tenant e teste das rotas). Antes de acrescentar uma palavra, confira se alguma empresa ja usa o slug (consulta no doc 06): ela passaria a ter slug invalido.",
+  "minLength": 3,
+  "maxLength": 50,
+  "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+  "reserved": {
+    "currentRoutes": [
+      "acesso-negado",
+      "admin",
+      "agendamento",
+      "api",
+      "assets",
+      "assinatura",
+      "buscar",
+      "cadastro",
+      "cliente",
+      "confirmar-novo-email",
+      "convite",
+      "entrar",
+      "esqueci-senha",
+      "fila",
+      "health",
+      "login",
+      "minha-conta",
+      "painel",
+      "platform",
+      "redefinir-senha",
+      "uploads",
+      "verificar-email"
+    ],
+    "institutional": [
+      "ajuda",
+      "blog",
+      "contato",
+      "docs",
+      "planos",
+      "precos",
+      "privacidade",
+      "sobre",
+      "status",
+      "termos"
+    ],
+    "phishing": [
+      "conta",
+      "oficial",
+      "seguranca",
+      "suporte"
+    ],
+    "technical": [
+      "app",
+      "auth",
+      "callback",
+      "media",
+      "oauth",
+      "static",
+      "webhook",
+      "webhooks",
+      "www"
+    ]
+  },
+  "brandTerms": [
+    "hlgestao",
+    "gestaohl"
+  ]
+}

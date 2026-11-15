@@ -1,0 +1,82 @@
+@if (mobileOpened()) {
+  <button class="admin-sidebar-backdrop" type="button" aria-label="Fechar menu administrativo" (click)="closeMobile.emit()"></button>
+}
+
+<aside class="admin-sidebar" [class.admin-sidebar--collapsed]="collapsed()" [class.admin-sidebar--opened]="mobileOpened()" [attr.aria-label]="ariaLabel()">
+  <div class="admin-sidebar__brand">
+    <app-brand-mark
+      variant="short"
+      [name]="brandName()"
+      [shortName]="brandShortName()"
+      [logoUrl]="logoUrl() ?? ''"
+      [showText]="!collapsed()"
+      [tag]="brandTag()"
+    />
+  </div>
+
+  <nav class="admin-sidebar__nav" [attr.aria-label]="navigationAriaLabel()">
+    @for (group of navigationGroups(); track group.id) {
+      <section
+        class="admin-sidebar__group"
+        [class.admin-sidebar__group--active]="isGroupActive(group)"
+        [class.admin-sidebar__group--collapsed]="!isGroupExpanded(group)"
+      >
+        @if (!collapsed() && group.label) {
+          @if (group.collapsible) {
+            <button
+              class="admin-sidebar__group-button"
+              type="button"
+              [attr.aria-expanded]="isGroupExpanded(group)"
+              [attr.aria-controls]="'admin-sidebar-group-' + group.id"
+              (click)="toggleGroup(group)"
+            >
+              <span>{{ group.label }}</span>
+              <app-icon class="admin-sidebar__group-chevron" name="chevron-right" [size]="14" />
+            </button>
+          } @else {
+            <div class="admin-sidebar__group-button admin-sidebar__group-button--static">
+              <span>{{ group.label }}</span>
+            </div>
+          }
+        }
+
+        @if (isGroupExpanded(group)) {
+          <div class="admin-sidebar__group-items" [id]="'admin-sidebar-group-' + group.id">
+            @for (item of group.items; track item.route) {
+              <a
+                class="admin-sidebar__link"
+                [class.admin-sidebar__link--locked]="!!item.lockedHint"
+                [routerLink]="item.route"
+                routerLinkActive="admin-sidebar__link--active"
+                [routerLinkActiveOptions]="activeMatchOptions(item)"
+                ariaCurrentWhenActive="page"
+                [attr.title]="item.lockedHint ? item.label + ': ' + item.lockedHint : collapsed() ? item.label : null"
+                [attr.aria-label]="item.lockedHint ? item.label + ' (' + item.lockedHint + ')' : collapsed() ? item.label : null"
+                (click)="handleNavigation()"
+              >
+                @if (item.iconAssetPath; as iconAssetPath) {
+                  <span
+                    class="admin-sidebar__asset-icon"
+                    aria-hidden="true"
+                    [style.--admin-sidebar-icon-url]="'url(' + iconAssetPath + ')'"
+                  ></span>
+                } @else {
+                  <app-icon [name]="item.icon" [size]="20" />
+                }
+                @if (item.badgeCount && item.badgeCount > 0) {
+                  <span class="admin-sidebar__badge">{{ item.badgeCount }}</span>
+                }
+                @if (!collapsed()) {
+                  <span>{{ item.label }}</span>
+                }
+                @if (item.lockedHint) {
+                  <app-icon class="admin-sidebar__lock" name="lock" [size]="14" />
+                }
+              </a>
+            }
+          </div>
+        }
+      </section>
+    }
+  </nav>
+</aside>

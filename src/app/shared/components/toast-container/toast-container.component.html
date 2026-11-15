@@ -1,0 +1,17 @@
+<div class="toast-container" aria-live="polite">
+  @for (toast of toastService.toasts(); track toast.id) {
+    <div class="toast" [class.toast--warning]="toast.tone === 'warning'" role="status">
+      <app-icon class="toast__icon" [name]="toast.tone === 'warning' ? 'lock' : 'check'" [size]="18" />
+      <div class="toast__body">
+        <strong>{{ toast.title }}</strong>
+        <span>{{ toast.message }}</span>
+        @if (toast.code) {
+          <span class="toast__code">C&oacute;digo: {{ toast.code }}</span>
+        }
+      </div>
+      <button class="toast__close" type="button" aria-label="Fechar notifica&ccedil;&atilde;o" (click)="toastService.dismiss(toast.id)">
+        <app-icon name="x" [size]="14" />
+      </button>
+    </div>
+  }
+</div>

@@ -1,0 +1,172 @@
+<section class="conta-page">
+  <header class="conta-hero">
+    <div>
+      <p class="conta-eyebrow">Minha conta</p>
+      <h1>Dados da conta</h1>
+      <p class="conta-subtitle">A conta vale em todas as empresas do HL Gestão. O cadastro que cada empresa tem de você continua com ela.</p>
+    </div>
+  </header>
+
+  <section class="conta-section" aria-labelledby="conta-dados-titulo">
+    <h2 id="conta-dados-titulo">Seus dados</h2>
+    <form class="conta-form" [formGroup]="profileForm" (ngSubmit)="saveProfile()" novalidate>
+      <label class="conta-field">
+        Nome completo
+        <input type="text" formControlName="fullName" autocomplete="name" />
+      </label>
+      @if (profileForm.controls.fullName.touched && profileForm.controls.fullName.invalid) {
+        <p class="conta-error">Informe o nome completo.</p>
+      }
+      <label class="conta-field">
+        Celular
+        <input type="tel" formControlName="phone" autocomplete="tel" />
+      </label>
+      @if (profileForm.controls.phone.touched && profileForm.controls.phone.invalid) {
+        <p class="conta-error">Informe um celular válido.</p>
+      }
+      <label class="conta-field">
+        E-mail
+        <input type="email" [value]="account()?.email ?? ''" readonly aria-describedby="conta-email-status" />
+      </label>
+      <p class="conta-section__hint" id="conta-email-status">
+        {{ account()?.emailVerified ? 'E-mail confirmado.' : 'E-mail ainda não confirmado.' }}
+        @if (account()?.googleLinked) {
+          Conta do Google ligada: você também pode entrar com o Google.
+        }
+      </p>
+      @if (profileMessage()) {
+        <p class="conta-feedback" role="status">{{ profileMessage() }}</p>
+      }
+      @if (profileError()) {
+        <p class="conta-error" role="alert">{{ profileError() }}</p>
+      }
+      <div class="conta-actions">
+        <button type="submit" class="conta-btn" [disabled]="profileSaving()">{{ profileSaving() ? 'Salvando...' : 'Salvar dados' }}</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="conta-section" aria-labelledby="conta-senha-titulo">
+    <h2 id="conta-senha-titulo">Senha</h2>
+    @if (hasPassword()) {
+      <form class="conta-form" [formGroup]="passwordForm" (ngSubmit)="changePassword()" novalidate>
+        <label class="conta-field">
+          Senha atual
+          <app-password-field><input type="password" formControlName="currentPassword" autocomplete="current-password" /></app-password-field>
+        </label>
+        <label class="conta-field">
+          Nova senha
+          <app-password-field><input type="password" formControlName="newPassword" autocomplete="new-password" /></app-password-field>
+        </label>
+        @if (passwordForm.controls.newPassword.touched && passwordForm.controls.newPassword.invalid) {
+          <p class="conta-error">A senha deve ter entre 8 e 128 caracteres.</p>
+        }
+        <label class="conta-field">
+          Confirmar nova senha
+          <app-password-field><input type="password" formControlName="confirmPassword" autocomplete="new-password" /></app-password-field>
+        </label>
+        @if (passwordForm.controls.confirmPassword.touched && passwordForm.hasError('passwordMismatch')) {
+          <p class="conta-error">A confirmação deve ser igual à nova senha.</p>
+        }
+        <p class="conta-section__hint">Ao trocar, as outras sessões da conta (outros aparelhos) são encerradas.</p>
+        @if (passwordMessage()) {
+          <p class="conta-feedback" role="status">{{ passwordMessage() }}</p>
+        }
+        @if (passwordError()) {
+          <p class="conta-error" role="alert">{{ passwordError() }}</p>
+        }
+        <div class="conta-actions">
+          <button type="submit" class="conta-btn" [disabled]="passwordSaving()">{{ passwordSaving() ? 'Trocando...' : 'Trocar senha' }}</button>
+        </div>
+      </form>
+    } @else {
+      <p class="conta-section__hint">Esta conta entra com o Google e ainda não tem senha. Para criar uma, enviamos um link para o seu e-mail.</p>
+      @if (createPasswordMessage()) {
+        <p class="conta-feedback" role="status">{{ createPasswordMessage() }}</p>
+      } @else {
+        <div class="conta-actions">
+          <button type="button" class="conta-btn-secondary" (click)="createPassword()">Criar uma senha</button>
+        </div>
+      }
+    }
+  </section>
+
+  <section class="conta-section" aria-labelledby="conta-email-titulo">
+    <h2 id="conta-email-titulo">Trocar o e-mail</h2>
+    @if (hasPassword()) {
+      <p class="conta-section__hint">Enviamos um link para o novo e-mail; a troca só vale depois que você confirmar por ele. O e-mail atual recebe um aviso com a opção "Não fui eu" para desfazer.</p>
+      <form class="conta-form" [formGroup]="emailForm" (ngSubmit)="requestEmailChange()" novalidate>
+        <label class="conta-field">
+          Novo e-mail
+          <input type="email" formControlName="newEmail" autocomplete="email" />
+        </label>
+        @if (emailForm.controls.newEmail.touched && emailForm.controls.newEmail.invalid) {
+          <p class="conta-error">Informe um e-mail válido.</p>
+        }
+        <label class="conta-field">
+          Senha atual
+          <app-password-field><input type="password" formControlName="currentPassword" autocomplete="current-password" /></app-password-field>
+        </label>
+        @if (emailMessage()) {
+          <p class="conta-feedback" role="status">{{ emailMessage() }}</p>
+        }
+        @if (emailError()) {
+          <p class="conta-error" role="alert">{{ emailError() }}</p>
+        }
+        <div class="conta-actions">
+          <button type="submit" class="conta-btn" [disabled]="emailSaving()">{{ emailSaving() ? 'Enviando...' : 'Enviar link para o novo e-mail' }}</button>
+        </div>
+      </form>
+    } @else {
+      <p class="conta-section__hint">Para trocar o e-mail, crie uma senha antes (bloco "Senha", acima).</p>
+    }
+  </section>
+
+  <section class="conta-section conta-danger" aria-labelledby="conta-excluir-titulo">
+    <h2 id="conta-excluir-titulo">Excluir minha conta</h2>
+    <p class="conta-section__hint">
+      A conta, o e-mail, a senha, os favoritos e os aceites dos documentos são apagados e todas as sessões são encerradas. Os seus
+      atendimentos continuam com cada empresa, que é responsável por eles, como explica a Política de Privacidade. Não dá
+      para desfazer.
+    </p>
+    @if (!deletionOpen()) {
+      <div class="conta-actions">
+        <button type="button" class="conta-btn-danger" (click)="openDeletion()">Excluir minha conta</button>
+      </div>
+    } @else {
+      @if (deletionPreview(); as preview) {
+        @if (preview.upcomingAppointments > 0) {
+          <p class="conta-error" role="status">
+            Você tem {{ preview.upcomingAppointments === 1 ? '1 agendamento marcado' : preview.upcomingAppointments + ' agendamentos marcados' }}.
+            {{ preview.upcomingAppointments === 1 ? 'Ele continua' : 'Eles continuam' }} na agenda da empresa: se não for comparecer, cancele antes em "Meus agendamentos".
+          </p>
+        }
+        <form class="conta-form" [formGroup]="deletionForm" (ngSubmit)="deleteAccount()" novalidate>
+          <label class="conta-field">
+            Digite o e-mail da conta para confirmar
+            <input type="email" formControlName="confirmEmail" autocomplete="off" />
+          </label>
+          @if (preview.requiresPassword) {
+            <label class="conta-field">
+              Senha atual
+              <app-password-field><input type="password" formControlName="currentPassword" autocomplete="current-password" /></app-password-field>
+            </label>
+          }
+          @if (deletionError()) {
+            <p class="conta-error" role="alert">{{ deletionError() }}</p>
+          }
+          <div class="conta-actions">
+            <button type="button" class="conta-btn-secondary" (click)="cancelDeletion()">Cancelar</button>
+            <button type="submit" class="conta-btn-danger conta-btn-danger--solid" [disabled]="deleting()">{{ deleting() ? 'Excluindo...' : 'Excluir definitivamente' }}</button>
+          </div>
+        </form>
+      } @else {
+        @if (deletionError()) {
+          <p class="conta-error" role="alert">{{ deletionError() }}</p>
+        } @else {
+          <p class="conta-section__hint" role="status">Carregando...</p>
+        }
+      }
+    }
+  </section>
+</section>

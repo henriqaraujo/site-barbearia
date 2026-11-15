@@ -1,0 +1,79 @@
+<section class="conta-page">
+  <header class="conta-hero">
+    <div>
+      <p class="conta-eyebrow">Minha conta</p>
+      <h1>Agendar</h1>
+      <p class="conta-subtitle">Escolha a empresa. O horário é marcado na página dela, com a sua conta.</p>
+    </div>
+    <a class="conta-btn-secondary" routerLink="/">Buscar outra empresa</a>
+  </header>
+
+  <section class="conta-section" aria-labelledby="conta-agendar-titulo">
+    <h2 id="conta-agendar-titulo">Minhas empresas</h2>
+    @switch (state()) {
+      @case ('loading') {
+        <div class="conta-skeleton" aria-hidden="true"></div>
+        <p class="conta-section__hint" role="status">Carregando...</p>
+      }
+      @case ('error') {
+        <p class="conta-error" role="alert">Não foi possível carregar suas empresas.</p>
+        <div class="conta-actions"><button type="button" class="conta-btn-secondary" (click)="load()">Tentar de novo</button></div>
+      }
+      @default {
+        @if (companies().length) {
+          <ul class="conta-list">
+            @for (company of companies(); track company.slug) {
+              <li class="conta-card">
+                <span class="conta-card__logo" aria-hidden="true">
+                  @if (logo(company)) {
+                    <img [src]="logo(company)" alt="" />
+                  } @else {
+                    {{ initial(company) }}
+                  }
+                </span>
+                <div class="conta-card__body">
+                  <p class="conta-card__title">{{ company.name }}</p>
+                  <a class="conta-link" [routerLink]="'/' + company.slug + '/cliente'">Ver na empresa</a>
+                </div>
+                <div class="conta-card__side">
+                  <a class="conta-btn" [routerLink]="'/' + company.slug + '/agendamento'" [attr.aria-label]="'Agendar em ' + company.name">Agendar</a>
+                </div>
+              </li>
+            }
+          </ul>
+        } @else {
+          <div class="conta-empty">
+            <p>Você ainda não agendou em nenhuma empresa com esta conta.</p>
+            <a class="conta-btn" routerLink="/">Buscar uma empresa</a>
+          </div>
+        }
+      }
+    }
+  </section>
+
+  @if (favorites().length) {
+    <section class="conta-section" aria-labelledby="conta-agendar-favoritos">
+      <h2 id="conta-agendar-favoritos">Favoritos</h2>
+      <ul class="conta-list">
+        @for (company of favorites(); track company.slug) {
+          <li class="conta-card">
+            <span class="conta-card__logo" aria-hidden="true">
+              @if (logo(company)) {
+                <img [src]="logo(company)" alt="" />
+              } @else {
+                {{ initial(company) }}
+              }
+            </span>
+            <div class="conta-card__body">
+              <p class="conta-card__title">{{ company.name }}</p>
+              <a class="conta-link" [routerLink]="'/' + company.slug">Ver a página</a>
+            </div>
+            <div class="conta-card__side">
+              <a class="conta-btn" [routerLink]="'/' + company.slug + '/agendamento'" [attr.aria-label]="'Agendar em ' + company.name + ' (favorito)'">Agendar</a>
+            </div>
+          </li>
+        }
+      </ul>
+    </section>
+  }
+</section>

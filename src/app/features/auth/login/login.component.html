@@ -1,0 +1,51 @@
+<main class="auth-page" [class.auth-page--platform]="!companySlug">
+  <section class="auth-panel" aria-labelledby="login-title">
+    <app-auth-brand title="Entrar" titleId="login-title" [isCompany]="!!companySlug" />
+
+    @if (pendingDocuments(); as documents) {
+      <app-customer-legal-acceptance
+        [documents]="documents"
+        [isSubmitting]="isSubmitting()"
+        submitLabel="Aceitar e entrar"
+        (accepted)="acceptDocuments($event)"
+        (cancelled)="backToCredentials()"
+      />
+    } @else {
+      @if (accountDeleted) {
+        <p class="form-message" role="status">Sua conta foi excluída. Os seus atendimentos continuam com cada empresa.</p>
+      }
+      <p class="form-hint">Uma conta só para agendar em qualquer empresa do HL Gestão.</p>
+      <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        <label>
+          E-mail
+          <input type="email" formControlName="email" autocomplete="email" />
+        </label>
+        @if (form.controls.email.touched && form.controls.email.invalid) {
+          <p class="field-error">Informe um e-mail válido.</p>
+        }
+
+        <label>
+          Senha
+          <app-password-field><input type="password" formControlName="password" autocomplete="current-password" /></app-password-field>
+        </label>
+        @if (form.controls.password.touched && form.controls.password.invalid) {
+          <p class="field-error">Informe sua senha.</p>
+        }
+
+        @if (errorMessage()) {
+          <p class="form-error" role="alert">{{ errorMessage() }}</p>
+        }
+
+        <button class="submit-button" type="submit" [disabled]="isSubmitting()">
+          {{ isSubmitting() ? 'Entrando...' : 'Entrar' }}
+        </button>
+      </form>
+      <app-google-sign-in (authenticated)="completeGoogleLogin()" />
+      <p class="auth-switch">Ainda não possui uma conta? <a [routerLink]="registerLink" [queryParams]="getRegisterQueryParams()">Criar conta</a></p>
+      <a [routerLink]="forgotPasswordLink">Esqueci minha senha</a>
+      <p class="auth-switch">É da equipe? <a routerLink="/login" [queryParams]="staffLoginQueryParams">Entrar na área da equipe</a></p>
+    }
+    <a class="site-link" [routerLink]="siteLink">Voltar ao site principal</a>
+    <app-legal-links />
+  </section>
+</main>

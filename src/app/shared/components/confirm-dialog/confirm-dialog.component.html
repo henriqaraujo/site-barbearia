@@ -1,0 +1,51 @@
+<div class="confirm-dialog__backdrop" aria-hidden="true" (click)="cancel()"></div>
+
+<section
+  class="confirm-dialog"
+  [attr.data-tone]="tone()"
+  [attr.data-size]="size()"
+  role="alertdialog"
+  aria-modal="true"
+  [attr.aria-labelledby]="titleId"
+  [attr.aria-describedby]="description() ? descriptionId : null">
+  <header class="confirm-dialog__header">
+    <span class="confirm-dialog__badge" aria-hidden="true">
+      <app-icon [name]="icon()" [size]="20" />
+    </span>
+    <div class="confirm-dialog__heading">
+      <h2 [id]="titleId">{{ title() }}</h2>
+      @if (description()) {
+        <p [id]="descriptionId">{{ description() }}</p>
+      }
+    </div>
+    <app-close-button class="confirm-dialog__close" label="Fechar" (closeClick)="cancel()" />
+  </header>
+
+  <div #body class="confirm-dialog__body">
+    <ng-content />
+  </div>
+
+  @if (errorMessage()) {
+    <p class="confirm-dialog__error" role="alert">{{ errorMessage() }}</p>
+  }
+
+  <footer class="confirm-dialog__footer">
+    <button #cancelButton type="button" class="confirm-dialog__button" [disabled]="busy()" (click)="cancel()">
+      {{ cancelLabel() }}
+    </button>
+    @if (secondaryLabel()) {
+      <button type="button" class="confirm-dialog__button" [disabled]="busy()" (click)="runSecondary()">
+        {{ secondaryLabel() }}
+      </button>
+    }
+    <button type="button" class="confirm-dialog__button confirm-dialog__button--primary" [disabled]="busy() || confirmDisabled()" [attr.aria-busy]="busy()" (click)="confirm()">
+      @if (busy()) {
+        <span class="confirm-dialog__spinner" aria-hidden="true"></span>
+        {{ busyLabel() }}
+      } @else {
+        <app-icon [name]="icon()" [size]="16" />
+        {{ confirmLabel() }}
+      }
+    </button>
+  </footer>
+</section>

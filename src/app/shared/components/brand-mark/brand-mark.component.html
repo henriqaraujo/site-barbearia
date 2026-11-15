@@ -1,0 +1,41 @@
+@if (loading()) {
+  <span
+    class="brand-mark brand-mark--loading"
+    [class.brand-mark--short]="variant() === 'short'"
+    [class.brand-mark--full]="variant() === 'full'"
+    role="status"
+    aria-label="Carregando a marca da empresa"
+  >
+    <span class="brand-mark__skeleton brand-mark__skeleton--icon" aria-hidden="true"></span>
+    @if (showText()) {
+      <span class="brand-mark__skeleton brand-mark__skeleton--name" aria-hidden="true"></span>
+    }
+  </span>
+} @else {
+  <span
+    class="brand-mark"
+    [class.brand-mark--short]="variant() === 'short'"
+    [class.brand-mark--full]="variant() === 'full'"
+    [attr.title]="title()"
+    [attr.role]="showText() ? null : 'img'"
+    [attr.aria-label]="showText() ? null : name()"
+  >
+    @if (showsLogoAlone()) {
+      <img class="brand-mark__logo brand-mark__logo--alone" [src]="logoUrl()" [alt]="name()" width="390" height="240" />
+    } @else {
+      @if (logoUrl()) {
+        <img class="brand-mark__logo" [src]="logoUrl()" alt="" aria-hidden="true" width="36" height="36" />
+      } @else if (initials()) {
+        <span class="brand-mark__monogram" aria-hidden="true">{{ initials() }}</span>
+      }
+      @if (showText()) {
+        <span class="brand-mark__text">
+          <span class="brand-mark__name">{{ label() }}</span>
+          @if (tag(); as tagText) {
+            <small class="brand-mark__tag">{{ tagText }}</small>
+          }
+        </span>
+      }
+    }
+  </span>
+}

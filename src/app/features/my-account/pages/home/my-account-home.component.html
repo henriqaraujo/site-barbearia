@@ -1,0 +1,88 @@
+<section class="conta-page">
+  <header class="conta-hero">
+    <div>
+      <p class="conta-eyebrow">Minha conta</p>
+      <h1>Olá{{ firstName() ? ', ' + firstName() : '' }}</h1>
+      <p class="conta-subtitle">Seus agendamentos em todas as empresas do HL Gestão, num lugar só.</p>
+    </div>
+    <a class="conta-btn" routerLink="/minha-conta/agendar">Agendar</a>
+  </header>
+
+  @if (account()?.emailVerified === false) {
+    <div class="conta-section" role="status">
+      <h2>Confirme seu e-mail</h2>
+      <p class="conta-section__hint">Enviamos um link para {{ account()?.email }}. Confirmar protege a sua conta e traz para ela os cadastros que você já tinha com este e-mail.</p>
+      @if (resendMessage()) {
+        <p class="conta-feedback">{{ resendMessage() }}</p>
+      } @else {
+        <div class="conta-actions">
+          <button type="button" class="conta-btn-secondary" (click)="resendVerification()">Reenviar link</button>
+        </div>
+      }
+    </div>
+  }
+
+  <section class="conta-section" aria-labelledby="conta-proximos-titulo">
+    <h2 id="conta-proximos-titulo">Próximos agendamentos</h2>
+    @switch (state()) {
+      @case ('loading') {
+        <div class="conta-skeleton" aria-hidden="true"></div>
+        <div class="conta-skeleton" aria-hidden="true"></div>
+        <p class="conta-section__hint" role="status">Carregando...</p>
+      }
+      @case ('error') {
+        <p class="conta-error" role="alert">Não foi possível carregar seus agendamentos.</p>
+        <div class="conta-actions"><button type="button" class="conta-btn-secondary" (click)="load()">Tentar de novo</button></div>
+      }
+      @default {
+        @if (upcoming().length) {
+          <ul class="conta-list">
+            @for (appointment of upcoming(); track appointment.id) {
+              <li><app-my-account-appointment-card [appointment]="appointment" /></li>
+            }
+          </ul>
+          @if (hasMoreUpcoming()) {
+            <a class="conta-link" routerLink="/minha-conta/agendamentos">Ver todos os agendamentos</a>
+          }
+        } @else {
+          <div class="conta-empty">
+            <p>Você não tem agendamentos marcados.</p>
+            <a class="conta-btn" routerLink="/minha-conta/agendar">Agendar um horário</a>
+          </div>
+        }
+      }
+    }
+  </section>
+
+  @if (state() === 'ready') {
+    <section class="conta-section" aria-labelledby="conta-empresas-titulo">
+      <h2 id="conta-empresas-titulo">Minhas empresas</h2>
+      @if (companies().length) {
+        <ul class="conta-list">
+          @for (company of companies(); track company.slug) {
+            <li class="conta-card">
+              <span class="conta-card__logo" aria-hidden="true">
+                @if (logo(company)) {
+                  <img [src]="logo(company)" alt="" />
+                } @else {
+                  {{ initial(company) }}
+                }
+              </span>
+              <div class="conta-card__body">
+                <p class="conta-card__title">{{ company.name }}</p>
+              </div>
+              <div class="conta-card__side">
+                <a class="conta-link" [routerLink]="'/' + company.slug + '/cliente'">Ver na empresa</a>
+              </div>
+            </li>
+          }
+        </ul>
+      } @else {
+        <div class="conta-empty">
+          <p>Você ainda não agendou em nenhuma empresa com esta conta.</p>
+          <p>Agendamentos feitos sem login ou com outro cadastro podem não aparecer aqui. Fale com a empresa se precisar.</p>
+        </div>
+      }
+    </section>
+  }
+</section>

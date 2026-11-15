@@ -1,0 +1,24 @@
+<section class="inicio-page" aria-labelledby="client-no-membership-title">
+  <header class="inicio-hero">
+    <div>
+      <p class="inicio-eyebrow">{{ 'Área do cliente' | term }}</p>
+      <h1 id="client-no-membership-title">
+        @if (companyName()) {
+          Você ainda não tem agendamentos em {{ companyName() }}
+        } @else {
+          Você ainda não tem agendamentos aqui
+        }
+      </h1>
+      <p class="inicio-subtitle">Quando você agendar, entrar na fila de espera ou contratar um plano, tudo aparece nesta área.</p>
+      <!-- Sempre, para nao revelar se ha um cadastro antigo (agendamentos sem login ficam nele, sem ligar a conta). -->
+      <p class="inicio-subtitle inicio-subtitle--note">
+        Agendamentos feitos sem login ou com outro cadastro podem não aparecer aqui.
+        Fale com {{ companyName() || 'a empresa' }} se precisar.
+      </p>
+    </div>
+    <a class="inicio-btn-primary" [routerLink]="'agendamento' | tenantUrl">
+      <app-icon name="calendar" [size]="16" />
+      Agendar horário
+    </a>
+  </header>
+</section>

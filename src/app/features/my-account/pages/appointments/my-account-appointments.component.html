@@ -1,0 +1,57 @@
+<section class="conta-page">
+  <header class="conta-hero">
+    <div>
+      <p class="conta-eyebrow">Minha conta</p>
+      <h1>Meus agendamentos</h1>
+      <p class="conta-subtitle">De todas as empresas em que você agenda com esta conta. Para cancelar ou remarcar, use "Ver na empresa".</p>
+    </div>
+  </header>
+
+  <div class="conta-filters">
+    <div class="conta-actions" role="group" aria-label="Período">
+      <button type="button" class="conta-btn-secondary" [attr.aria-pressed]="scope() === 'upcoming'" (click)="selectScope('upcoming')">Próximos</button>
+      <button type="button" class="conta-btn-secondary" [attr.aria-pressed]="scope() === 'history'" (click)="selectScope('history')">Histórico</button>
+    </div>
+    <label class="conta-field">
+      Empresa
+      <select (change)="selectCompany($event)">
+        <option value="">Todas as empresas</option>
+        @for (option of companies(); track option.slug) {
+          <option [value]="option.slug" [selected]="company() === option.slug">{{ option.name }}</option>
+        }
+      </select>
+    </label>
+  </div>
+
+  <section class="conta-section" aria-live="polite">
+    @switch (state()) {
+      @case ('loading') {
+        <div class="conta-skeleton" aria-hidden="true"></div>
+        <div class="conta-skeleton" aria-hidden="true"></div>
+        <p class="conta-section__hint" role="status">Carregando...</p>
+      }
+      @case ('error') {
+        <p class="conta-error" role="alert">Não foi possível carregar seus agendamentos.</p>
+        <div class="conta-actions"><button type="button" class="conta-btn-secondary" (click)="load()">Tentar de novo</button></div>
+      }
+      @default {
+        @if (items().length) {
+          <ul class="conta-list">
+            @for (appointment of items(); track appointment.id) {
+              <li><app-my-account-appointment-card [appointment]="appointment" [history]="scope() === 'history'" /></li>
+            }
+          </ul>
+          @if (hasMore()) {
+            <div class="conta-actions">
+              <button type="button" class="conta-btn-secondary" [disabled]="loadingMore()" (click)="loadMore()">{{ loadingMore() ? 'Carregando...' : 'Carregar mais' }}</button>
+            </div>
+          }
+        } @else {
+          <div class="conta-empty">
+            <p>{{ scope() === 'upcoming' ? 'Nenhum agendamento marcado.' : 'Nenhum agendamento no histórico.' }}</p>
+          </div>
+        }
+      }
+    }
+  </section>
+</section>

@@ -1,0 +1,69 @@
+<header class="admin-header">
+  <div class="admin-header__left">
+    <button class="admin-header__icon-button admin-header__mobile-button" type="button" [attr.aria-label]="'Abrir ' + menuAriaLabel()" (click)="toggleMobileSidebar.emit()">
+      <app-icon name="menu" [size]="20" />
+    </button>
+
+    <button
+      class="admin-header__icon-button admin-header__desktop-button"
+      type="button"
+      [attr.aria-label]="(sidebarCollapsed() ? 'Expandir ' : 'Recolher ') + menuAriaLabel()"
+      (click)="toggleDesktopSidebar.emit()"
+    >
+      <app-icon name="panel-left" [size]="20" />
+    </button>
+
+    <ng-content select="[adminHeaderStart]" />
+  </div>
+
+  <div class="admin-header__user">
+    @if (notificationRoute(); as route) {
+      <a class="admin-header__icon-button admin-header__notification-button" [routerLink]="route" aria-label="Abrir notificações">
+        <app-icon [name]="notificationIcon()" [size]="20" />
+        @if (notificationCount() > 0) {
+          <span class="admin-header__notification-count">{{ notificationCount() }}</span>
+        }
+      </a>
+    }
+    @if (currentUser(); as user) {
+      <div class="admin-header__menu" [appCustomDropdown]="isUserMenuOpen()" (customDropdownOpenChange)="isUserMenuOpen.set($event)">
+        <button class="admin-header__menu-trigger" type="button" data-dropdown-trigger aria-haspopup="menu" [attr.aria-expanded]="isUserMenuOpen()" aria-controls="admin-user-menu" (click)="toggleUserMenu($event)">
+          <span class="admin-header__avatar" aria-hidden="true">
+            @if (user.avatarUrl) {
+              <img [src]="user.avatarUrl" [alt]="user.name" />
+            } @else {
+              {{ user.name.slice(0, 1) }}
+            }
+          </span>
+          <span class="admin-header__name">{{ user.name }}</span>
+        </button>
+        @if (isUserMenuOpen()) {
+          <div id="admin-user-menu" class="admin-header__dropdown" role="menu">
+            @if (user.detail) {
+              <p class="admin-header__dropdown-detail">{{ user.detail }}</p>
+            }
+            @if (profileRoute(); as route) {
+              <a [routerLink]="route" role="menuitem" data-dropdown-close (click)="closeUserMenu()">{{ profileLabel() }}</a>
+            }
+            @if (canSwitchCompany()) {
+              <button type="button" role="menuitem" data-dropdown-close (click)="openCompanySwitcher()">
+                <app-icon name="repeat" [size]="16" />
+                Trocar de {{ terms.company }}
+              </button>
+            }
+            <button type="button" role="menuitem" data-dropdown-close (click)="logout()">
+              <app-icon name="log-out" [size]="16" />
+              Sair
+            </button>
+          </div>
+        }
+      </div>
+    } @else {
+      <span class="admin-header__avatar" aria-hidden="true">BD</span>
+    }
+  </div>
+</header>
+
+@if (isCompanySwitcherOpen()) {
+  <app-company-switcher (closed)="isCompanySwitcherOpen.set(false)" />
+}

@@ -1,0 +1,209 @@
+<div class="perfil">
+  @if (companyError()) {
+    <p class="perfil__error" role="alert">Não foi possível carregar a página da {{ terms.company }}. Recarregue a página.</p>
+  }
+
+  <header class="perfil__header" aria-labelledby="perfil-nome">
+    <span class="perfil__logo" aria-hidden="true">
+      @if (logoUrl()) {
+        <img appImageFallback [src]="logoUrl()" alt="" />
+      } @else if (name()) {
+        {{ initial() }}
+      }
+    </span>
+    <div class="perfil__identity">
+      @if (name()) {
+        <h1 id="perfil-nome">{{ name() }}</h1>
+      } @else {
+        <h1 id="perfil-nome" class="perfil__skeleton-text" aria-busy="true"><span class="perfil__sr">Carregando</span></h1>
+      }
+      @if (place()) {
+        <p class="perfil__place">{{ place() }}</p>
+      }
+    </div>
+    <div class="perfil__actions">
+      @if (name()) {
+        <app-favorite-toggle [slug]="slug" [companyName]="name()" [returnUrl]="profileUrl()" />
+      }
+      <a class="perfil__book" [routerLink]="bookingUrl()">Agendar agora</a>
+    </div>
+  </header>
+
+  @if (favoriteError()) {
+    <p class="perfil__error" role="alert">{{ favoriteError() }}</p>
+  }
+
+  @if (gallery().length) {
+    <section class="perfil__gallery" aria-label="Fotos da {{ terms.company }}">
+      <!-- Fileira com rolagem propria: focavel para rolar pelo teclado (setas). -->
+      <ul tabindex="0">
+        @for (photo of gallery(); track photo.url) {
+          <li><img [src]="photo.url" [alt]="photo.alt" loading="lazy" (error)="photoFailed(photo.url)" /></li>
+        }
+      </ul>
+    </section>
+  }
+
+  <div class="perfil__layout">
+    <main class="perfil__main">
+      @if (description()) {
+        <p class="perfil__description">{{ description() }}</p>
+      }
+
+      <div class="perfil__tabs" role="tablist" aria-label="Informações da {{ terms.company }}">
+        @for (tab of tabs(); track tab.id) {
+          <button
+            type="button"
+            role="tab"
+            class="perfil__tab"
+            [id]="'perfil-aba-' + tab.id"
+            [attr.aria-selected]="activeTab() === tab.id"
+            [attr.aria-controls]="'perfil-painel-' + tab.id"
+            [attr.tabindex]="activeTab() === tab.id ? 0 : -1"
+            (click)="selectTab(tab.id)"
+          >
+            {{ tab.label }}
+          </button>
+        }
+      </div>
+
+      <section class="perfil__panel" role="tabpanel" [id]="'perfil-painel-' + activeTab()" [attr.aria-labelledby]="'perfil-aba-' + activeTab()">
+        @switch (activeTab()) {
+          @case ('servicos') {
+            @if (services() === null) {
+              <p class="perfil__hint" role="status">Carregando...</p>
+            } @else if (services()!.length) {
+              <ul class="perfil__list">
+                @for (service of services()!; track service.id) {
+                  <li class="perfil__item">
+                    <div class="perfil__item-body">
+                      <h3>{{ service.name }}</h3>
+                      @if (service.description) {
+                        <p>{{ service.description }}</p>
+                      }
+                      <p class="perfil__meta">{{ service.durationInMinutes }} min · {{ price(service.price) }}</p>
+                    </div>
+                    <a class="perfil__item-action" [routerLink]="bookingUrl()" [queryParams]="{ servico: service.id }" [attr.aria-label]="'Agendar ' + service.name">Agendar</a>
+                  </li>
+                }
+              </ul>
+            } @else {
+              <p class="perfil__hint">{{ 'Nenhum serviço disponível para agendar no momento.' | term }}</p>
+            }
+          }
+          @case ('profissionais') {
+            <ul class="perfil__list">
+              @for (professional of professionals() ?? []; track professional.id) {
+                <li class="perfil__item">
+                  <span class="perfil__avatar" aria-hidden="true">
+                    @if (professional.imageUrl) {
+                      <img appImageFallback [src]="imageUrl(professional.imageUrl)" alt="" />
+                    } @else {
+                      {{ professional.name.charAt(0) }}
+                    }
+                  </span>
+                  <div class="perfil__item-body">
+                    <h3>{{ professional.name }}</h3>
+                    @if (professional.biography) {
+                      <p>{{ professional.biography }}</p>
+                    }
+                  </div>
+                  <a class="perfil__item-action" [routerLink]="bookingUrl()" [queryParams]="{ profissional: professional.id }" [attr.aria-label]="'Agendar com ' + professional.name">Agendar</a>
+                </li>
+              }
+            </ul>
+          }
+          @case ('planos') {
+            <ul class="perfil__list">
+              @for (plan of plans(); track plan.id) {
+                <li class="perfil__item">
+                  <div class="perfil__item-body">
+                    <h3>{{ plan.name }}</h3>
+                    @if (plan.description) {
+                      <p>{{ plan.description }}</p>
+                    }
+                    <p class="perfil__meta">{{ price(plan.price) }}/{{ billingLabel(plan) }}</p>
+                    @if (plan.benefits.length) {
+                      <p class="perfil__meta">Inclui: {{ benefitsText(plan) }}</p>
+                    }
+                  </div>
+                  <a class="perfil__item-action" [routerLink]="planRoute(plan.id)" [queryParams]="planQueryParams(plan.id)" [attr.aria-label]="'Quero assinar ' + plan.name">Quero assinar</a>
+                </li>
+              }
+            </ul>
+          }
+          @case ('produtos') {
+            <ul class="perfil__list">
+              @for (product of products(); track product.id) {
+                <li class="perfil__item">
+                  @if (product.imageUrl) {
+                    <span class="perfil__avatar" aria-hidden="true"><img appImageFallback [src]="imageUrl(product.imageUrl)" alt="" /></span>
+                  }
+                  <div class="perfil__item-body">
+                    <h3>{{ product.name }}</h3>
+                    @if (product.description) {
+                      <p>{{ product.description }}</p>
+                    }
+                    <p class="perfil__meta">{{ price(product.price) }}</p>
+                  </div>
+                  @if (productWhatsappUrl(product); as whatsapp) {
+                    <a class="perfil__item-action" [href]="whatsapp" target="_blank" rel="noopener" [attr.aria-label]="'Perguntar sobre ' + product.name + ' no WhatsApp'">Perguntar</a>
+                  }
+                </li>
+              }
+            </ul>
+          }
+        }
+      </section>
+    </main>
+
+    <aside class="perfil__aside" aria-label="Localização, horário e contato">
+      @if (address()) {
+        <section class="perfil__box" aria-labelledby="perfil-local">
+          <h2 id="perfil-local">Localização</h2>
+          <p>{{ address() }}</p>
+          @if (mapsUrl(); as maps) {
+            <a [href]="maps" target="_blank" rel="noopener">Como chegar</a>
+          }
+        </section>
+      }
+      @if (hours().length) {
+        <section class="perfil__box" aria-labelledby="perfil-horario">
+          <h2 id="perfil-horario">Horário</h2>
+          <dl class="perfil__hours">
+            @for (line of hours(); track line.days) {
+              <div><dt>{{ line.days }}</dt><dd>{{ line.hours }}</dd></div>
+            }
+          </dl>
+        </section>
+      }
+      @if (company(); as current) {
+        @if (current.phone || whatsappUrl() || current.email) {
+          <section class="perfil__box" aria-labelledby="perfil-contato">
+            <h2 id="perfil-contato">Contato</h2>
+            @if (current.phone) {
+              <p><a [href]="'tel:' + current.phone">{{ current.phone }}</a></p>
+            }
+            @if (whatsappUrl(); as whatsapp) {
+              <p><a [href]="whatsapp" target="_blank" rel="noopener">WhatsApp</a></p>
+            }
+            @if (current.email) {
+              <p><a [href]="'mailto:' + current.email">{{ current.email }}</a></p>
+            }
+          </section>
+        }
+        @if (instagramUrl() || current.websiteUrl) {
+          <section class="perfil__box" aria-labelledby="perfil-redes">
+            <h2 id="perfil-redes">Redes</h2>
+            @if (instagramUrl(); as instagram) {
+              <p><a [href]="instagram" target="_blank" rel="noopener">Instagram</a></p>
+            }
+            @if (current.websiteUrl) {
+              <p><a [href]="current.websiteUrl" target="_blank" rel="noopener">Site</a></p>
+            }
+          </section>
+        }
+      }
+    </aside>
+  </div>
+</div>

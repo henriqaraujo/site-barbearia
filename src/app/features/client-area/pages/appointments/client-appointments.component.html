@@ -1,0 +1,173 @@
+<section class="agendamentos-page">
+  <header class="agendamentos-hero">
+    <div>
+      <p class="agendamentos-eyebrow">Agenda</p>
+      <h1>Meus agendamentos</h1>
+    </div>
+    <a class="agendamentos-btn-primary" [routerLink]="'agendamento' | tenantUrl">+ Novo agendamento</a>
+  </header>
+
+  @if (feedbackMessage()) {
+    <p class="agendamentos-feedback">{{ feedbackMessage() }}</p>
+  }
+
+  <div class="agendamentos-stat-bar">
+    <div class="agendamentos-stat">
+      <p class="agendamentos-stat-label">Próximo agendamento</p>
+      @if (nextAppointment(); as next) {
+        <p class="agendamentos-stat-value">{{ formatService.formatDate(next.date) }}</p>
+        <p class="agendamentos-stat-sub">{{ next.time }}</p>
+      } @else {
+        <p class="agendamentos-stat-value">-</p>
+      }
+    </div>
+    <div class="agendamentos-stat">
+      <p class="agendamentos-stat-label">Total de agendamentos</p>
+      <p class="agendamentos-stat-value">{{ upcomingAppointments().length }}</p>
+    </div>
+    <div class="agendamentos-stat">
+      <p class="agendamentos-stat-label">Cobertos pelo plano</p>
+      <p class="agendamentos-stat-value">{{ coveredByPlanCount() }}</p>
+    </div>
+    <div class="agendamentos-stat">
+      <p class="agendamentos-stat-label">Nos próximos 7 dias</p>
+      <p class="agendamentos-stat-value">{{ next7DaysCount() }}</p>
+    </div>
+  </div>
+
+  <div class="agendamentos-layout" [class.agendamentos-layout--with-plan]="hasActiveSubscription()">
+    <div class="agendamentos-list-column">
+      @if (groupedAppointments().length) {
+        <div class="agendamentos-list-wrap">
+          <div class="agendamentos-list-head">
+            <span>{{ 'Serviço' | term }}</span>
+            <span>Profissional</span>
+            <span>Horário</span>
+            <span>Duração</span>
+            <span>Preço</span>
+            <span></span>
+          </div>
+
+          @for (group of groupedAppointments(); track group.dateKey) {
+            <div class="agendamentos-date-heading">{{ group.label }}</div>
+
+            @for (appointment of group.items; track appointment.id) {
+              <article class="agendamentos-row">
+                <div class="agendamentos-servico">
+                  <p class="agendamentos-servico-nome">{{ appointment.service.name }}</p>
+                  @if (appointment.subscriptionPlanName) {
+                    <p class="agendamentos-servico-plano">Plano {{ appointment.subscriptionPlanName }}</p>
+                  }
+                </div>
+                <div class="agendamentos-col">{{ appointment.professional.name }}</div>
+                <div class="agendamentos-col">{{ appointment.time }}</div>
+                <div class="agendamentos-col-sub">{{ appointment.durationInMinutes }} min</div>
+                <div class="agendamentos-price" [class.agendamentos-price--covered]="appointment.subscriptionPlanName">
+                  {{ appointment.subscriptionPlanName ? 'Coberto' : formatService.formatCurrency(appointment.price) }}
+                </div>
+                <div class="agendamentos-row-actions">
+                  <app-client-status-badge [status]="appointment.status" />
+
+                  <details class="agendamentos-menu" appCustomDropdown>
+                    <summary data-dropdown-trigger aria-haspopup="menu" [attr.aria-label]="'Mais ações para ' + appointment.service.name">
+                      <app-icon name="more-vertical" [size]="18" />
+                    </summary>
+                    <div role="menu" class="agendamentos-menu-panel">
+                      <a role="menuitem" data-dropdown-close class="agendamentos-menu-item" [routerLink]="'agendamento' | tenantUrl" [queryParams]="{ servico: appointment.service.id, profissional: appointment.professional.id, remarcar: appointment.id }">Reagendar</a>
+                      <button role="menuitem" data-dropdown-close type="button" class="agendamentos-menu-item" (click)="openCancellation(appointment)">Cancelar</button>
+                      @if (companyContext.whatsappUrl(); as whatsappUrl) {
+                        <a role="menuitem" data-dropdown-close class="agendamentos-menu-item" [href]="whatsappUrl" target="_blank" rel="noreferrer">WhatsApp</a>
+                      }
+                      @if (companyContext.mapsUrl(); as mapsUrl) {
+                        <a role="menuitem" data-dropdown-close class="agendamentos-menu-item" [href]="mapsUrl" target="_blank" rel="noreferrer">Localização</a>
+                      }
+                    </div>
+                  </details>
+                </div>
+              </article>
+            }
+          }
+        </div>
+
+        @if (hasMoreAppointments()) {
+          <p class="agendamentos-load-more" role="status">Role para carregar mais agendamentos.</p>
+        }
+      } @else {
+        <div class="agendamentos-empty">
+          <h3>Você ainda não possui agendamentos</h3>
+          <p>Agende seu próximo horário e ele aparecera aqui.</p>
+          <a class="agendamentos-btn-primary" [routerLink]="'agendamento' | tenantUrl">Iniciar agendamento</a>
+        </div>
+      }
+    </div>
+
+    @if (hasActiveSubscription()) {
+      <aside class="agendamentos-sidebar">
+        <section class="agendamentos-plan-summary" aria-labelledby="agendamentos-plan-summary-title">
+          <h2 id="agendamentos-plan-summary-title">Resumo do plano</h2>
+          <article class="agendamentos-plan-card">
+            <header>
+              <span class="agendamentos-plan-card__icon"><app-icon name="award" [size]="20" /></span>
+              <div>
+                <h3>{{ subscription()!.planName }}</h3>
+                <p>Renovação: {{ subscription()!.nextRenewalDate | date: 'dd/MM/yyyy' }}</p>
+              </div>
+              <span class="agendamentos-plan-card__status">Ativo</span>
+            </header>
+
+            @if (planBenefitsSummary(); as benefits) {
+              <dl class="agendamentos-plan-card__meta">
+                <div><dt>Plano</dt><dd>{{ benefits.allowed }}</dd></div>
+                <div><dt>Utilizados</dt><dd>{{ benefits.used }}</dd></div>
+                <div><dt>Reservados</dt><dd>{{ benefits.reserved }}</dd></div>
+                <div><dt>Disponíveis</dt><dd>{{ benefits.available }}</dd></div>
+              </dl>
+            }
+          </article>
+        </section>
+
+        <article class="agendamentos-tip">
+          <app-icon name="sparkles" [size]="16" />
+          <p>Você pode reagendar ou cancelar seus agendamentos a qualquer momento.</p>
+        </article>
+      </aside>
+    }
+  </div>
+</section>
+
+@if (selectedAppointment(); as appointment) {
+  <app-confirm-dialog
+    title="Cancelar agendamento"
+    description="Confira o horário antes de confirmar."
+    icon="ban"
+    cancelLabel="Voltar"
+    confirmLabel="Cancelar agendamento"
+    busyLabel="Cancelando..."
+    [busy]="isCancelling()"
+    [errorMessage]="cancellationErrorMessage()"
+    (confirmed)="confirmCancellation()"
+    (cancelled)="closeModal()">
+    <div class="confirm-entity">
+      <span class="confirm-entity__avatar confirm-entity__avatar--icon"><app-icon name="scissors" [size]="18" /></span>
+      <div class="confirm-entity__text">
+        <strong>{{ appointment.service.name }}</strong>
+        <small>{{ formatService.formatDate(appointment.date) }} às {{ appointment.time }} · {{ appointment.professional.name }}</small>
+      </div>
+    </div>
+
+    <ul class="confirm-impact">
+      <li>
+        <span class="confirm-impact__icon confirm-impact__icon--remove" aria-hidden="true"><app-icon name="calendar" [size]="15" /></span>
+        <div>
+          <strong>O horário é liberado</strong>
+          <p>Outra pessoa pode reservá-lo. Para voltar, será preciso agendar de novo.</p>
+        </div>
+      </li>
+    </ul>
+
+    <div class="confirm-field">
+      <label for="cancellationReason">Motivo (opcional)</label>
+      <textarea id="cancellationReason" placeholder="Conte o motivo, se quiser" [ngModel]="cancellationReason()" (ngModelChange)="updateCancellationReason($event)"></textarea>
+    </div>
+  </app-confirm-dialog>
+}

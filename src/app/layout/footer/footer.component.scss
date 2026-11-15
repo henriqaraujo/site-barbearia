@@ -1,0 +1,71 @@
+.footer {
+  padding: 4.5rem clamp(1rem, 4vw, 4rem) 2rem;
+  border-top: 1px solid var(--border-subtle);
+  background: var(--surface-secondary);
+
+  &__inner {
+    display: grid;
+    grid-template-columns: 1.5fr repeat(3, 1fr);
+    gap: 2rem;
+    width: min(1180px, 100%);
+    margin: 0 auto;
+  }
+
+  &__brand {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  h2 {
+    margin: 0 0 1rem;
+    color: var(--brand-secondary);
+    font-family: var(--font-condensed);
+    font-size: 0.95rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  p,
+  a,
+  span {
+    display: block;
+    margin: 0 0 0.6rem;
+    color: var(--color-text-secondary);
+  }
+
+  &__bottom {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    width: min(1180px, 100%);
+    margin: 2.5rem auto 0;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-subtle);
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 760px) {
+  .footer {
+    &__inner {
+      grid-template-columns: 1fr;
+    }
+
+    &__bottom {
+      flex-direction: column;
+    }
+  }
+}
+
+// Nome da empresa ainda carregando: bloco neutro, nunca um nome provisorio.
+.footer__skeleton {
+  display: block;
+  width: 9rem;
+  height: 1rem;
+  border-radius: 999px;
+  background: currentColor;
+  opacity: 0.18;
+}

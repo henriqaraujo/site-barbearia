@@ -1,0 +1,47 @@
+{
+  "name": "barbearia-site-publico",
+  "version": "0.1.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve --proxy-config proxy.conf.json",
+    "start:staging": "ng serve --configuration staging",
+    "start:production": "ng serve --configuration production",
+    "build": "ng build",
+    "build:development": "ng build --configuration development",
+    "build:staging": "ng build --configuration staging",
+    "build:production": "ng build --configuration production",
+    "build:demo": "ng build --configuration demo",
+    "test": "ng test"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "20.3.31",
+    "@angular/common": "20.3.31",
+    "@angular/compiler": "20.3.31",
+    "@angular/core": "20.3.31",
+    "@angular/forms": "20.3.31",
+    "@angular/platform-browser": "20.3.31",
+    "@angular/router": "20.3.31",
+    "@fontsource-variable/big-shoulders-display": "^5.3.0",
+    "@fontsource-variable/hanken-grotesk": "^5.3.0",
+    "@phosphor-icons/web": "^2.1.2",
+    "qrcode": "^1.5.4",
+    "rxjs": "~7.8.1",
+    "tslib": "^2.6.2",
+    "zone.js": "~0.15.0"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "20.3.37",
+    "@angular/cli": "20.3.37",
+    "@angular/compiler-cli": "20.3.31",
+    "@types/jasmine": "^6.0.0",
+    "@types/qrcode": "^1.5.6",
+    "jasmine-core": "^6.3.0",
+    "karma": "^6.4.4",
+    "karma-chrome-launcher": "^3.2.0",
+    "karma-coverage": "^2.2.1",
+    "karma-jasmine": "^5.1.0",
+    "karma-jasmine-html-reporter": "^2.2.0",
+    "typescript": "~5.8.3"
+  }
+}

@@ -1,0 +1,9 @@
+<div class="auth-brand">
+  @if (logoUrl(); as logo) {
+    <img class="auth-brand__logo" [src]="logo" [alt]="name()" />
+  }
+  <h1 class="auth-brand__title" [id]="titleId()">{{ title() }}</h1>
+  @if (name()) {
+    <p class="auth-brand__name">{{ name() }}</p>
+  }
+</div>

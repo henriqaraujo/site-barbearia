@@ -1,0 +1,22 @@
+.client-status-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.75rem;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--admin-text);
+  background: var(--admin-surface-muted);
+}
+
+.client-status-badge--confirmed,
+.client-status-badge--completed {
+  color: var(--admin-success);
+  background: var(--admin-success-background);
+}
+
+.client-status-badge--cancelled {
+  color: var(--admin-danger);
+  background: var(--admin-danger-background);
+}

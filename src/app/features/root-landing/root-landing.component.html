@@ -1,0 +1,163 @@
+<app-header />
+
+<div class="vitrine">
+  <main class="vitrine__main" id="conteudo-principal">
+    @if (mode === 'buscar') {
+      <section class="vitrine__hero" aria-labelledby="vitrine-titulo">
+        <h1 id="vitrine-titulo">Buscar</h1>
+        <p class="vitrine__subtitle">Pesquise pelo nome ou pela cidade. O horário é marcado na página da {{ terms.company }}, com a sua conta do {{ brand.name }}.</p>
+
+        <form class="vitrine__search" [formGroup]="form" (ngSubmit)="submit()" role="search" novalidate>
+          <label class="vitrine__field">
+            <span>Nome da {{ terms.company }}</span>
+            <input type="search" formControlName="q" autocomplete="off" placeholder="Ex.: Studio Aurora" />
+          </label>
+          <label class="vitrine__field">
+            <span>Cidade</span>
+            <input type="search" formControlName="cidade" autocomplete="off" list="vitrine-cidades" placeholder="Ex.: Campo Grande" (input)="cityTyped()" />
+            <datalist id="vitrine-cidades">
+              @for (city of cities(); track city.city + city.state) {
+                <option [value]="cityLabel(city)"></option>
+              }
+            </datalist>
+          </label>
+          <button type="submit" class="vitrine__submit">Buscar</button>
+        </form>
+        @if (termError()) {
+          <p class="vitrine__error" role="alert">{{ termError() }}</p>
+        }
+      </section>
+    } @else {
+      <section class="vitrine__hero vitrine__hero--inicio" aria-labelledby="vitrine-titulo">
+        <h1 id="vitrine-titulo">Seja bem-vindo(a)</h1>
+        <p class="vitrine__date">{{ today }}</p>
+        <a class="vitrine__search-link" routerLink="/buscar">Buscar uma {{ terms.company }} pelo nome ou pela cidade</a>
+      </section>
+
+      @if (favorites().length) {
+        <section class="vitrine__results vitrine__favorites" aria-labelledby="vitrine-favoritos">
+          <h2 id="vitrine-favoritos" class="vitrine__results-title">Seus favoritos</h2>
+          <ul class="vitrine__grid">
+            @for (company of favorites(); track company.slug) {
+              <li class="vitrine__card-item">
+                <ng-container [ngTemplateOutlet]="card" [ngTemplateOutletContext]="{ $implicit: company }" />
+              </li>
+            }
+          </ul>
+        </section>
+      }
+
+      <!-- "Perto de você": front pronto, ligado em DIRECTORY_FEATURES.nearby quando a rota /nearby existir. -->
+      @if (nearbyEnabled) {
+        <section class="vitrine__results vitrine__nearby" aria-labelledby="vitrine-perto">
+          <h2 id="vitrine-perto" class="vitrine__results-title">Perto de você</h2>
+          @switch (nearbyState()) {
+            @case ('idle') {
+              <p class="vitrine__hint">Veja as {{ terms.companies }} mais próximas. A sua localização é usada só nesta busca e não é guardada.</p>
+              <button type="button" class="vitrine__secondary" (click)="findNearby()">Usar minha localização</button>
+            }
+            @case ('locating') {
+              <p class="vitrine__hint" role="status">Procurando {{ terms.companies }} perto de você...</p>
+            }
+            @case ('ready') {
+              @if (nearby().length) {
+                <ul class="vitrine__grid">
+                  @for (company of nearby(); track company.slug) {
+                    <li class="vitrine__card-item">
+                      <ng-container [ngTemplateOutlet]="card" [ngTemplateOutletContext]="{ $implicit: company }" />
+                    </li>
+                  }
+                </ul>
+              } @else {
+                <p class="vitrine__hint">Nenhuma {{ terms.company }} perto de você. <a routerLink="/buscar">Busque pela cidade</a>.</p>
+              }
+            }
+            @case ('denied') {
+              <p class="vitrine__hint" role="status">Sem a localização não dá para mostrar as mais próximas. <a routerLink="/buscar">Busque pela cidade</a>.</p>
+            }
+            @default {
+              <p class="vitrine__error" role="alert">Não foi possível buscar as {{ terms.companies }} próximas. <a routerLink="/buscar">Busque pela cidade</a>.</p>
+            }
+          }
+        </section>
+      }
+    }
+
+    @if (favoriteError()) {
+      <p class="vitrine__error" role="alert">{{ favoriteError() }}</p>
+    }
+
+    <!-- Buscar sem termo (idle): nada listado ate a pessoa buscar; as empresas da vitrine ficam no Inicio. -->
+    @if (state() !== 'idle') {
+      <section class="vitrine__results" aria-labelledby="vitrine-resultados" aria-live="polite">
+        <h2 id="vitrine-resultados" class="vitrine__results-title">
+          {{ searched().q || searched().cidade ? 'Resultado da busca' : terms.companies.charAt(0).toUpperCase() + terms.companies.slice(1) + ' no ' + brand.name }}
+        </h2>
+        @switch (state()) {
+          @case ('loading') {
+            <div class="vitrine__grid" aria-hidden="true">
+              <div class="vitrine__skeleton"></div>
+              <div class="vitrine__skeleton"></div>
+              <div class="vitrine__skeleton"></div>
+            </div>
+            <p class="vitrine__hint" role="status">Carregando...</p>
+          }
+          @case ('error') {
+            <p class="vitrine__error" role="alert">Não foi possível buscar agora. Tente de novo.</p>
+            <button type="button" class="vitrine__secondary" (click)="submit()">Tentar de novo</button>
+          }
+          @default {
+            @if (companies().length) {
+              <ul class="vitrine__grid">
+                @for (company of companies(); track company.slug) {
+                  <li class="vitrine__card-item">
+                    <ng-container [ngTemplateOutlet]="card" [ngTemplateOutletContext]="{ $implicit: company }" />
+                  </li>
+                }
+              </ul>
+              @if (hasMore()) {
+                <button type="button" class="vitrine__secondary" [disabled]="loadingMore()" (click)="loadMore()">{{ loadingMore() ? 'Carregando...' : 'Ver mais' }}</button>
+              }
+            } @else {
+              <div class="vitrine__empty">
+                <p>{{ searched().q || searched().cidade ? 'Nenhuma ' + terms.company + ' encontrada.' : 'Ainda não há ' + terms.companies + ' na busca.' }}</p>
+                <!-- So quando nao achou nada (pedido do dono, 07/10): antes era um cartao fixo embaixo da lista. -->
+                <p class="vitrine__hint root-landing__notice">Nem toda {{ terms.company }} aparece na busca: use o link da própria {{ terms.company }}, que ela divulga no WhatsApp, no Instagram ou no balcão.</p>
+                @if (searched().q || searched().cidade) {
+                  <button type="button" class="vitrine__secondary" (click)="clear()">Limpar a busca</button>
+                }
+              </div>
+            }
+          }
+        }
+      </section>
+    }
+  </main>
+
+  <!-- Cartao da busca, dos favoritos e de "Perto de você": o coracao fica fora do link (nada interativo dentro de outro). -->
+  <ng-template #card let-company>
+    <a class="vitrine__card" [routerLink]="'/' + company.slug">
+      <span class="vitrine__card-logo" aria-hidden="true">
+        @if (logo(company) && !logoFailed(company)) {
+          <img [src]="logo(company)" alt="" (error)="markLogoFailed(company)" />
+        } @else {
+          {{ initial(company) }}
+        }
+      </span>
+      <span class="vitrine__card-body">
+        <span class="vitrine__card-name">{{ company.name }}</span>
+        @if (place(company)) {
+          <span class="vitrine__card-place">{{ place(company) }}</span>
+        }
+        @if (distance(company)) {
+          <span class="vitrine__card-place">{{ distance(company) }}</span>
+        }
+      </span>
+    </a>
+    <app-favorite-toggle class="vitrine__card-favorite" [slug]="company.slug" [companyName]="company.name" [returnUrl]="returnUrl()" />
+  </ng-template>
+
+  <footer class="vitrine__footer">
+    <app-legal-links />
+  </footer>
+</div>

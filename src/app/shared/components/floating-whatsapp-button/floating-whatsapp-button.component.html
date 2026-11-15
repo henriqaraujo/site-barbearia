@@ -1,0 +1,13 @@
+@if (whatsappUrl(); as url) {
+  <a
+    class="whatsapp-button"
+    [class.whatsapp-button--visible]="isVisible()"
+    [href]="url"
+    target="_blank"
+    rel="noopener"
+    aria-label="Conversar pelo WhatsApp"
+  >
+    <app-icon name="message-circle" [size]="24" />
+    <span class="whatsapp-button__tooltip">WhatsApp</span>
+  </a>
+}

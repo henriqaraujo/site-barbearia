@@ -1,0 +1,163 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.searchable-select {
+  position: relative;
+  width: 100%;
+}
+
+.searchable-select input {
+  width: 100%;
+  min-height: var(--admin-input-height, var(--form-control-height, 2.55rem));
+  border: 1px solid var(--admin-border);
+  border-radius: var(--admin-input-radius, 10px);
+  background: var(--admin-control-background, #ffffff);
+  color: var(--admin-text);
+  padding: 0 var(--form-control-padding-icon, 2.25rem) 0 var(--form-control-padding-x, 0.75rem);
+  font: inherit;
+  font-weight: 400;
+  font-size: var(--form-control-font-size, 0.95rem);
+  line-height: var(--form-control-line-height, 1.25);
+}
+
+.searchable-select input:focus {
+  border-color: var(--admin-primary);
+  outline: 0;
+  box-shadow: 0 0 0 1.5px var(--admin-primary);
+}
+
+.searchable-select input:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.searchable-select__indicator {
+  position: absolute;
+  top: 50%;
+  right: var(--form-control-padding-x, 0.75rem);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--admin-text-muted);
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.searchable-select__indicator app-icon {
+  transform: rotate(90deg);
+  transition: transform var(--transition-fast, 180ms ease);
+}
+
+.searchable-select__indicator--open app-icon {
+  transform: rotate(-90deg);
+}
+
+.searchable-select__panel {
+  position: absolute;
+  z-index: 80;
+  top: calc(100% + 0.3rem);
+  right: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--admin-border);
+  border-radius: var(--radius-control);
+  background: var(--admin-surface, #ffffff);
+  box-shadow: var(--admin-shadow-soft);
+  padding: 0.4rem 0;
+}
+
+/* So as opcoes rolam; a acao de rodape fica fixa no fim do painel. */
+.searchable-select__options {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: 13.5rem;
+  overflow-y: auto;
+}
+
+.searchable-select__options::-webkit-scrollbar {
+  width: 8px;
+}
+
+.searchable-select__options::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.searchable-select__options::-webkit-scrollbar-thumb {
+  background: #f2e6d2;
+  border-radius: 999px;
+}
+
+.searchable-select__options::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, #f2e6d2 75%, black);
+}
+
+.searchable-select__panel button {
+  display: block;
+  width: 100%;
+  min-height: 2.6rem;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--admin-text);
+  padding: 0 1rem;
+  text-align: left;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 400;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  box-shadow: none;
+  outline: 0;
+}
+
+.searchable-select__panel button:hover,
+.searchable-select__panel button:focus-visible {
+  background: var(--admin-surface-muted);
+  outline: 0;
+  box-shadow: none;
+}
+
+.searchable-select__panel button.selected {
+  color: var(--admin-primary);
+  font-weight: 700;
+  background: transparent;
+}
+
+.searchable-select__panel button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.searchable-select__panel button.searchable-select__action {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.4rem;
+  border-top: 1px solid var(--admin-border);
+  color: var(--admin-primary);
+  font-weight: 700;
+}
+
+.searchable-select__action-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.4rem;
+  height: 1.4rem;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+}
+
+.searchable-select__empty {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  color: var(--admin-text-muted);
+  font-size: 0.9rem;
+  font-weight: 700;
+}

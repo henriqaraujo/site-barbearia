@@ -1,0 +1,31 @@
+@switch (tenant.status()) {
+  @case ('not-found') {
+    <main class="tenant-state" aria-labelledby="tenant-state-title">
+      <h1 id="tenant-state-title">{{ terms.Company }} não encontrada</h1>
+      <p>Confira o endereço que você recebeu. Se o link veio da sua {{ terms.company }}, peça para ela enviar de novo.</p>
+      <a routerLink="/">Ir para o início</a>
+    </main>
+  }
+  @case ('inactive') {
+    <main class="tenant-state" aria-labelledby="tenant-state-title">
+      @if (tenant.company(); as company) {
+        @if (company.branding.logoPreviewUrl) {
+          <img class="tenant-state__logo" [src]="company.branding.logoPreviewUrl" [alt]="company.name" />
+        }
+        <p class="tenant-state__company">{{ company.name }}</p>
+      }
+      <h1 id="tenant-state-title">Agendamento temporariamente indisponível</h1>
+      <p>Esta {{ terms.company }} não está recebendo agendamentos pelo site no momento. Tente de novo mais tarde.</p>
+    </main>
+  }
+  @case ('error') {
+    <main class="tenant-state" aria-labelledby="tenant-state-title">
+      <h1 id="tenant-state-title">Não foi possível abrir a {{ terms.company }} agora</h1>
+      <p>Verifique sua conexão e tente de novo em instantes.</p>
+      <button class="button button-primary" type="button" (click)="retry()">Tentar de novo</button>
+    </main>
+  }
+  @default {
+    <router-outlet />
+  }
+}

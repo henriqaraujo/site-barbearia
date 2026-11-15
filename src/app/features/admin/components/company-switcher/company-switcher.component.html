@@ -1,0 +1,45 @@
+<app-admin-drawer
+  [title]="title"
+  titleId="company-switcher-title"
+  closeAriaLabel="Fechar troca de empresa"
+  [errorMessage]="errorMessage()"
+  (closed)="closed.emit()"
+>
+  <div drawer-content class="company-switcher__body">
+    @if (companies() === null && !errorMessage()) {
+      <ul class="company-switcher__list" aria-busy="true" aria-label="Carregando">
+        @for (placeholder of placeholders; track placeholder) {
+          <li class="company-switcher__skeleton" aria-hidden="true"></li>
+        }
+      </ul>
+    } @else {
+      <ul class="company-switcher__list">
+        @for (company of options(); track company.companyId) {
+          <li>
+            <button
+              type="button"
+              class="company-switcher__option"
+              [disabled]="company.isCurrent || switchingTo() !== null"
+              [attr.aria-current]="company.isCurrent ? 'true' : null"
+              (click)="switchTo(company.companyId)"
+            >
+              <app-brand-mark [name]="company.name" [logoUrl]="company.logo" variant="short" [showText]="false" />
+              <span class="company-switcher__text">
+                <span class="company-switcher__name">{{ company.name }}</span>
+                <span class="company-switcher__role">
+                  {{ roleLabel(company.role) }}
+                  @if (company.isCurrent) {
+                    · atual
+                  } @else if (switchingTo() === company.companyId) {
+                    · entrando...
+                  }
+                </span>
+              </span>
+            </button>
+          </li>
+        }
+      </ul>
+    }
+  </div>
+  <button drawer-footer type="button" class="secondary-button" (click)="closed.emit()">Cancelar</button>
+</app-admin-drawer>

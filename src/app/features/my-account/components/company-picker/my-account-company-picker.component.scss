@@ -1,0 +1,142 @@
+// Troca de empresa no topo da /minha-conta e da area do cliente, no padrao dos filtros do painel
+// (app-searchable-select), com logo e nome.
+
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.empresa-picker {
+  position: relative;
+  min-width: 0;
+}
+
+.empresa-picker__trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  min-width: 15rem;
+  max-width: 22rem;
+  min-height: 2.5rem;
+  border: 1px solid var(--admin-border);
+  border-radius: 10px;
+  background: var(--admin-control-background, #ffffff);
+  color: var(--admin-text);
+  padding: 0.25rem 0.75rem 0.25rem 0.35rem;
+  font: inherit;
+  font-size: 0.92rem;
+  text-align: left;
+}
+
+.empresa-picker__trigger {
+  cursor: pointer;
+}
+
+.empresa-picker__trigger:focus-visible {
+  border-color: var(--admin-primary);
+  outline: 0;
+  box-shadow: 0 0 0 1.5px var(--admin-primary);
+}
+
+.empresa-picker__logo {
+  display: grid;
+  flex: 0 0 auto;
+  width: 1.9rem;
+  height: 1.9rem;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid var(--admin-border);
+  border-radius: 999px;
+  background: var(--admin-surface-muted);
+  color: var(--admin-primary);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.empresa-picker__logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.empresa-picker__name {
+  min-width: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.empresa-picker__chevron {
+  display: inline-flex;
+  color: var(--admin-text-muted);
+}
+
+.empresa-picker__chevron app-icon {
+  transform: rotate(90deg);
+  transition: transform var(--transition-fast, 180ms ease);
+}
+
+.empresa-picker__chevron--open app-icon {
+  transform: rotate(-90deg);
+}
+
+.empresa-picker__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.empresa-picker__panel {
+  position: absolute;
+  z-index: 80;
+  top: calc(100% + 0.3rem);
+  left: 0;
+  right: 0;
+  max-height: 18rem;
+  overflow-y: auto;
+  border: 1px solid var(--admin-border);
+  border-radius: var(--radius-control);
+  background: var(--admin-surface, #ffffff);
+  box-shadow: var(--admin-shadow-soft);
+  padding: 0.4rem 0;
+}
+
+.empresa-picker__panel button {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  min-height: 2.75rem;
+  border: 0;
+  background: transparent;
+  color: var(--admin-text);
+  padding: 0 0.85rem 0 0.5rem;
+  font: inherit;
+  font-size: 0.9rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.empresa-picker__panel button:hover,
+.empresa-picker__panel button:focus-visible {
+  background: var(--admin-surface-muted);
+  outline: 0;
+}
+
+.empresa-picker__panel .empresa-picker__option--selected {
+  color: var(--admin-primary);
+  font-weight: 700;
+}
+
+@media (max-width: 900px) {
+  .empresa-picker__trigger {
+    min-width: 0;
+    max-width: none;
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "$comment": "Versao atual de cada documento legal, lida pelo backend (aceite) e pelo front (paginas e links). Versao nova = arquivo de texto novo em public/assets/legal/{id}-{versao}.html (os antigos nunca sao editados) e nova data aqui; quem aceitou a anterior aceita de novo. Em rascunho as paginas ficam escondidas em producao e o aceite e recusado la.",
+  "documents": {
+    "termos": {
+      "title": "Termos de Uso",
+      "version": "2026-10-05",
+      "status": "rascunho"
+    },
+    "privacidade": {
+      "title": "Política de Privacidade",
+      "version": "2026-10-05",
+      "status": "rascunho"
+    }
+  }
+}

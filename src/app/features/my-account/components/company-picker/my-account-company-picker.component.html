@@ -1,0 +1,53 @@
+@if (visible()) {
+  <div class="empresa-picker" [appCustomDropdown]="isOpen()" (customDropdownOpenChange)="isOpen.set($event)">
+    <button
+      class="empresa-picker__trigger"
+      type="button"
+      data-dropdown-trigger
+      aria-haspopup="listbox"
+      [attr.aria-expanded]="isOpen()"
+      aria-controls="empresa-picker-lista"
+      (click)="toggle()"
+    >
+      <span class="empresa-picker__sr">Você está em: </span>
+      <ng-container *ngTemplateOutlet="companyMark; context: { $implicit: current() }" />
+      <span class="empresa-picker__chevron" [class.empresa-picker__chevron--open]="isOpen()" aria-hidden="true">
+        <app-icon name="chevron-right" [size]="16" />
+      </span>
+    </button>
+
+    @if (isOpen()) {
+      <div id="empresa-picker-lista" class="empresa-picker__panel" role="listbox" aria-label="Trocar de empresa">
+        <button type="button" role="option" [attr.aria-selected]="!current()" [class.empresa-picker__option--selected]="!current()" (click)="choose(null)">
+          <ng-container *ngTemplateOutlet="companyMark; context: { $implicit: null }" />
+        </button>
+        @for (company of companies(); track company.slug) {
+          <button
+            type="button"
+            role="option"
+            [attr.aria-selected]="current()?.slug === company.slug"
+            [class.empresa-picker__option--selected]="current()?.slug === company.slug"
+            (click)="choose(company)"
+          >
+            <ng-container *ngTemplateOutlet="companyMark; context: { $implicit: company }" />
+          </button>
+        }
+      </div>
+    }
+  </div>
+}
+
+<ng-template #companyMark let-company>
+  <span class="empresa-picker__logo" aria-hidden="true">
+    @if (company) {
+      @if (logo(company)) {
+        <img [src]="logo(company)" alt="" />
+      } @else {
+        {{ initial(company) }}
+      }
+    } @else {
+      <app-icon name="user" [size]="16" />
+    }
+  </span>
+  <span class="empresa-picker__name">{{ company ? company.name : 'Minha conta' }}</span>
+</ng-template>

@@ -1,0 +1,229 @@
+:host {
+  display: contents;
+}
+
+.admin-sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--admin-z-sidebar) - 1);
+  border: 0;
+  background: var(--admin-backdrop);
+}
+
+.admin-sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: var(--admin-z-sidebar);
+  display: flex;
+  flex-direction: column;
+  width: var(--admin-sidebar-width);
+  padding: 1rem 0.75rem;
+  border-right: 1px solid var(--admin-border);
+  background: var(--admin-sidebar-background);
+  color: var(--admin-sidebar-text);
+  transition: width var(--transition-medium), transform var(--transition-medium);
+}
+
+.admin-sidebar--collapsed {
+  width: var(--admin-sidebar-collapsed-width);
+}
+
+.admin-sidebar__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 3rem;
+  padding: 0 0.5rem 1rem;
+  border-bottom: 1px solid var(--admin-border);
+}
+
+.admin-sidebar__nav {
+  display: grid;
+  flex: 1 1 auto;
+  gap: 0.45rem;
+  align-content: start;
+  min-height: 0;
+  padding-top: 1rem;
+  padding-right: 0.2rem;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #f2e6d2 transparent;
+}
+
+.admin-sidebar__nav::-webkit-scrollbar {
+  width: 6px;
+}
+
+.admin-sidebar__nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.admin-sidebar__nav::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: #f2e6d2;
+}
+
+.admin-sidebar__nav::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, #f2e6d2 75%, black);
+}
+
+.admin-sidebar__nav::-webkit-scrollbar-button {
+  display: none;
+}
+
+.admin-sidebar__group {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.admin-sidebar__group-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 1.75rem;
+  padding: 0 0.5rem;
+  border: 0;
+  background: transparent;
+  color: var(--admin-sidebar-text-muted);
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-align: left;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color var(--transition-fast);
+}
+
+.admin-sidebar__group-button:hover,
+.admin-sidebar__group--active .admin-sidebar__group-button {
+  color: var(--admin-sidebar-text);
+}
+
+.admin-sidebar__group-button--static {
+  cursor: default;
+}
+
+.admin-sidebar__group-chevron {
+  transition: transform var(--transition-fast);
+}
+
+.admin-sidebar__group:not(.admin-sidebar__group--collapsed) .admin-sidebar__group-chevron {
+  transform: rotate(90deg);
+}
+
+.admin-sidebar__group-items {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.admin-sidebar__link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-height: 2.35rem;
+  padding: 0 0.75rem 0 1rem;
+  border-radius: var(--radius-control);
+  color: var(--admin-sidebar-text-muted);
+  font-size: 0.9rem;
+  font-weight: 400;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.admin-sidebar__asset-icon {
+  display: inline-block;
+  flex: 0 0 1.25rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  background: currentColor;
+  mask-image: var(--admin-sidebar-icon-url);
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  -webkit-mask-image: var(--admin-sidebar-icon-url);
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+}
+
+.admin-sidebar__badge {
+  position: absolute;
+  top: 0.25rem;
+  left: 1.55rem;
+  display: grid;
+  min-width: 1.15rem;
+  height: 1.15rem;
+  place-items: center;
+  padding: 0 0.25rem;
+  border-radius: 999px;
+  background: var(--admin-danger);
+  color: #ffffff;
+  font-size: 0.7rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.admin-sidebar--collapsed .admin-sidebar__badge {
+  left: 2.1rem;
+}
+
+.admin-sidebar__link:hover,
+.admin-sidebar__link--active {
+  color: var(--admin-sidebar-text);
+  background: var(--admin-sidebar-active-background);
+}
+
+.admin-sidebar__link--active {
+  box-shadow: inset 3px 0 0 var(--admin-primary);
+}
+
+.admin-sidebar--collapsed .admin-sidebar__link {
+  justify-content: center;
+  padding-inline: 0;
+}
+
+.admin-sidebar--collapsed .admin-sidebar__nav {
+  gap: 0.3rem;
+  padding-right: 0;
+}
+
+.admin-sidebar--collapsed .admin-sidebar__group,
+.admin-sidebar--collapsed .admin-sidebar__group-items {
+  gap: 0.25rem;
+}
+
+@media (max-width: 900px) {
+  .admin-sidebar {
+    width: min(18rem, calc(100vw - 2rem));
+    transform: translateX(-105%);
+  }
+
+  .admin-sidebar--opened {
+    transform: translateX(0);
+  }
+
+  .admin-sidebar--collapsed {
+    width: min(18rem, calc(100vw - 2rem));
+  }
+
+  .admin-sidebar--collapsed .admin-sidebar__link {
+    justify-content: flex-start;
+    padding-inline: 0.75rem;
+  }
+}
+
+/* Funcao fora do plano da HL (ID 12): item mais apagado e cadeado no fim; o clique leva a "Meu plano". */
+.admin-sidebar__link--locked {
+  opacity: 0.7;
+}
+
+.admin-sidebar__lock {
+  margin-left: auto;
+  flex: 0 0 auto;
+}
+
+.admin-sidebar--collapsed .admin-sidebar__lock {
+  position: absolute;
+  right: 0.35rem;
+  bottom: 0.3rem;
+}

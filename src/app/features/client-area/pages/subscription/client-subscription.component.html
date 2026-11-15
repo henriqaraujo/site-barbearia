@@ -1,0 +1,186 @@
+<section class="plano-page">
+  <header class="plano-hero">
+    <h1>Meu plano</h1>
+    <p>Acompanhe status, renovação e saldo dos benefícios.</p>
+  </header>
+
+  @if (isLoading()) {
+    <div class="plano-state" role="status">Carregando planos.</div>
+  } @else if (unavailable()) {
+    <div class="plano-state" role="status">Esta empresa não oferece planos de assinatura no momento.</div>
+  } @else if (errorMessage()) {
+    <div class="plano-state plano-state--error" role="alert">{{ errorMessage() }}</div>
+  } @else {
+    @if (subscription(); as currentSubscription) {
+      <article class="plano-card">
+        <div class="plano-card-pole"></div>
+
+        <div class="plano-card-head">
+          <div>
+            <span class="plano-status-pill" [class]="'plano-status-pill--' + getStatusPillModifier(currentSubscription.status)">
+              <span class="dot"></span>{{ getStatusLabel(currentSubscription.status) }}
+            </span>
+            <h2>{{ currentSubscription.planName }}</h2>
+            @if (currentSubscription.planDescription) {
+              <p class="plano-card-desc">{{ currentSubscription.planDescription }}</p>
+            }
+          </div>
+          <div class="plano-card-price">{{ currentSubscription.contractedPrice | currency: 'BRL':'symbol':'1.2-2':'pt-BR' }}</div>
+        </div>
+
+        @if (currentSubscription.status === 'AwaitingPayment') {
+          <p class="plano-awaiting-message">Aguardando confirmação do pagamento.</p>
+        }
+
+        @if (currentSubscription.overdueInstallmentDate) {
+          <p class="plano-overdue-message" role="status">
+            Mensalidade de {{ currentSubscription.overdueInstallmentDate | date: 'dd/MM' }} em aberto. Os horários novos saem como avulso até o pagamento ser registrado.
+          </p>
+        }
+
+        @if (currentSubscription.status === 'Expired') {
+          <p class="plano-ended-message" role="status">
+            @if (currentSubscription.coveredUntil) {
+              Seu plano terminou em {{ currentSubscription.coveredUntil | date: 'dd/MM/yyyy' }}.
+            } @else {
+              Seu plano terminou.
+            }
+            Os horários novos saem como avulso; para voltar a ter benefícios, escolha um plano abaixo.
+          </p>
+        }
+
+        @if (currentSubscription.coveredUntil && currentSubscription.status === 'Active') {
+          <p class="plano-promo-message">
+            Plano promocional: seus benefícios valem até {{ currentSubscription.coveredUntil | date: 'dd/MM/yyyy' }}. Depois disso ele não renova.
+          </p>
+        }
+
+        <dl class="plano-meta-grid">
+          <div><dt>Início</dt><dd>{{ currentSubscription.startDate | date: 'dd/MM/yyyy' }}</dd></div>
+          @if (currentSubscription.status === 'Expired') {
+            <div><dt>Terminou em</dt><dd>{{ currentSubscription.coveredUntil ? (currentSubscription.coveredUntil | date: 'dd/MM/yyyy') : '—' }}</dd></div>
+          } @else if (renewsOnNextRenewalDate(currentSubscription)) {
+            <div><dt>Próxima renovação</dt><dd>{{ currentSubscription.nextRenewalDate | date: 'dd/MM/yyyy' }}</dd></div>
+          } @else {
+            <div><dt>Válido até</dt><dd>{{ currentSubscription.coveredUntil | date: 'dd/MM/yyyy' }}</dd></div>
+          }
+          <div><dt>Periodicidade</dt><dd>{{ getBillingPeriodLabel(currentSubscription.billingPeriod) }}</dd></div>
+          <div><dt>Quem atende</dt><dd>{{ currentSubscription.professionalName || describePlanProfessionals(currentSubscription.planProfessionalNames) }}</dd></div>
+        </dl>
+
+        @if (currentSubscription.status !== 'Expired' && currentSubscription.currentPeriod; as period) {
+          <section class="plano-benefits">
+            <h3>Benefícios</h3>
+            @for (benefit of period.benefits; track benefit.serviceId) {
+              <article class="plano-benefit-card">
+                <p class="plano-benefit-name">{{ benefit.serviceName }}</p>
+                <div class="plano-benefit-stats">
+                  <div><p class="label">Plano</p><p class="value">{{ benefit.allowedQuantity }}</p></div>
+                  <div><p class="label">Utilizados</p><p class="value">{{ benefit.usedQuantity }}</p></div>
+                  <div><p class="label">Reservados</p><p class="value">{{ benefit.reservedQuantity }}</p></div>
+                  @if (currentSubscription.status === 'Overdue') {
+                    <div><p class="label">Liberados após o pagamento</p><p class="value">{{ getBlockedUntilPaymentQuantity(benefit) }}</p></div>
+                  } @else {
+                    <div><p class="label">Disponíveis</p><p class="value">{{ canUseBenefits(currentSubscription) ? benefit.availableQuantity : 0 }}</p></div>
+                  }
+                </div>
+                <div class="plano-benefit-bar-track">
+                  <div class="plano-benefit-bar-used" [style.width.%]="getUsedPercent(benefit)"></div>
+                  <div class="plano-benefit-bar-reserved" [style.width.%]="getReservedPercent(benefit)"></div>
+                </div>
+              </article>
+            }
+          </section>
+        }
+      </article>
+    } @else {
+      <div class="plano-state">Você ainda não possui uma assinatura ativa.</div>
+    }
+
+    <section class="plano-other-plans" aria-labelledby="plano-other-plans-title">
+      <h2 class="plano-section-title" id="plano-other-plans-title">{{ availablePlansTitle() }}</h2>
+
+      @if (interestMessage()) {
+        <div class="plano-state plano-state--success" role="status">{{ interestMessage() }}</div>
+      }
+
+      @if (availablePlans().length) {
+        <div class="plano-options-row">
+          @for (plan of availablePlans(); track plan.id) {
+            <article class="plano-option" [class.plano-option--current]="isCurrentPlan(plan)">
+              <div class="plano-option-top">
+                <div class="plano-option-name-row">
+                  <h3>{{ plan.name }}</h3>
+                  @if (isCurrentPlan(plan)) {
+                    <span class="plano-current-pill">Seu plano atual</span>
+                  }
+                </div>
+                <div class="plano-option-price">{{ plan.price | currency: 'BRL':'symbol':'1.2-2':'pt-BR' }}</div>
+              </div>
+
+              @if (plan.description) {
+                <p class="plano-option-desc">{{ plan.description }}</p>
+              }
+
+              <div class="plano-option-period">
+                <p class="label">Periodicidade</p>
+                <p class="value">{{ getBillingPeriodLabel(plan.billingPeriod) }}</p>
+              </div>
+
+              @if (plan.professionalName) {
+                <div class="plano-option-period">
+                  <p class="label">Profissional</p>
+                  <p class="value">{{ plan.professionalName }}</p>
+                </div>
+              }
+
+              <ul class="plano-option-features">
+                @for (benefit of plan.benefits; track benefit.serviceId) {
+                  <li>{{ getPlanBenefitLabel(plan, benefit.serviceName, benefit.quantityPerPeriod) }}</li>
+                }
+              </ul>
+
+              @if (isCurrentPlan(plan)) {
+                <button type="button" class="plano-option-btn plano-option-btn--disabled" disabled>Plano atual</button>
+              } @else {
+                <button type="button" class="plano-option-btn plano-option-btn--primary" (click)="openInterestModal(plan)">Quero assinar</button>
+              }
+            </article>
+          }
+        </div>
+      } @else {
+        <div class="plano-state">Nenhum plano disponível no momento.</div>
+      }
+    </section>
+  }
+
+  @if (selectedInterestPlan(); as selectedPlan) {
+    <app-confirm-dialog
+      title="Confirmar interesse"
+      [description]="interestDescription()"
+      tone="neutral"
+      icon="star"
+      cancelLabel="Voltar"
+      confirmLabel="Confirmar interesse"
+      (confirmed)="confirmInterest()"
+      (cancelled)="closeInterestModal()">
+      <div class="confirm-entity">
+        <span class="confirm-entity__avatar confirm-entity__avatar--icon"><app-icon name="repeat" [size]="18" /></span>
+        <div class="confirm-entity__text">
+          <strong>Plano {{ selectedPlan.name }}</strong>
+          <small>{{ getBillingPeriodLabel(selectedPlan.billingPeriod) }}</small>
+        </div>
+        <span class="confirm-entity__amount">{{ selectedPlan.price | currency: 'BRL':'symbol':'1.2-2':'pt-BR' }}</span>
+      </div>
+      <ul class="confirm-impact">
+        <li>
+          <span class="confirm-impact__icon confirm-impact__icon--warn" aria-hidden="true"><app-icon name="alert-circle" [size]="15" /></span>
+          <div>
+            <strong>Ainda não é a assinatura</strong>
+            <p>Registramos seu interesse; nenhuma cobrança é feita nesta etapa.</p>
+          </div>
+        </li>
+      </ul>
+    </app-confirm-dialog>
+  }
+</section>

@@ -1,0 +1,40 @@
+:host {
+  display: grid;
+  gap: 12px;
+}
+
+.google-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  /* "OU" entre o formulario e o Google, como no HL CRM; as cores vem das telas de conta (login.component.scss). */
+  color: var(--auth-muted, var(--color-text-secondary));
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.google-divider::before,
+.google-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--auth-border, var(--border-subtle));
+}
+
+.google-button {
+  display: flex;
+  justify-content: center;
+  min-height: 44px;
+}
+
+.google-button[hidden] {
+  display: none;
+}
+
+.google-button.is-busy {
+  pointer-events: none;
+  opacity: 0.65;
+}

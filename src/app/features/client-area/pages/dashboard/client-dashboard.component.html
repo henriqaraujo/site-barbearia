@@ -1,0 +1,186 @@
+<section class="inicio-page">
+  @if (currentUser(); as user) {
+    <header class="inicio-hero">
+      <div>
+        <p class="inicio-eyebrow">{{ 'Área do cliente' | term }}</p>
+        <h1>Olá, {{ user.name.split(' ')[0] }}</h1>
+        <p class="inicio-subtitle">Veja seus próximos agendamentos e acompanhe seu histórico.</p>
+      </div>
+      <a class="inicio-btn-primary" [routerLink]="'agendamento' | tenantUrl">
+        <app-icon name="calendar" [size]="16" />
+        Novo agendamento
+      </a>
+    </header>
+  }
+
+  @if (feedbackMessage()) {
+    <p class="inicio-feedback">{{ feedbackMessage() }}</p>
+  }
+
+  @if (nextAppointment(); as appointment) {
+    <article class="inicio-appointment-card">
+      <div class="inicio-appointment-pole"></div>
+
+      <div class="inicio-appointment-head">
+        <h2>Próximo agendamento</h2>
+        <app-client-status-badge [status]="appointment.status" />
+      </div>
+
+      <div class="inicio-appointment-grid">
+        <div class="inicio-appointment-item">
+          <span class="inicio-appointment-icon"><app-icon name="scissors" [size]="16" /></span>
+          <div>
+            <p class="inicio-appointment-label">{{ 'Serviço' | term }}</p>
+            <p class="inicio-appointment-value">{{ appointment.service.name }}</p>
+          </div>
+        </div>
+        <div class="inicio-appointment-item">
+          <span class="inicio-appointment-icon"><app-icon name="user" [size]="16" /></span>
+          <div>
+            <p class="inicio-appointment-label">Profissional</p>
+            <p class="inicio-appointment-value">{{ appointment.professional.name }}</p>
+          </div>
+        </div>
+        <div class="inicio-appointment-item">
+          <span class="inicio-appointment-icon"><app-icon name="calendar" [size]="16" /></span>
+          <div>
+            <p class="inicio-appointment-label">Data</p>
+            <p class="inicio-appointment-value">{{ formatService.formatDate(appointment.date) }}</p>
+          </div>
+        </div>
+        <div class="inicio-appointment-item">
+          <span class="inicio-appointment-icon"><app-icon name="clock" [size]="16" /></span>
+          <div>
+            <p class="inicio-appointment-label">Horário</p>
+            <p class="inicio-appointment-value">{{ appointment.time }}</p>
+          </div>
+        </div>
+        <div class="inicio-appointment-item">
+          <span class="inicio-appointment-icon"><app-icon name="bar-chart" [size]="16" /></span>
+          <div>
+            <p class="inicio-appointment-label">Duração</p>
+            <p class="inicio-appointment-value">{{ appointment.durationInMinutes }} minutos</p>
+          </div>
+        </div>
+        <div class="inicio-appointment-item">
+          <span class="inicio-appointment-icon"><app-icon name="wallet" [size]="16" /></span>
+          <div>
+            <p class="inicio-appointment-label">Valor</p>
+            <p class="inicio-appointment-value">{{ formatService.formatCurrency(appointment.price) }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="inicio-appointment-actions">
+        <a class="inicio-btn-filled" [routerLink]="'cliente/agendamentos' | tenantUrl">Ver detalhes</a>
+        <a class="inicio-btn-outline" [routerLink]="'agendamento' | tenantUrl" [queryParams]="{ servico: appointment.service.id, profissional: appointment.professional.id, remarcar: appointment.id }">
+          <app-icon name="repeat" [size]="14" />
+          Reagendar
+        </a>
+        @if (companyContext.mapsUrl(); as mapsUrl) {
+          <a class="inicio-btn-outline" [href]="mapsUrl" target="_blank" rel="noreferrer">
+            <app-icon name="map-pin" [size]="14" />
+            Como chegar
+          </a>
+        }
+        @if (companyContext.whatsappUrl(); as whatsappUrl) {
+          <a class="inicio-btn-outline" [href]="whatsappUrl" target="_blank" rel="noreferrer">
+            <app-icon name="message-circle" [size]="14" />
+            WhatsApp
+          </a>
+        }
+        <button class="inicio-btn-text" type="button" (click)="openCancelConfirmation(appointment)">Cancelar agendamento</button>
+      </div>
+    </article>
+  } @else {
+    <article class="inicio-empty-card">
+      <h2>Você ainda não possui agendamentos.</h2>
+      <a class="inicio-btn-filled" [routerLink]="'agendamento' | tenantUrl">Iniciar agendamento</a>
+    </article>
+  }
+
+  <div class="inicio-stats-row">
+    <article class="inicio-stat-card">
+      <div class="inicio-stat-top">
+        <span class="inicio-stat-label">Total de visitas</span>
+        <span class="inicio-stat-icon"><app-icon name="calendar" [size]="15" /></span>
+      </div>
+      <p class="inicio-stat-num">{{ summary().totalVisits }}</p>
+    </article>
+    <article class="inicio-stat-card">
+      <div class="inicio-stat-top">
+        <span class="inicio-stat-label">Total gasto</span>
+        <span class="inicio-stat-icon"><app-icon name="coins" [size]="15" /></span>
+      </div>
+      <p class="inicio-stat-num">{{ formatService.formatCurrency(summary().totalSpent) }}</p>
+    </article>
+    <article class="inicio-stat-card">
+      <div class="inicio-stat-top">
+        <span class="inicio-stat-label">Profissional favorito</span>
+        <span class="inicio-stat-icon"><app-icon name="star" [size]="15" /></span>
+      </div>
+      <p class="inicio-stat-num inicio-stat-num--text">{{ summary().favoriteProfessional || '-' }}</p>
+    </article>
+    @if (loyaltySummary(); as loyalty) {
+      @if (loyalty.programEnabled) {
+        <a class="inicio-stat-card inicio-stat-card--link" [routerLink]="'cliente/fidelidade' | tenantUrl" aria-label="Ver meus pontos">
+          <div class="inicio-stat-top">
+            <span class="inicio-stat-label">Meus pontos</span>
+            <span class="inicio-stat-icon"><app-icon name="award" [size]="15" /></span>
+          </div>
+          <p class="inicio-stat-num">{{ loyalty.balance.toLocaleString('pt-BR') }}</p>
+          <span class="inicio-stat-link">Ver recompensas</span>
+        </a>
+      }
+    }
+  </div>
+
+  @if (lastAppointment(); as last) {
+    <div class="inicio-promo-row">
+      <article class="inicio-promo-card">
+        <h3>Agendar novamente</h3>
+        <p>{{ last.service.name }} com {{ last.professional.name }}</p>
+        <a class="inicio-promo-btn" [routerLink]="'agendamento' | tenantUrl" [queryParams]="{ servico: last.service.id, profissional: last.professional.id }">Agendar novamente</a>
+      </article>
+      @if (daysSinceLastAppointment(); as dias) {
+        <article class="inicio-promo-card">
+          <h3>Sugestão</h3>
+          <p>Seu último atendimento foi há {{ dias }} {{ dias === 1 ? 'dia' : 'dias' }}. Que tal reservar seu próximo horário?</p>
+          <a class="inicio-promo-btn" [routerLink]="'agendamento' | tenantUrl">Ver horários disponíveis</a>
+        </article>
+      }
+    </div>
+  }
+</section>
+
+@if (selectedAppointment(); as appointment) {
+  <app-confirm-dialog
+    title="Cancelar agendamento"
+    description="Confira o horário antes de confirmar."
+    icon="ban"
+    cancelLabel="Voltar"
+    confirmLabel="Cancelar agendamento"
+    busyLabel="Cancelando..."
+    [busy]="isCancelling()"
+    [errorMessage]="cancellationErrorMessage()"
+    (confirmed)="confirmCancellation()"
+    (cancelled)="closeModal()">
+    <div class="confirm-entity">
+      <span class="confirm-entity__avatar confirm-entity__avatar--icon"><app-icon name="scissors" [size]="18" /></span>
+      <div class="confirm-entity__text">
+        <strong>{{ appointment.service.name }}</strong>
+        <small>{{ formatService.formatDate(appointment.date) }} às {{ appointment.time }} · {{ appointment.professional.name }}</small>
+      </div>
+    </div>
+
+    <ul class="confirm-impact">
+      <li>
+        <span class="confirm-impact__icon confirm-impact__icon--remove" aria-hidden="true"><app-icon name="calendar" [size]="15" /></span>
+        <div>
+          <strong>O horário é liberado</strong>
+          <p>Outra pessoa pode reservá-lo. Para voltar, será preciso agendar de novo.</p>
+        </div>
+      </li>
+    </ul>
+  </app-confirm-dialog>
+}

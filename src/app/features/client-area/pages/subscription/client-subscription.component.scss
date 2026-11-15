@@ -1,0 +1,484 @@
+:host {
+  --verde-900: #173425;
+  --verde-700: #24503a;
+  --latao-500: #b98b3e;
+  --latao-700: #8c6828;
+  --bege-100: #faf9f5;
+  --marfim-50: #fbf8f0;
+  --grafite-900: #2a2520;
+  --grafite-500: #726a5d;
+  --grafite-300: #a79f8f;
+  --linha: #e2d8c2;
+  --pole-red: #9e3b34;
+  --pole-blue: #2c4a63;
+  --cancel-500: #b5544a;
+  --cancel-100: #f3e2df;
+  --ok-bg: #e4eee3;
+  --ok-text: #2e5b3b;
+
+  display: block;
+  border-radius: 14px;
+  padding: 1.75rem 2rem 2.5rem;
+  background: var(--bege-100);
+  color: var(--grafite-900);
+  font-family: 'Poppins', sans-serif;
+  font-weight: 300;
+}
+
+.plano-page {
+  display: grid;
+  gap: 1.5rem;
+}
+
+/* ---------- Cabecalho ---------- */
+
+.plano-hero h1 {
+  margin: 0 0 0.35rem;
+  color: var(--verde-900);
+  font-family: 'Fraunces', serif;
+  font-size: 2.1rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.plano-hero p {
+  margin: 0;
+  color: var(--grafite-500);
+  font-size: 0.9rem;
+}
+
+/* ---------- Mensagens de estado ---------- */
+
+.plano-state {
+  padding: 1rem 1.15rem;
+  border: 0;
+  border-bottom: 1px solid #dedad2;
+  border-radius: 12px;
+  background: var(--marfim-50);
+  color: var(--grafite-900);
+  font-weight: 500;
+}
+
+.plano-state--error {
+  border-bottom-color: rgba(181, 84, 74, 0.35);
+  background: var(--cancel-100);
+  color: var(--cancel-500);
+}
+
+.plano-state--success {
+  border-bottom-color: rgba(46, 91, 59, 0.35);
+  background: var(--ok-bg);
+  color: var(--ok-text);
+  font-weight: 600;
+}
+
+/* ---------- Cartao do plano atual ---------- */
+
+.plano-card {
+  border: 0;
+  border-bottom: 1px solid #dedad2;
+  border-radius: 14px;
+  background: var(--marfim-50);
+  overflow: hidden;
+}
+
+.plano-card-pole {
+  height: 5px;
+  width: 100%;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--pole-red) 0 10px,
+    var(--marfim-50) 10px 20px,
+    var(--pole-blue) 20px 30px,
+    var(--marfim-50) 30px 40px
+  );
+}
+
+.plano-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.35rem 1.5rem 0.2rem;
+}
+
+.plano-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 0.6rem;
+  padding: 4px 12px;
+  border-radius: 20px;
+  background: var(--ok-bg);
+  color: var(--ok-text);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.plano-status-pill .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #3f7a54;
+}
+
+.plano-status-pill--awaiting {
+  background: color-mix(in srgb, var(--latao-500) 18%, var(--marfim-50));
+  color: var(--latao-700);
+}
+
+.plano-status-pill--awaiting .dot {
+  background: var(--latao-500);
+}
+
+/* Em atraso (N16): tom de alerta, mais forte que "aguardando". */
+.plano-status-pill--overdue {
+  background: #fef0c7;
+  color: #b54708;
+}
+
+.plano-status-pill--overdue .dot {
+  background: #b54708;
+}
+
+.plano-ended-message,
+.plano-overdue-message {
+  margin: 0.5rem 1.5rem 0;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid #fdb022;
+  border-radius: 10px;
+  background: #fffbeb;
+  color: #b54708;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.plano-status-pill--paused {
+  background: var(--bege-100);
+  color: var(--grafite-500);
+}
+
+.plano-status-pill--paused .dot {
+  background: var(--grafite-300);
+}
+
+.plano-status-pill--expired,
+.plano-status-pill--cancelled {
+  background: var(--cancel-100);
+  color: var(--cancel-500);
+}
+
+.plano-status-pill--expired .dot,
+.plano-status-pill--cancelled .dot {
+  background: var(--cancel-500);
+}
+
+.plano-card-head h2 {
+  margin: 0 0 0.35rem;
+  color: var(--verde-900);
+  font-family: 'Fraunces', serif;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.plano-card-desc {
+  margin: 0;
+  color: var(--grafite-500);
+  font-size: 0.86rem;
+}
+
+.plano-card-price {
+  flex: 0 0 auto;
+  padding-top: 0.15rem;
+  color: var(--latao-700);
+  font-family: 'Fraunces', serif;
+  font-size: 1.6rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.plano-awaiting-message {
+  margin: 0.5rem 1.5rem 0;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid rgba(185, 139, 62, 0.35);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--latao-500) 12%, var(--marfim-50));
+  color: var(--latao-700);
+  font-weight: 500;
+  font-size: 0.85rem;
+}
+
+.plano-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem 1.35rem;
+  margin: 0;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--linha);
+}
+
+.plano-meta-grid dt {
+  margin: 0 0 0.2rem;
+  color: var(--grafite-500);
+  font-size: 0.78rem;
+}
+
+.plano-meta-grid dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: var(--grafite-900);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* ---------- Beneficios ---------- */
+
+.plano-benefits {
+  padding: 1.35rem 1.5rem 1.6rem;
+}
+
+.plano-benefits h3 {
+  margin: 0 0 0.85rem;
+  color: var(--verde-900);
+  font-family: 'Fraunces', serif;
+  font-size: 1.05rem;
+  font-weight: 500;
+}
+
+.plano-benefit-card {
+  border: 0;
+  border-bottom: 1px solid #dedad2;
+  border-left: 4px solid var(--verde-900);
+  border-radius: 12px;
+  padding: 1.1rem 1.35rem;
+  background: var(--marfim-50);
+}
+
+.plano-benefit-name {
+  margin: 0 0 0.85rem;
+  color: var(--grafite-900);
+  font-family: 'Fraunces', serif;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.plano-benefit-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.85rem;
+  margin-bottom: 0.85rem;
+}
+
+.plano-benefit-stats .label {
+  margin: 0 0 0.2rem;
+  color: var(--grafite-500);
+  font-size: 0.75rem;
+}
+
+.plano-benefit-stats .value {
+  margin: 0;
+  color: var(--grafite-900);
+  font-family: 'Fraunces', serif;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.plano-benefit-bar-track {
+  display: flex;
+  height: 8px;
+  border-radius: 6px;
+  background: var(--linha);
+  overflow: hidden;
+}
+
+.plano-benefit-bar-used {
+  height: 100%;
+  background: var(--grafite-500);
+}
+
+.plano-benefit-bar-reserved {
+  height: 100%;
+  background: var(--latao-500);
+}
+
+/* ---------- Outros planos ---------- */
+
+.plano-section-title {
+  margin: 0 0 1rem;
+  color: var(--verde-900);
+  font-family: 'Fraunces', serif;
+  font-size: 1.4rem;
+  font-weight: 500;
+}
+
+.plano-options-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+.plano-option {
+  display: flex;
+  flex-direction: column;
+  border: 0;
+  border-bottom: 1px solid #dedad2;
+  border-radius: 14px;
+  padding: 1.35rem 1.5rem;
+  background: var(--marfim-50);
+}
+
+.plano-option--current {
+  border-bottom-color: var(--latao-500);
+  box-shadow: inset 0 0 0 1px var(--latao-500);
+}
+
+.plano-option-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.25rem;
+}
+
+.plano-option-name-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.plano-option-top h3 {
+  margin: 0;
+  color: var(--verde-900);
+  font-family: 'Fraunces', serif;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.plano-current-pill {
+  padding: 3px 9px;
+  border-radius: 20px;
+  background: var(--bege-100);
+  color: var(--latao-700);
+  font-size: 0.72rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.plano-option-price {
+  flex: 0 0 auto;
+  color: var(--latao-700);
+  font-family: 'Fraunces', serif;
+  font-size: 1.15rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.plano-option-desc {
+  margin: 0.4rem 0 0.85rem;
+  color: var(--grafite-500);
+  font-size: 0.85rem;
+}
+
+.plano-option-period {
+  margin-bottom: 0.85rem;
+}
+
+.plano-option-period .label {
+  margin: 0 0 0.15rem;
+  color: var(--grafite-500);
+  font-size: 0.75rem;
+}
+
+.plano-option-period .value {
+  margin: 0;
+  color: var(--grafite-900);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.plano-option-features {
+  flex: 1;
+  list-style: none;
+  margin: 0 0 1.1rem;
+  padding: 0;
+}
+
+.plano-option-features li {
+  position: relative;
+  padding: 6px 0 6px 20px;
+  color: var(--grafite-900);
+  font-size: 0.85rem;
+}
+
+.plano-option-features li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 13px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--verde-900);
+}
+
+.plano-option-btn {
+  width: 100%;
+  min-height: 2.85rem;
+  border: 0;
+  border-radius: 9px;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.plano-option-btn--primary {
+  background: var(--verde-900);
+  color: var(--marfim-50);
+}
+
+.plano-option-btn--primary:hover {
+  background: var(--verde-700);
+}
+
+.plano-option-btn--disabled {
+  background: var(--linha);
+  color: var(--grafite-500);
+  cursor: default;
+}
+
+/* ---------- Responsivo ---------- */
+
+@media (max-width: 920px) {
+  .plano-meta-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .plano-benefit-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .plano-options-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 820px) {
+  :host {
+    padding: 1.5rem 1.1rem 3rem;
+  }
+
+  .plano-hero h1 {
+    font-size: 1.65rem;
+  }
+
+  .plano-card-head {
+    flex-wrap: wrap;
+  }
+}
+
+/* Plano promocional: mesmo aviso visual do "aguardando pagamento". */
+.plano-promo-message {
+  @extend .plano-awaiting-message;
+}

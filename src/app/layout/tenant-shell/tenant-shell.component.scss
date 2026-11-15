@@ -1,0 +1,37 @@
+.tenant-state {
+  min-height: 100vh;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 16px;
+  padding: 24px;
+  text-align: center;
+  background: var(--surface-primary);
+  color: var(--color-text-primary);
+
+  h1 {
+    margin: 0;
+    font-size: 1.8rem;
+  }
+
+  p {
+    max-width: 420px;
+    margin: 0;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+  }
+
+  a {
+    color: var(--color-text-primary);
+  }
+}
+
+.tenant-state__logo {
+  max-width: 120px;
+  max-height: 120px;
+  object-fit: contain;
+}
+
+.tenant-state__company {
+  font-weight: 700;
+}

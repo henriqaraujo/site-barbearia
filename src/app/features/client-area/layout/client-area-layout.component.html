@@ -1,0 +1,41 @@
+<div class="admin-shell client-admin-shell" [class.admin-shell--collapsed]="sidebarCollapsed()" [style.--admin-current-sidebar-width]="sidebarWidth()">
+  <app-admin-sidebar
+    [collapsed]="sidebarCollapsed()"
+    [mobileOpened]="mobileSidebarOpened()"
+    [navigationItems]="navigationItems()"
+    [ariaLabel]="'Menu do cliente' | term"
+    navigationAriaLabel="Rotas da área do cliente"
+    (closeMobile)="closeMobileMenu()"
+  />
+
+  <section class="admin-shell__workspace">
+    <app-admin-header
+      [sidebarCollapsed]="sidebarCollapsed()"
+      businessLabel=""
+      [account]="headerAccount()"
+      profileRoute="/minha-conta/dados"
+      profileLabel="Dados da conta"
+      (logoutRequested)="logout()"
+      (toggleDesktopSidebar)="toggleDesktopSidebar()"
+      (toggleMobileSidebar)="toggleMobileMenu()"
+    >
+      @if (!compact()) {
+        <app-my-account-company-picker adminHeaderStart [currentSlug]="companySlug()" [currentName]="companyName()" [currentLogoUrl]="companyLogoUrl()" />
+      }
+    </app-admin-header>
+
+    @if (compact()) {
+      <div class="conta-empresa-bar">
+        <app-my-account-company-picker [currentSlug]="companySlug()" [currentName]="companyName()" [currentLogoUrl]="companyLogoUrl()" />
+      </div>
+    }
+
+    <main id="conteudo-cliente" class="admin-shell__content client-admin-shell__content" tabindex="-1">
+      @if (hasMembership()) {
+        <router-outlet />
+      } @else {
+        <app-client-no-membership [companyName]="companyName()" />
+      }
+    </main>
+  </section>
+</div>

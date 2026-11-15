@@ -1,0 +1,83 @@
+<header class="site-header" [class.site-header--scrolled]="hasScrolled()">
+  <nav class="site-header__nav" aria-label="Navega&ccedil;&atilde;o principal">
+    <a class="site-header__brand" routerLink="/" (click)="closeMobileMenu()">
+      <img class="site-header__brand-logo" [src]="brand.iconUrl" alt="" width="52" height="52" />
+      <span>{{ brand.name }}</span>
+    </a>
+
+    <div class="site-header__panel" [class.site-header__panel--open]="isMobileMenuOpen()">
+      <div class="site-header__links">
+        @for (item of navigation; track item.route) {
+          <a
+            class="site-header__link"
+            [routerLink]="item.route"
+            routerLinkActive="is-active"
+            [routerLinkActiveOptions]="activeOptions(item.exact)"
+            ariaCurrentWhenActive="page"
+            (click)="closeMobileMenu()"
+          >{{ item.label }}</a>
+        }
+      </div>
+
+      <div class="site-header__actions">
+        @if (isAuthenticated()) {
+          <div
+            class="site-header__account"
+            [appCustomDropdown]="isAccountMenuOpen()"
+            [customDropdownReturnFocus]="false"
+            (customDropdownOpenChange)="setAccountMenuOpen($event)"
+          >
+            <button
+              class="site-header__access"
+              type="button"
+              data-dropdown-trigger
+              aria-haspopup="menu"
+              [attr.aria-expanded]="isAccountMenuOpen()"
+              [attr.aria-label]="accountAriaLabel()"
+              (click)="toggleAccountMenu()"
+            >
+              <app-icon name="user" [size]="18" />
+              {{ accountLabel() }}
+              <app-icon class="site-header__account-chevron" name="chevron-right" [size]="14" />
+            </button>
+
+            @if (isAccountMenuOpen()) {
+              <div class="site-header__account-menu" role="menu">
+                @if (isCustomerAccount()) {
+                  @if (hasCompany()) {
+                    <button class="site-header__account-menu-item" type="button" role="menuitem" data-dropdown-close (click)="go(clientAreaRoute())">
+                      <app-icon name="user" [size]="16" />
+                      &Aacute;rea do Cliente
+                    </button>
+                  }
+                  <button class="site-header__account-menu-item" type="button" role="menuitem" data-dropdown-close (click)="go('/minha-conta')">
+                    <app-icon name="layout-dashboard" [size]="16" />
+                    Minha conta
+                  </button>
+                } @else {
+                  <button class="site-header__account-menu-item" type="button" role="menuitem" data-dropdown-close (click)="go(staffArea())">
+                    <app-icon name="layout-dashboard" [size]="16" />
+                    &Aacute;rea administrativa
+                  </button>
+                }
+                <button class="site-header__account-menu-item" type="button" role="menuitem" data-dropdown-close (click)="handleLogout()">
+                  <app-icon name="log-out" [size]="16" />
+                  Sair
+                </button>
+              </div>
+            }
+          </div>
+        } @else {
+          <a class="site-header__access" [routerLink]="loginRoute()" aria-label="Acessar a área de login" (click)="closeMobileMenu()">
+            <app-icon name="user" [size]="18" />
+            Entrar
+          </a>
+        }
+      </div>
+    </div>
+
+    <button class="site-header__menu" type="button" aria-label="Abrir menu" [attr.aria-expanded]="isMobileMenuOpen()" (click)="toggleMobileMenu()">
+      <app-icon [name]="isMobileMenuOpen() ? 'x' : 'menu'" [size]="24" />
+    </button>
+  </nav>
+</header>

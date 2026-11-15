@@ -1,0 +1,27 @@
+<main class="auth-page auth-page--platform">
+  <section class="auth-panel" aria-labelledby="email-change-link-title">
+    <app-auth-brand [title]="title" titleId="email-change-link-title" [isCompany]="false" />
+
+    @switch (state()) {
+      @case ('working') {
+        <p class="form-hint" role="status">{{ mode === 'revert' ? 'Desfazendo a troca...' : 'Confirmando o novo e-mail...' }}</p>
+      }
+      @case ('done') {
+        <div class="form-message" role="status">
+          <p>{{ message() }}</p>
+        </div>
+        @if (mode === 'revert') {
+          <a class="submit-button" routerLink="/entrar/esqueci-senha">Redefinir a senha</a>
+        }
+        <a class="submit-button" routerLink="/entrar">Entrar</a>
+      }
+      @case ('failed') {
+        <p class="form-error" role="alert">{{ message() }}</p>
+        <p class="form-hint">{{ mode === 'revert' ? 'O link vale por 7 dias e uma vez só. Se precisar de ajuda, redefina a senha pelo e-mail.' : 'O link vale por 1 hora e uma vez só. Peça a troca de novo em Minha conta › Dados da conta.' }}</p>
+        <a class="submit-button" routerLink="/entrar">Ir para o login</a>
+      }
+    }
+    <a class="site-link" routerLink="/">Voltar ao site principal</a>
+    <app-legal-links />
+  </section>
+</main>

@@ -1,0 +1,126 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.brand-mark {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+  color: inherit;
+}
+
+.brand-mark__text {
+  display: grid;
+  gap: 0.1rem;
+  min-width: 0;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+// Nome longo nunca quebra o layout: uma linha, com reticencias (o completo fica no title).
+.brand-mark__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.brand-mark__tag {
+  color: var(--admin-sidebar-text-muted);
+  font-size: 0.72rem;
+  font-weight: 500;
+}
+
+.brand-mark__monogram {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+// Site publico: logo grande sozinho, ou iniciais em anel e nome completo na cor do texto do cabecalho.
+.brand-mark--full {
+  .brand-mark__logo--alone {
+    display: block;
+    width: clamp(122px, 11.5vw, 158px);
+    max-height: 68px;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.28));
+  }
+
+  .brand-mark__monogram {
+    width: 40px;
+    height: 40px;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+  }
+}
+
+// Sidebars (painel, area do cliente e /minha-conta): icone de 2.75rem e nome curto, na paleta fixa do painel.
+.brand-mark--short {
+  .brand-mark__logo,
+  .brand-mark__monogram {
+    flex: 0 0 2.75rem;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: var(--radius-control);
+  }
+
+  .brand-mark__logo {
+    display: block;
+    object-fit: contain;
+  }
+
+  .brand-mark__monogram {
+    background: var(--admin-primary);
+    color: var(--admin-on-primary);
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .brand-mark--full .brand-mark__logo--alone {
+    width: 108px;
+  }
+}
+
+// Carregando: blocos neutros no lugar do icone e do nome (na cor do texto, bem apagados), sem nome provisorio.
+.brand-mark__skeleton {
+  display: block;
+  flex: none;
+  background: currentColor;
+  opacity: 0.18;
+  animation: brand-mark-pulse 1.2s ease-in-out infinite;
+}
+
+.brand-mark__skeleton--icon {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+}
+
+.brand-mark__skeleton--name {
+  width: 8rem;
+  max-width: 100%;
+  height: 0.9rem;
+  border-radius: 999px;
+}
+
+.brand-mark--short .brand-mark__skeleton--icon {
+  border-radius: var(--radius-control);
+}
+
+@keyframes brand-mark-pulse {
+  50% {
+    opacity: 0.08;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-mark__skeleton {
+    animation: none;
+  }
+}

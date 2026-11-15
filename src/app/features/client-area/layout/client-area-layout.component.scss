@@ -1,0 +1,28 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background: var(--admin-background);
+  color: var(--admin-text);
+  --radius-control: 8px;
+  --font-interface: var(--admin-font-interface);
+  font-family: var(--font-interface);
+  font-weight: 300;
+  /* A marca do tenant sobrescreve --brand-* na raiz do documento para o site publico; a area do cliente usa o mesmo painel beige do admin e precisa fixar esses tokens de volta para nao herdar a cor de marca de cada empresa nos aneis de foco globais (:focus-visible, input:focus etc. em styles.scss). */
+  --brand-primary: var(--admin-primary);
+  --brand-accent: var(--admin-primary-strong);
+}
+
+.client-admin-shell__content {
+  min-height: calc(100vh - var(--admin-header-height));
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+}
+
+// Troca de empresa logo abaixo do topo no celular (area do cliente e /minha-conta, que usa este mesmo estilo).
+.conta-empresa-bar {
+  padding: 0.75rem clamp(1rem, 2vw, 1.5rem);
+  border-bottom: 1px solid var(--admin-border);
+  background: var(--admin-header-background);
+}

@@ -1,0 +1,285 @@
+// Vitrine na raiz (Fase 5), com a paleta fixa da plataforma (--admin-*, a mesma do HL CRM): a raiz nao herda as cores
+// da ultima empresa aberta. Fundo claro, titulo serifado, busca em destaque e cartoes, no estilo AppBarber.
+
+:host {
+  display: block;
+  min-height: 100vh;
+  background: var(--admin-background, #faf9f5);
+  color: var(--admin-text, #2a2520);
+  font-family: 'Poppins', 'Manrope', Arial, sans-serif;
+  font-weight: 300;
+}
+
+.vitrine {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  // Abaixo do cabecalho fixo da plataforma.
+  padding-top: var(--header-height);
+  box-sizing: border-box;
+}
+
+.vitrine__submit {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--admin-primary-strong, #24503a);
+  color: var(--admin-on-primary, #fbf7ee);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.vitrine__submit:hover {
+  background: var(--admin-primary, #173425);
+}
+
+.vitrine__main {
+  width: min(100% - 32px, 1120px);
+  margin: 0 auto;
+  display: grid;
+  // Conteudo no topo: sem isto a grade dividia a altura da tela entre as secoes (espacos enormes, cartoes altos).
+  align-content: start;
+  gap: 24px;
+  padding: 28px 0 40px;
+}
+
+.vitrine__hero {
+  display: grid;
+  gap: 8px;
+}
+
+.vitrine__hero h1 {
+  margin: 0;
+  color: var(--admin-primary, #173425);
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.vitrine__subtitle {
+  margin: 0;
+  max-width: 40rem;
+  color: var(--admin-text-muted, #726a5d);
+  line-height: 1.5;
+}
+
+.vitrine__search {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 12px;
+  margin-top: 8px;
+  padding: 16px;
+  border: 1px solid var(--admin-border, #e2d8c2);
+  border-radius: 12px;
+  background: #fff;
+}
+
+.vitrine__field {
+  display: grid;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.vitrine__field input {
+  min-height: 44px;
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--admin-border, #e2d8c2);
+  border-radius: 8px;
+  padding: 0 12px;
+  background: #fff;
+  color: var(--admin-text, #2a2520);
+  font: inherit;
+  font-weight: 400;
+}
+
+.vitrine__field input:focus {
+  outline: 0;
+  border-color: var(--admin-primary-strong, #24503a);
+  box-shadow: 0 0 0 3px rgb(36 80 58 / 0.15);
+}
+
+.vitrine__results {
+  display: grid;
+  gap: 14px;
+}
+
+.vitrine__results-title {
+  margin: 0;
+  color: var(--admin-primary, #173425);
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 1.35rem;
+  font-weight: 500;
+}
+
+.vitrine__grid {
+  display: grid;
+  // Largo o bastante para cidade de uma palavra so (Pindamonhangaba/SP) caber ao lado do coracao.
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.vitrine__card-item {
+  position: relative;
+}
+
+// Coracao sobre o canto do cartao, fora do link.
+.vitrine__card-favorite {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  --favorite-border: var(--admin-border, #e2d8c2);
+  --favorite-background: #fff;
+  --favorite-color: var(--admin-primary, #173425);
+  --favorite-active-color: #b42345;
+  --favorite-focus: var(--admin-primary-strong, #24503a);
+}
+
+.vitrine__card {
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 62px 10px 12px;
+  border: 1px solid var(--admin-border, #e2d8c2);
+  border-radius: 12px;
+  background: #fff;
+  color: inherit;
+  text-decoration: none;
+}
+
+.vitrine__card:hover,
+.vitrine__card:focus-visible {
+  border-color: var(--admin-primary-strong, #24503a);
+}
+
+.vitrine__card-logo {
+  width: 48px;
+  height: 48px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: var(--admin-background, #faf9f5);
+  color: var(--admin-primary, #173425);
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 1.3rem;
+  overflow: hidden;
+}
+
+.vitrine__card-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.vitrine__card-body {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.vitrine__card-name {
+  color: var(--admin-text, #2a2520);
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.vitrine__card-place {
+  color: var(--admin-text-muted, #726a5d);
+  font-size: 0.85rem;
+  // Nunca passa por baixo do coracao: se nao couber, quebra.
+  overflow-wrap: break-word;
+}
+
+.vitrine__date {
+  margin: 0;
+  color: var(--admin-text-muted, #726a5d);
+}
+
+.vitrine__search-link {
+  justify-self: start;
+  color: var(--admin-primary-strong, #24503a);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.vitrine__skeleton {
+  height: 84px;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #f1ece2 0%, #f8f4ec 50%, #f1ece2 100%);
+}
+
+.vitrine__secondary {
+  justify-self: start;
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid var(--admin-border, #e2d8c2);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--admin-text, #2a2520);
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.vitrine__empty {
+  display: grid;
+  gap: 10px;
+  padding: 18px;
+  border: 1px dashed var(--admin-border, #e2d8c2);
+  border-radius: 12px;
+  color: var(--admin-text-muted, #726a5d);
+}
+
+.vitrine__empty p,
+.vitrine__hint {
+  margin: 0;
+}
+
+.vitrine__hint {
+  color: var(--admin-text-muted, #726a5d);
+}
+
+.vitrine__error {
+  margin: 0;
+  color: #b42318;
+  font-size: 0.9rem;
+}
+
+.vitrine__footer {
+  display: flex;
+  justify-content: center;
+  padding: 20px 16px 32px;
+}
+
+@media (max-width: 760px) {
+  .vitrine__search {
+    grid-template-columns: 1fr;
+  }
+
+  .vitrine__submit {
+    width: 100%;
+  }
+
+  .vitrine__main {
+    padding-top: 24px;
+  }
+
+}

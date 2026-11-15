@@ -1,0 +1,221 @@
+.subscription-checkout {
+  display: grid;
+  min-height: calc(100svh - var(--header-height));
+  align-items: center;
+  padding: calc(var(--header-height) + 2rem) 1rem 3rem;
+  background:
+    radial-gradient(circle at 82% 12%, rgb(from var(--brand-primary) r g b / 0.28), transparent 20rem),
+    linear-gradient(180deg, var(--surface-primary), var(--surface-secondary));
+}
+
+.subscription-checkout__panel {
+  display: grid;
+  gap: 1rem;
+  width: min(820px, 100%);
+  margin: 0 auto;
+  padding: clamp(1rem, 4vw, 2rem);
+  border: 1px solid var(--border-subtle);
+  background: rgba(243, 240, 232, 0.035);
+  box-shadow: var(--shadow-editorial);
+}
+
+.subscription-checkout__back {
+  width: fit-content;
+  color: var(--brand-secondary);
+  font-family: var(--font-condensed);
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.subscription-checkout__summary,
+.subscription-checkout__success {
+  display: grid;
+  gap: 1.2rem;
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 7vw, 5.6rem);
+  line-height: 0.9;
+}
+
+h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  line-height: 1;
+}
+
+p,
+dd,
+li span {
+  color: var(--color-text-secondary);
+}
+
+.subscription-checkout__price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+
+  strong {
+    color: var(--brand-secondary);
+    font-family: var(--font-condensed);
+    font-size: 2.4rem;
+    line-height: 1;
+  }
+}
+
+ul {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+dl {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+dl div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+dt {
+  color: var(--brand-secondary);
+  font-family: var(--font-condensed);
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+dd {
+  margin: 0;
+  text-align: right;
+}
+
+.subscription-checkout__state {
+  margin: 0;
+  padding: 0.8rem 0.9rem;
+  border: 1px solid var(--border-subtle);
+  background: rgba(243, 240, 232, 0.05);
+}
+
+.subscription-checkout__state--error {
+  border-color: rgba(199, 104, 91, 0.44);
+  color: var(--color-error);
+}
+
+.subscription-checkout__notice {
+  display: grid;
+  gap: 0.6rem;
+  border-color: rgba(199, 104, 91, 0.44);
+  color: var(--color-text-primary);
+
+  p {
+    margin: 0;
+  }
+}
+
+.subscription-checkout__phone {
+  display: grid;
+  gap: 0.35rem;
+  color: var(--color-text-primary);
+  font-weight: 600;
+
+  input {
+    min-height: 44px;
+    padding: 0 0.8rem;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-control);
+    background: rgba(243, 240, 232, 0.05);
+    color: var(--color-text-primary);
+    font: inherit;
+    font-weight: 400;
+  }
+
+  small {
+    color: var(--color-text-secondary);
+    font-size: 0.78rem;
+    font-weight: 400;
+  }
+}
+
+.subscription-checkout__field-error {
+  margin: 0;
+  color: var(--color-error);
+  font-size: 0.82rem;
+}
+
+.subscription-checkout__notice-action {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 0.9rem;
+  border: 1px solid var(--brand-interactive);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-text-primary);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    background: var(--brand-interactive-soft);
+  }
+}
+
+.button {
+  width: fit-content;
+}
+
+@media (max-width: 640px) {
+  li,
+  dl div {
+    display: grid;
+  }
+
+  dd {
+    text-align: left;
+  }
+
+  .button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+.subscription-checkout__promo {
+  margin: 0.75rem 0 0;
+  border: 1px solid var(--border-secondary-subtle);
+  border-radius: 8px;
+  padding: 0.6rem 0.8rem;
+  color: var(--color-text-primary);
+}
+
+.subscription-checkout__overlap {
+  margin: 0.75rem 0 0;
+  border: 1px solid var(--border-secondary-subtle);
+  border-radius: 8px;
+  padding: 0.6rem 0.8rem;
+  color: var(--brand-secondary);
+}

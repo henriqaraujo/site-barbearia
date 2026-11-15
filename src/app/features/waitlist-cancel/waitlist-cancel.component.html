@@ -1,0 +1,25 @@
+<main class="waitlist-cancel-page">
+  <section class="waitlist-cancel-panel" aria-labelledby="waitlist-cancel-title">
+    <h1 id="waitlist-cancel-title">Sair da fila de espera</h1>
+
+    @switch (status()) {
+      @case ('done') {
+        <p role="status">Pronto, você saiu da fila de espera.</p>
+      }
+      @case ('invalid') {
+        <p role="alert">Este link não é válido ou já foi usado. Se ainda estiver na fila, @if (companyName()) {fale diretamente com {{ companyName() }}.} @else {fale com o atendimento.}</p>
+      }
+      @default {
+        <p>Confirme para sair da fila. Você deixa de ser avisado quando um horário abrir.</p>
+        <button class="button button-primary" type="button" [disabled]="status() === 'submitting'" (click)="leave()">
+          {{ status() === 'submitting' ? 'Saindo...' : 'Sair da fila' }}
+        </button>
+        @if (errorMessage()) {
+          <p class="field-error" role="alert">{{ errorMessage() }}</p>
+        }
+      }
+    }
+
+    <a [routerLink]="homeUrl">Voltar ao início</a>
+  </section>
+</main>

@@ -1,0 +1,371 @@
+@if (presentation) { <p style="margin:0;padding:.65rem;text-align:center;background:#ead6a8;color:#25231e">Apresentação ilustrativa: nomes, serviços e valores são exemplos.</p> }
+<section id="inicio" class="hero" aria-label="Apresentação principal">
+  @for (slide of heroSlides(); track slide.slot; let slideIndex = $index) {
+    <img
+      class="hero__image"
+      [class.hero__image--active]="activeSlideIndex() === slideIndex"
+      [appImageFallback]="slide.fallbackImageUrl ?? ''"
+      [src]="slide.imageUrl"
+      [alt]="slide.alt"
+      width="1800"
+      height="1100"
+      [attr.fetchpriority]="slideIndex === 0 ? 'high' : 'auto'"
+    >
+  }
+
+  <div class="hero__overlay"></div>
+  <div class="hero__content">
+    @if (companyName()) {
+      <span class="eyebrow">{{ companyName() }}</span>
+    } @else {
+      <span class="eyebrow home-skeleton" role="status" aria-label="Carregando"></span>
+    }
+    <h1>Seu estilo não termina no corte.</h1>
+    <app-brand-cut-line />
+    <p>Precisão técnica, atendimento próximo e um ambiente pensado para você desacelerar antes de voltar para a rotina.</p>
+    <div class="hero__actions">
+      @if (presentation) { <a class="button button-primary" href="#servicos">Ver serviços</a> } @else { <a class="button button-primary" [routerLink]="'agendamento' | tenantUrl">Reservar horário</a> }
+      <a class="button button-secondary" href="#sobre">Conhecer a casa</a>
+    </div>
+  </div>
+</section>
+
+<section id="sobre" class="page-section about">
+  <div class="section-inner about__grid" appRevealOnScroll>
+    <span class="section-number">01</span>
+    <div class="about__image editorial-frame image-treatment">
+      <img appImageFallback="/assets/fotos/placeholder-ambiente.svg" [src]="aboutPrimaryImageUrl()" alt="Recepção" width="1000" height="1200" loading="lazy">
+    </div>
+    <div class="about__copy">
+      <span class="eyebrow">A casa</span>
+      <h2 class="section-title">Conversa antes da maquina.</h2>
+      <p class="section-description">@if (companyName()) {Na {{ companyName() }}, cada} @else {Cada} atendimento começa com conversa. Entendemos sua rotina, o formato do rosto e o resultado que você procura antes de ligar a máquina.</p>
+      <!-- So numeros reais da empresa, vindos da API; nada de anos, atendimentos ou nota inventados. -->
+      @if (services().length || professionals().length) {
+        <div class="about__numbers">
+          @if (services().length) {
+            <div><strong>{{ services().length }}</strong><span>{{ services().length === 1 ? 'serviço' : 'serviços' }}</span></div>
+          }
+          @if (professionals().length) {
+            <div><strong>{{ professionals().length }}</strong><span>{{ professionals().length === 1 ? 'profissional' : 'profissionais' }} na casa</span></div>
+          }
+        </div>
+      }
+    </div>
+    <img class="about__detail" [src]="aboutDetailImageUrl()" alt="Detalhe do ambiente" width="640" height="360" loading="lazy">
+  </div>
+</section>
+
+<section class="parallax">
+  <img class="parallax__background" appImageFallback="/assets/fotos/placeholder-ambiente.svg" [src]="ritualBackgroundImageUrl()" alt="" aria-hidden="true" loading="lazy">
+  <div class="parallax__content" appRevealOnScroll>
+    <span class="eyebrow">Ritual de atendimento</span>
+    <h2>A cadeira fica pronta antes de você chegar.</h2>
+    <p>Horário reservado, ferramenta organizada e finalização escolhida de acordo com o que você usa no dia a dia.</p>
+    <div class="parallax__items">
+      <span>Escuta antes do corte</span>
+      <span>Produtos escolhidos por acabamento</span>
+      <span>Ambiente real, sem pressa de corredor</span>
+    </div>
+  </div>
+</section>
+
+<section id="servicos" class="page-section services">
+  <div class="section-inner services__layout">
+    <div class="section-heading" appRevealOnScroll>
+      <span class="eyebrow">Serviços</span>
+      <h2 class="section-title">Escolha pelo que precisa manter.</h2>
+      <p class="section-description">Preço e tempo aparecem juntos para você marcar sem adivinhar quanto a cadeira vai tomar do seu dia.</p>
+    </div>
+
+    @if (isLoadingServices()) {
+      <p class="api-feedback">Carregando serviços...</p>
+    }
+
+    @if (servicesErrorMessage()) {
+      <p class="api-feedback api-feedback--error">{{ servicesErrorMessage() }}</p>
+    }
+
+    <div class="service-list" appRevealOnScroll>
+      @for (service of services(); track service.id; let serviceIndex = $index) {
+        <article class="service-row" [class.is-active]="highlightedServiceIndex() === serviceIndex" (mouseenter)="highlightService(serviceIndex)" (focusin)="highlightService(serviceIndex)">
+          <span class="service-row__number">{{ serviceIndex + 1 < 10 ? '0' + (serviceIndex + 1) : serviceIndex + 1 }}</span>
+          <div>
+            <h3>{{ service.name }}</h3>
+            <p>{{ service.description }}</p>
+          </div>
+          <span>{{ service.duration }}</span>
+          <strong>{{ service.price | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong>
+          @if (!presentation) { <a class="button button-secondary" [routerLink]="'agendamento' | tenantUrl" [queryParams]="{ servico: service.id }">Agendar</a> }
+        </article>
+      }
+    </div>
+
+    @if (highlightedService(); as service) {
+      <aside class="services__image image-treatment">
+        <img appImageFallback [src]="service.imageUrl" [alt]="service.name" width="900" height="1100" loading="lazy">
+        <span>{{ service.name }}</span>
+      </aside>
+    }
+  </div>
+</section>
+
+@if (isLoadingSubscriptionPlans() || subscriptionPlansErrorMessage() || subscriptionPlans().length > 0) {
+  <section id="planos" class="page-section subscription-plans">
+    <div class="section-inner">
+      <div class="section-heading" appRevealOnScroll>
+        <span class="eyebrow">Assinaturas</span>
+        <h2 class="section-title">Frequência combinada sem remarcar do zero.</h2>
+        <p class="section-description">Conheça os planos disponíveis @if (companyName()) {da {{ companyName() }} }e use os benefícios configurados para os serviços da casa.</p>
+      </div>
+
+      @if (isLoadingSubscriptionPlans()) {
+        <p class="api-feedback">Carregando assinaturas...</p>
+      }
+
+      @if (subscriptionPlansErrorMessage()) {
+        <p class="api-feedback api-feedback--error">{{ subscriptionPlansErrorMessage() }}</p>
+      }
+
+      @if (subscriptionPlans().length > 0) {
+        <div class="subscription-plan-grid" appRevealOnScroll>
+          @for (plan of subscriptionPlans(); track plan.id) {
+            <article class="subscription-plan-card" [class.subscription-plan-card--featured]="plan.isFeatured">
+              @if (plan.isFeatured) {
+                <span class="subscription-plan-card__badge">Mais escolhido</span>
+              }
+              <div>
+                <h3>{{ plan.name }}</h3>
+                @if (plan.description) {
+                  <p>{{ plan.description }}</p>
+                }
+                @if (plan.professionalNames?.length) {
+                  <p class="subscription-plan-card__professionals">Atendido por {{ joinNames(plan.professionalNames!) }}</p>
+                }
+                @if (plan.saleEndsOn) {
+                  <p class="subscription-plan-card__promo">Promoção: assine até {{ plan.saleEndsOn | date: 'dd/MM/yyyy' }}</p>
+                }
+              </div>
+              <ul>
+                @for (benefit of plan.benefits; track benefit.serviceId) {
+                  <li>{{ getBenefitLabel(benefit.quantityPerPeriod, benefit.serviceName) }}</li>
+                }
+              </ul>
+              <div class="subscription-plan-card__price">
+                <strong>{{ plan.price | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong>
+                <span>/ {{ getBillingPeriodLabel(plan) }}</span>
+              </div>
+              @if (!presentation) { <a class="button button-primary" [routerLink]="getSubscriptionPlanRoute(plan.id)" [queryParams]="getSubscriptionPlanQueryParams(plan.id)">Quero assinar</a> }
+            </article>
+          }
+        </div>
+      }
+    </div>
+  </section>
+}
+
+<section id="profissionais" class="page-section professionals">
+  <div class="section-inner professionals__layout">
+    <div class="section-heading" appRevealOnScroll>
+      <span class="eyebrow">Equipe</span>
+      <h2 class="section-title">Quem segura a maquina também entende sua rotina.</h2>
+    </div>
+
+    @if (isLoadingProfessionals()) {
+      <p class="api-feedback">Carregando profissionais...</p>
+    }
+
+    @if (professionalsErrorMessage()) {
+      <p class="api-feedback api-feedback--error">{{ professionalsErrorMessage() }}</p>
+    }
+
+    <div class="professional-grid" appRevealOnScroll>
+      @for (professional of professionals(); track professional.id; let professionalIndex = $index) {
+        <article class="professional-card">
+          <div class="professional-card__image image-treatment">
+            @if (professional.photoUrl) {
+              <img appImageFallback [src]="professional.photoUrl" [alt]="professional.name" width="700" height="860" loading="lazy">
+            } @else {
+              <div class="professional-card__placeholder" aria-hidden="true">{{ professional.name.slice(0, 1) }}</div>
+            }
+            <span>{{ professionalIndex + 1 < 10 ? '0' + (professionalIndex + 1) : professionalIndex + 1 }}</span>
+          </div>
+          <div class="professional-card__content">
+            <span class="eyebrow">{{ professional.specialty }}</span>
+            <h3>{{ professional.name }}</h3>
+            <p>{{ professional.description }}</p>
+            <small>{{ professional.yearsOfExperience }} anos de experiência na cadeira.</small>
+            <a class="button button-secondary" [routerLink]="'agendamento' | tenantUrl" [queryParams]="{ profissional: professional.id }">Agendar com este profissional</a>
+          </div>
+        </article>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="page-section gallery">
+  <div class="section-inner">
+    <div class="section-heading" appRevealOnScroll>
+      <span class="eyebrow">Galeria</span>
+      <h2 class="section-title">Um percurso pela casa.</h2>
+      <p class="section-description">Entrada, preparo, execução e pausa. As fotos seguem a ordem de quem chega para ser atendido.</p>
+    </div>
+    <div class="gallery__grid">
+      @for (galleryImage of galleryImages(); track galleryImage.id; let galleryIndex = $index) {
+        <button class="gallery__item gallery__item--{{ galleryImage.size }} image-treatment" type="button" (click)="openGalleryLightbox(galleryImage)" appRevealOnScroll>
+          <span class="gallery__index">{{ galleryIndex + 1 < 10 ? '0' + (galleryIndex + 1) : galleryIndex + 1 }}</span>
+          <img [appImageFallback]="galleryImage.fallbackImageUrl ?? ''" [src]="galleryImage.imageUrl" [alt]="galleryImage.alt" width="900" height="900" loading="lazy">
+          <span class="gallery__caption">{{ galleryImage.category }}</span>
+        </button>
+      }
+    </div>
+  </div>
+</section>
+
+<section id="produtos" class="page-section products">
+  <div class="section-inner products__layout">
+    <div class="section-heading" appRevealOnScroll>
+      <span class="eyebrow">Produtos</span>
+      <h2 class="section-title">Para manter o resultado fora da cadeira.</h2>
+      <p class="section-description">Produtos selecionados para uso simples: finalização, barba, textura e manutenção diária.</p>
+    </div>
+    @if (isLoadingProducts()) {
+      <p class="api-feedback">Carregando produtos...</p>
+    }
+
+    @if (productsErrorMessage()) {
+      <p class="api-feedback api-feedback--error">{{ productsErrorMessage() }}</p>
+    }
+
+    @if (products().length > 0) {
+    <div class="product-grid">
+      @for (product of products(); track product.id; let productIndex = $index) {
+        <article class="product-card" appRevealOnScroll>
+          <div class="product-card__image-container">
+            @if (product.imageUrl) {
+              <img class="product-card__image" appImageFallback [src]="product.imageUrl" [alt]="product.name" width="700" height="620" loading="lazy">
+            } @else {
+              <div class="product-card__placeholder" aria-hidden="true">{{ product.name.slice(0, 1) }}</div>
+            }
+          </div>
+          <div>
+            <span>{{ product.category }}</span>
+            <h3>{{ product.name }}</h3>
+            <p>{{ product.description }}</p>
+            <div class="product-card__actions">
+              <strong>{{ product.price | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong>
+              <button class="button button-secondary" type="button" (click)="openProductModal(product)">Comprar</button>
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+    }
+  </div>
+</section>
+
+<section class="page-section experience">
+  <div class="section-inner experience__layout">
+    <div>
+      <span class="eyebrow">Diferenciais</span>
+      <h2>Você chega no horário marcado. A cadeira já está preparada.</h2>
+    </div>
+    <div class="experience__list">
+      @for (experienceItem of experienceItems; track experienceItem.title) {
+        <article appRevealOnScroll>
+          <h3>{{ experienceItem.title }}</h3>
+          <p>{{ experienceItem.description }}</p>
+        </article>
+      }
+    </div>
+  </div>
+</section>
+
+
+<section id="contato" class="page-section contact">
+  <div class="section-inner contact__grid" appRevealOnScroll>
+    <div>
+      <span class="eyebrow">Contato</span>
+      <h2 class="section-title">Horário marcado e caminho direto.</h2>
+      <address class="contact__details">
+        @if (businessInformation().address) {
+          <span>{{ businessInformation().address }}</span>
+        }
+        @if (businessInformation().phone) {
+          <span>{{ businessInformation().phone }}</span>
+        }
+        @if (businessInformation().instagramUrl) {
+          <a [href]="businessInformation().instagramUrl" target="_blank" rel="noopener">{{ businessInformation().instagram }}</a>
+        }
+      </address>
+      @if (companyErrorMessage()) {
+        <p class="api-feedback api-feedback--error">{{ companyErrorMessage() }}</p>
+      }
+      @if (businessInformation().openingHours.length) {
+        <div class="contact__hours" aria-label="Horário de atendimento">
+          @for (openingHour of businessInformation().openingHours; track openingHour) {
+            <span>{{ openingHour }}</span>
+          }
+        </div>
+      }
+      @if (businessInformation().googleMapsUrl) {
+        <a class="button button-primary" [href]="businessInformation().googleMapsUrl" target="_blank" rel="noopener">Como chegar</a>
+      }
+    </div>
+    @if (googleMapsEmbedUrl) {
+      <div class="contact__map" [attr.aria-label]="companyName() ? 'Mapa da ' + companyName() : 'Mapa'">
+        <iframe
+          [title]="companyName() ? 'Localização da ' + companyName() + ' no Google Maps' : 'Localização no Google Maps'"
+          [src]="googleMapsEmbedUrl"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen
+        ></iframe>
+      </div>
+    }
+  </div>
+</section>
+
+<section class="final-call">
+  <img class="final-call__background" appImageFallback="/assets/fotos/placeholder-ambiente.svg" [src]="bookingCtaBackgroundImageUrl()" alt="" aria-hidden="true" loading="lazy">
+  <div appRevealOnScroll>
+    <span class="eyebrow">Agendamento</span>
+    <h2>O próximo horário pode ser seu.</h2>
+    <p>Escolha serviço, profissional e horário. A reserva fica salva para você revisar antes de sair de casa.</p>
+    @if (!presentation) { <a class="button button-primary" [routerLink]="'agendamento' | tenantUrl">Agendar agora</a> }
+  </div>
+</section>
+
+@if (selectedProduct(); as product) {
+  <div class="modal-backdrop" role="dialog" aria-modal="true" [attr.aria-label]="'Produto ' + product.name" (click)="closeProductModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <app-close-button class="modal__close" tone="inverse" label="Fechar modal de produto" (closeClick)="closeProductModal()" />
+      <div class="modal__image-container">
+        @if (product.imageUrl) {
+          <img class="modal__image" appImageFallback [src]="product.imageUrl" [alt]="product.name" width="700" height="620">
+        } @else {
+          <div class="modal__image-placeholder" aria-hidden="true">{{ product.name.slice(0, 1) }}</div>
+        }
+      </div>
+      <h2>{{ product.name }}</h2>
+      <p>{{ product.description }}</p>
+      <strong>{{ product.price | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong>
+      <p>Compra demonstrativa. A aquisição poderá ser realizada diretamente @if (companyName()) {na {{ companyName() }}.} @else {no local.}</p>
+      @if (selectedProductWhatsappUrl(); as whatsappUrl) {
+        <a class="button button-primary" [href]="whatsappUrl" target="_blank" rel="noopener">Conversar pelo WhatsApp</a>
+      }
+    </div>
+  </div>
+}
+
+@if (selectedGalleryImage(); as galleryImage) {
+  <div class="modal-backdrop" role="dialog" aria-modal="true" [attr.aria-label]="'Imagem ' + galleryImage.category" (click)="closeGalleryLightbox()">
+    <div class="lightbox" (click)="$event.stopPropagation()">
+      <app-close-button class="modal__close" tone="inverse" label="Fechar galeria" (closeClick)="closeGalleryLightbox()" />
+      <button class="lightbox__nav lightbox__nav--previous" type="button" aria-label="Imagem anterior" (click)="showPreviousGalleryImage()">&lt;</button>
+      <img [appImageFallback]="galleryImage.fallbackImageUrl ?? ''" [src]="galleryImage.imageUrl" [alt]="galleryImage.alt" width="1200" height="900">
+      <button class="lightbox__nav lightbox__nav--next" type="button" aria-label="Próxima imagem" (click)="showNextGalleryImage()">&gt;</button>
+      <span>{{ galleryImage.category }}</span>
+    </div>
+  </div>
+}

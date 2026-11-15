@@ -1,0 +1,98 @@
+{
+  "$comment": "Sugestoes por ramo da empresa (ID 35): servicos e categorias de produto que o dono adota com um clique na primeira configuracao. Nada e criado sozinho. A chave (key) e estavel: nunca reaproveite uma chave para outro item; para tirar um item, apague a linha. Sem preco: o preco vem da tela. Duracao em minutos, maior que zero. Mesma fonte do back (embutido no dominio) e do front.",
+  "version": 1,
+  "segments": {
+    "Barbershop": {
+      "services": [
+        { "key": "barbershop.mens-haircut", "name": "Corte masculino", "durationMinutes": 30 },
+        { "key": "barbershop.beard", "name": "Barba", "durationMinutes": 30 },
+        { "key": "barbershop.haircut-and-beard", "name": "Corte e barba", "durationMinutes": 60 },
+        { "key": "barbershop.kids-haircut", "name": "Corte infantil", "durationMinutes": 30 },
+        { "key": "barbershop.finishing", "name": "Acabamento/pezinho", "durationMinutes": 15 },
+        { "key": "barbershop.eyebrow", "name": "Sobrancelha", "durationMinutes": 15 },
+        { "key": "barbershop.beard-pigmentation", "name": "Pigmentação de barba", "durationMinutes": 30 },
+        { "key": "barbershop.hydration", "name": "Hidratação", "durationMinutes": 30 },
+        { "key": "barbershop.relaxing", "name": "Relaxamento", "durationMinutes": 60 },
+        { "key": "barbershop.highlights", "name": "Luzes/platinado", "durationMinutes": 120 }
+      ],
+      "productCategories": [
+        { "key": "barbershop.hair", "name": "Cabelo" },
+        { "key": "barbershop.beard-care", "name": "Barba" },
+        { "key": "barbershop.styling", "name": "Finalização" },
+        { "key": "barbershop.care", "name": "Cuidados" },
+        { "key": "barbershop.accessories", "name": "Acessórios" },
+        { "key": "barbershop.drinks", "name": "Bebidas" }
+      ]
+    },
+    "BeautySalon": {
+      "services": [
+        { "key": "beauty-salon.womens-haircut", "name": "Corte feminino", "durationMinutes": 60 },
+        { "key": "beauty-salon.blow-dry", "name": "Escova", "durationMinutes": 45 },
+        { "key": "beauty-salon.hydration", "name": "Hidratação", "durationMinutes": 45 },
+        { "key": "beauty-salon.coloring", "name": "Coloração", "durationMinutes": 120 },
+        { "key": "beauty-salon.highlights", "name": "Mechas/luzes", "durationMinutes": 180 },
+        { "key": "beauty-salon.progressive", "name": "Progressiva", "durationMinutes": 180 },
+        { "key": "beauty-salon.hairstyle", "name": "Penteado", "durationMinutes": 60 },
+        { "key": "beauty-salon.manicure", "name": "Manicure", "durationMinutes": 45 },
+        { "key": "beauty-salon.pedicure", "name": "Pedicure", "durationMinutes": 45 },
+        { "key": "beauty-salon.manicure-and-pedicure", "name": "Pé e mão", "durationMinutes": 90 },
+        { "key": "beauty-salon.eyebrow-design", "name": "Design de sobrancelha", "durationMinutes": 30 },
+        { "key": "beauty-salon.makeup", "name": "Maquiagem", "durationMinutes": 60 }
+      ],
+      "productCategories": [
+        { "key": "beauty-salon.shampoo-and-conditioner", "name": "Shampoo e condicionador" },
+        { "key": "beauty-salon.treatment", "name": "Tratamento" },
+        { "key": "beauty-salon.styling", "name": "Finalização" },
+        { "key": "beauty-salon.coloring-products", "name": "Coloração" },
+        { "key": "beauty-salon.nails", "name": "Unhas" },
+        { "key": "beauty-salon.makeup-products", "name": "Maquiagem" },
+        { "key": "beauty-salon.accessories", "name": "Acessórios" }
+      ]
+    },
+    "Aesthetics": {
+      "services": [
+        { "key": "aesthetics.facial-cleansing", "name": "Limpeza de pele", "durationMinutes": 60 },
+        { "key": "aesthetics.peeling", "name": "Peeling", "durationMinutes": 45 },
+        { "key": "aesthetics.microneedling", "name": "Microagulhamento", "durationMinutes": 60 },
+        { "key": "aesthetics.lymphatic-drainage", "name": "Drenagem linfática", "durationMinutes": 60 },
+        { "key": "aesthetics.modeling-massage", "name": "Massagem modeladora", "durationMinutes": 60 },
+        { "key": "aesthetics.relaxing-massage", "name": "Massagem relaxante", "durationMinutes": 60 },
+        { "key": "aesthetics.underarm-waxing", "name": "Depilação de axila", "durationMinutes": 15 },
+        { "key": "aesthetics.leg-waxing", "name": "Depilação de pernas", "durationMinutes": 45 },
+        { "key": "aesthetics.eyebrow-design", "name": "Design de sobrancelha", "durationMinutes": 30 },
+        { "key": "aesthetics.lash-extension", "name": "Extensão de cílios", "durationMinutes": 120 },
+        { "key": "aesthetics.lash-lifting", "name": "Lash lifting", "durationMinutes": 60 }
+      ],
+      "productCategories": [
+        { "key": "aesthetics.skincare", "name": "Skincare" },
+        { "key": "aesthetics.body", "name": "Corpo" },
+        { "key": "aesthetics.sunscreen", "name": "Proteção solar" },
+        { "key": "aesthetics.waxing", "name": "Depilação" },
+        { "key": "aesthetics.lashes-and-brows", "name": "Cílios e sobrancelhas" },
+        { "key": "aesthetics.kits", "name": "Kits" }
+      ]
+    },
+    "DentalClinic": {
+      "services": [
+        { "key": "dental-clinic.assessment", "name": "Avaliação", "durationMinutes": 30 },
+        { "key": "dental-clinic.cleaning", "name": "Limpeza/profilaxia", "durationMinutes": 45 },
+        { "key": "dental-clinic.fluoride", "name": "Aplicação de flúor", "durationMinutes": 20 },
+        { "key": "dental-clinic.filling", "name": "Restauração", "durationMinutes": 60 },
+        { "key": "dental-clinic.whitening", "name": "Clareamento", "durationMinutes": 60 },
+        { "key": "dental-clinic.extraction", "name": "Extração", "durationMinutes": 60 },
+        { "key": "dental-clinic.root-canal", "name": "Tratamento de canal", "durationMinutes": 90 },
+        { "key": "dental-clinic.braces-maintenance", "name": "Manutenção de aparelho", "durationMinutes": 30 }
+      ],
+      "productCategories": [
+        { "key": "dental-clinic.oral-hygiene", "name": "Higiene bucal" },
+        { "key": "dental-clinic.whitening-products", "name": "Clareamento" },
+        { "key": "dental-clinic.orthodontics", "name": "Ortodontia" },
+        { "key": "dental-clinic.kits", "name": "Kits" }
+      ]
+    },
+    "Other": {
+      "services": [],
+      "productCategories": []
+    }
+  }
+}
